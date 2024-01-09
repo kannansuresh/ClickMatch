@@ -1,0 +1,23 @@
+﻿<div class="row g-0 row-cols-md-auto">
+	@foreach (TileModel tile in Tiles)
+	{
+		<div class="col">
+			<_Tile Tile="tile" OnTileClick="HandleTileClick" />
+		</div>
+	}
+</div>
+
+@code {
+	[Parameter] public TileModel[] Tiles { get; set; } = null!;
+
+	private void HandleTileClick(TileModel tile)
+	{
+		tile.IsShown = true;
+	}
+
+	protected override Task OnInitializedAsync()
+	{
+		return base.OnInitializedAsync();
+	}
+
+}

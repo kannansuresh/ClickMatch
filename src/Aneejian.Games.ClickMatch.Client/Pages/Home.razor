@@ -1,0 +1,38 @@
+﻿@page "/"
+@inject HttpClient httpClient
+
+<PageTitle>Click and Match</PageTitle>
+
+<div class="container">
+	<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+		<h1>Aneejian Click and Match</h1>
+		<p>Click on the cards to match them.</p>
+
+		<_Settings />
+
+
+		 <_TileGrid Tiles="tiles" />
+
+	</div>
+</div>
+
+
+@code {
+
+	private TileModel[]? tiles { get; set; } 
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		tiles = new TileModel[16];
+
+		var fetchedThemes = await httpClient.GetFromJsonAsync<IEnumerable<ThemeData>>("https://aneejian.com/memory-game-resources/theme_info.json");
+
+		var selectedTheme = fetchedThemes?.FirstOrDefault(x => x.ThemeId == "animals");
+
+		var gameSettings = new GameSettings(16, selectedTheme!);
+
+		tiles = gameSettings.GenerateTiles().ToArray();
+
+	}
+}

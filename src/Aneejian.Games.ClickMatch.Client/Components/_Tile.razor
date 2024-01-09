@@ -1,0 +1,37 @@
+﻿@if (Tile is not null)
+{
+	<div class="flip-card" @onclick="HandleTileClick">
+		<div class="flip-card-inner @flipTileClass">
+			<div class="flip-card-front">
+				<p>@(Tile.ShowNumber ? Tile.PositionId : "T")</p>
+			</div>
+
+			@if (Tile.IsShown)
+			{
+				@if (Tile.ContentIsImage())
+				{
+					<div class="flip-card-back flip-card-back-image">
+						<img src="@Tile.Content" alt="Tile-@Tile.PositionId" />
+					</div>
+				}
+				else
+				{
+					<div class="flip-card-back flip-card-back-icon">
+						<i class="tile-icon @Tile.Content"></i>
+					</div>
+				}}
+		</div>
+	</div>
+}
+
+@code {
+	[Parameter, EditorRequired] public TileModel? Tile { get; set; }
+	[Parameter, EditorRequired] public EventCallback<TileModel> OnTileClick { get; set; }
+
+	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
+
+	private async Task HandleTileClick()
+	{
+		await OnTileClick.InvokeAsync(Tile);
+	}
+}
