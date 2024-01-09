@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject HttpClient httpClient
+@inject IThemeService themeService
 
 <PageTitle>Click and Match</PageTitle>
 
@@ -8,10 +8,15 @@
 		<h1>Aneejian Click and Match</h1>
 		<p>Click on the cards to match them.</p>
 
-		<_Settings />
-
-
-		 <_TileGrid Tiles="tiles" />
+		@if (Themes is not null)
+		{
+			@* <_SettingsForm SelectedThemeId="SelectedThemeId" Themes="Themes" OnSubmitClick="OnSettingSave" /> *@
+			<_SettingsForm Themes=Themes SelectedThemeId=@SelectedThemeId OnSubmitClick=OnSettingSave />
+		}
+		@if (Tiles is not null)
+		{
+			<_TileGrid Tiles="Tiles" />
+		}
 
 	</div>
 </div>
@@ -19,20 +24,25 @@
 
 @code {
 
-	private TileModel[]? tiles { get; set; } 
+	private TileModel[]? Tiles { get; set; }
+	private List<ThemeData>? Themes { get; set; }
+	private string SelectedThemeId { get; set; } = "";
+	private Config? Config { get; set; }
+
 
 	protected override async Task OnInitializedAsync()
 	{
 
-		tiles = new TileModel[16];
+		Tiles = [];
+		Config = await themeService.GetConfigAsync("config/config.json");
+		SelectedThemeId = Config.DefaultTheme;
+		Themes = await themeService.GetThemesAsync(Config.LocalThemeInfo, Config.HostedThemeInfo);
+		
+	}
 
-		var fetchedThemes = await httpClient.GetFromJsonAsync<IEnumerable<ThemeData>>("https://aneejian.com/memory-game-resources/theme_info.json");
-
-		var selectedTheme = fetchedThemes?.FirstOrDefault(x => x.ThemeId == "animals");
-
-		var gameSettings = new GameSettings(16, selectedTheme!);
-
-		tiles = gameSettings.GenerateTiles().ToArray();
-
+	private void OnSettingSave(IGameSettings settings)
+	{
+		SelectedThemeId = settings.ThemeData.ThemeId;
+		Tiles = settings.GenerateTiles().ToArray();
 	}
 }

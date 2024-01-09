@@ -1,6 +1,6 @@
 ﻿namespace Aneejian.Games.ClickMatch.Models;
 
-public class GameSettings(int numberOfTiles, IThemeData themeData)
+public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettings
 {
 	public int NumberOfTiles { get; set; } = numberOfTiles % 2 == 0 ? numberOfTiles : numberOfTiles + 1;
 	public IThemeData ThemeData { get; set; } = themeData;

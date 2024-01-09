@@ -1,0 +1,52 @@
+﻿<div class="row">
+	<form id="settings-form" class="mb-4" @onsubmit="HandleSubmitClick">
+		<div class="form-floating mb-3">
+			<select class="form-select" id="selectTheme" aria-label="Select Theme" value="@SelectedThemeId" @onchange="HandleThemeChange">
+				@foreach (var theme in Themes!)
+				{
+					<option value="@theme.ThemeId">@theme.ThemeName</option>
+				}
+			</select>
+			<label for="selectTheme">Select Theme</label>
+		</div>
+		<div class="form-floating mb-3">
+			<input class="form-control" id="enterNumberOfTiles" type="number" placeholder="Enter number of tiles" @bind="TileCount" />
+			<label for="enterNumberOfTiles">Enter number of tiles</label>
+			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
+		</div>
+		<div class="d-grid">
+			<button class="btn btn-primary btn-lg" id="submitButton" type="submit">Start Game</button>
+		</div>
+	</form>
+</div>
+
+<div>Hello from settings @SelectedThemeId</div>
+
+@code {
+
+	[Parameter] public List<ThemeData>? Themes { get; set; }
+	[Parameter] public string? SelectedThemeId { get; set; }
+	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
+
+	private int TileCount { get; set; } = 16;
+	private ThemeData? SelectedTheme { get; set; }
+
+	protected override void OnInitialized()
+	{
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+	}
+
+
+	private async Task HandleSubmitClick()
+	{
+		var gameSettings = new GameSettings(TileCount, SelectedTheme!);
+		await OnSubmitClick.InvokeAsync(gameSettings);
+	}
+
+	private void HandleThemeChange(ChangeEventArgs e)
+	{
+		SelectedThemeId = e.Value?.ToString();
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+	}
+
+}

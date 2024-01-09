@@ -1,7 +1,10 @@
-﻿
-namespace Aneejian.Games.ClickMatch.Services;
+﻿using Aneejian.Games.ClickMatch.Models;
 
-public interface IThemeService
+namespace Aneejian.Games.ClickMatch.Services
 {
-	Task<T?> GetAsync<T>(string path, bool deserialize);
+	public interface IThemeService
+	{
+		Task<Config> GetConfigAsync(string configPath);
+		Task<List<ThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo);
+	}
 }
