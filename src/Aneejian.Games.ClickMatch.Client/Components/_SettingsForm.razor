@@ -22,14 +22,16 @@
 
 <div>Hello from settings @SelectedThemeId</div>
 
+
+
 @code {
 
-	[Parameter] public List<ThemeData>? Themes { get; set; }
+	[Parameter] public IEnumerable<IThemeData>? Themes { get; set; }
 	[Parameter] public string? SelectedThemeId { get; set; }
 	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
 
 	private int TileCount { get; set; } = 16;
-	private ThemeData? SelectedTheme { get; set; }
+	private IThemeData? SelectedTheme { get; set; }
 
 	protected override void OnInitialized()
 	{

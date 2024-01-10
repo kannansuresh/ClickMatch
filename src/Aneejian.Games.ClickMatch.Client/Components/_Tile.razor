@@ -1,4 +1,7 @@
-﻿@if (Tile is not null)
+﻿@inject IJSRuntime jsRuntime
+
+
+@if (Tile is not null)
 {
 	<div class="flip-card" @onclick="HandleTileClick">
 		<div class="flip-card-inner @flipTileClass">
@@ -30,8 +33,17 @@
 
 	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
 
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && Tile!.ContentIsImage())
+		{
+			await jsRuntime.InvokeVoidAsync("preloadImage", Tile.Content);
+		}
+	}
+
 	private async Task HandleTileClick()
 	{
+		if (Tile == null || Tile.IsShown) return;
 		await OnTileClick.InvokeAsync(Tile);
 	}
 }

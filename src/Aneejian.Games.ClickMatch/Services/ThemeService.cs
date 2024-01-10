@@ -13,35 +13,37 @@ public class ThemeService(HttpClient httpClient) : IThemeService
 		return config ?? throw new Exception("Error getting config.");
 	}
 
-	public async Task<List<ThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo)
+	public async Task<IEnumerable<IThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo)
 	{
-		List<ThemeData>? localThemes;
-		List<ThemeData>? hostedThemes;
+		IEnumerable<IThemeData>? localThemes;
+		IEnumerable<IThemeData>? hostedThemes;
 
-		var themes = new HashSet<ThemeData>();
+		var themes = new HashSet<IThemeData>();
 
 		try
 		{
 
-			hostedThemes = await GetAsync<List<ThemeData>>(hostedThemeInfo, true);
+			hostedThemes = await GetAsync<IEnumerable<ThemeData>>(hostedThemeInfo, true);
 			if (hostedThemes != null)
 				themes.UnionWith(hostedThemes);
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
+			await Console.Out.WriteLineAsync(ex.Message);
 			try
 			{
-				localThemes = await GetAsync<List<ThemeData>>(localThemeInfo, true);
+				localThemes = await GetAsync<IEnumerable<ThemeData>>(localThemeInfo, true);
 				if (localThemes != null)
 					themes.UnionWith(localThemes);
 			}
-			catch (Exception)
+			catch (Exception ex2)
 			{
-				// ignore
+				await Console.Out.WriteLineAsync(ex2.Message);
+
 			}
 		}
 
-		return [.. themes];
+		return themes;
 	}
 
 	private async Task<T?> GetAsync<T>(string path, bool deserialize)

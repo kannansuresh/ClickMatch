@@ -5,6 +5,6 @@ namespace Aneejian.Games.ClickMatch.Services
 	public interface IThemeService
 	{
 		Task<Config> GetConfigAsync(string configPath);
-		Task<List<ThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo);
+		Task<IEnumerable<IThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo);
 	}
 }

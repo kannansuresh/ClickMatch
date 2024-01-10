@@ -1,0 +1,35 @@
+﻿@inject IThemeService themeService
+
+@if (Themes is not null)
+{
+	<_SettingsForm Themes=@Themes SelectedThemeId=@SelectedThemeId OnSubmitClick=@OnSettingSave />
+}
+@if (Tiles is not null)
+{
+	<_TileGrid Tiles="Tiles" />
+}
+
+@code {
+
+	private TileModel[]? Tiles { get; set; }
+	private IEnumerable<IThemeData>? Themes { get; set; }
+	private string SelectedThemeId { get; set; } = "";
+	private Config? Config { get; set; }
+
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		Tiles = [];
+		Config = await themeService.GetConfigAsync("config/config.json");
+		SelectedThemeId = Config.DefaultTheme;
+		Themes = await themeService.GetThemesAsync(Config.LocalThemeInfo, Config.HostedThemeInfo);
+
+	}
+
+	private void OnSettingSave(IGameSettings settings)
+	{
+		SelectedThemeId = settings?.ThemeData.ThemeId ?? Config!.DefaultTheme;
+		Tiles = settings?.GenerateTiles().ToArray();
+	}
+}
