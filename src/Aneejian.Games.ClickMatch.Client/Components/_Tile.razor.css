@@ -1,9 +1,5 @@
 ﻿.flip-card {
     perspective: 1000px;
-    width: 150px;
-    /* Adjust the size as needed */
-    height: 150px;
-    /* Adjust the size as needed */
     margin: 2px;
     cursor: pointer;
 }
@@ -21,27 +17,25 @@
 
 .flip-card-front,
 .flip-card-back {
-    width: 100%;
     height: 100%;
+    width: 100%;
     position: absolute;
     backface-visibility: hidden;
-    font-family: 'Kaushan Script';
 }
 
 .flip-card-front {
     background-color: #3498db;
-    /* Front color */
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Adjust the font size as needed */
     color: #fff;
-    /* Front text color */
 }
 
 .flip-card-back {
-    background-color: #2ecc71;
-    /* Back color */
+    /*    background-color: #2ecc71;
+    background-color: #712cf9;*/
+    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
+    backdrop-filter: blur(10rem);
     transform: rotateY(180deg);
     display: flex;
     align-items: center;
@@ -52,13 +46,16 @@
     .flip-card-front * {
         padding: 0;
         margin: 0;
-        font-size: 4rem;
         max-width: 100%;
         max-height: 100%;
         color: #fff;
     }
 
     .flip-card-back img {
-        width: 95%;
-        height: 95%;
+        width: auto;
+        height: 70%;
     }
+
+.flip-card-matched {
+    visibility: hidden;
+}

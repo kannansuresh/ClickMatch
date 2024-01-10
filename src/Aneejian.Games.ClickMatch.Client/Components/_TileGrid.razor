@@ -1,23 +1,77 @@
-﻿<div class="row g-0 row-cols-md-auto">
+﻿@inject GameManagerService gameManager
+
+<div class="row g-1 justify-items-center mt-5" style="max-width: @maximumWidth">
 	@foreach (TileModel tile in Tiles)
 	{
-		<div class="col">
-			<_Tile Tile="tile" OnTileClick="HandleTileClick" />
+		<div class="col" style="@tileSize">
+			<_Tile Tile="tile" TileSize="@tileSize" OnTileClick="HandleTileClick" />
 		</div>
+
 	}
 </div>
 
 @code {
 	[Parameter] public TileModel[] Tiles { get; set; } = null!;
+	private int rows { get; set; }
+	private int columns { get; set; }
+	private string maximumWidth { get; set; } = "100%";
+	private double tileWidth { get; set; } = 150;
+	private double tileHeight { get; set; } = 150;
+	private string tileSize { get; set; } = "height: 150px; width: 150px";
 
-	private void HandleTileClick(TileModel tile)
+	private async Task HandleTileClick(TileModel tile)
 	{
-		tile.IsShown = true;
+		await gameManager.FlipTile(tile);
+		StateHasChanged();
 	}
 
-	protected override Task OnInitializedAsync()
+	protected override void OnParametersSet()
 	{
-		return base.OnInitializedAsync();
+		if (Tiles != null && Tiles.Count() > 0)
+		{
+			(rows, columns) = GetGridDimensions();
+			Console.WriteLine($"Rows: {rows} Columns: {columns}");
+			tileWidth = CalculateTileWidth(1024, columns, 4);
+			tileHeight = CalculateTileWidth(768, rows, 4);
+			tileHeight = tileWidth = Math.Min(tileWidth, tileHeight);
+			Console.WriteLine(tileWidth);
+			maximumWidth = (columns * tileWidth) + (columns * 4) + "px";
+			tileSize = $"height: {tileHeight}px; width: {tileWidth}px";
+		}
 	}
+
+
+	public static double CalculateTileWidth(double viewportWidth, int columnsPerRow, double gapWidth)
+	{
+		double totalGapWidth = (columnsPerRow - 1) * gapWidth;
+		double availableWidth = viewportWidth - totalGapWidth;
+		double tileWidth = availableWidth / columnsPerRow;
+		return tileWidth < 150 ? tileWidth : 150;
+	}
+
+	private (int rows, int columns) GetGridDimensions()
+	{
+		int rows = columns = (int)Math.Sqrt(Tiles.Count());
+
+		while (rows * columns < Tiles.Count())
+		{
+			rows++;
+			columns++;
+		}
+
+		if (Tiles.Count() % rows == 0)
+		{
+			return (rows, columns);
+		}
+
+		while (rows >= columns)
+		{
+			rows--;
+			columns = Tiles.Count() / rows;
+		}
+
+		return (rows, columns);
+	}
+
 
 }

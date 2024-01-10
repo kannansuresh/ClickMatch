@@ -4,7 +4,7 @@ public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettin
 {
 	public int NumberOfTiles { get; set; } = numberOfTiles % 2 == 0 ? numberOfTiles : numberOfTiles + 1;
 	public IThemeData ThemeData { get; set; } = themeData;
-	public bool ShowTileNumbers { get; set; } = false;
+	public bool ShowTileNumbers { get; set; } = true;
 	public IEnumerable<string> Items => ThemeData.GetItems(NumberOfTiles / 2) ?? [];
 
 	public IEnumerable<TileModel> GenerateTiles()

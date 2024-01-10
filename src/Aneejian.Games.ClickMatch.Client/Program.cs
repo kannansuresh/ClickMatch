@@ -11,4 +11,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddScoped<IThemeService>(sp => new ThemeService(sp.GetRequiredService<HttpClient>()));
 
+builder.Services.AddSingleton<GameManagerService>();
+
 await builder.Build().RunAsync();

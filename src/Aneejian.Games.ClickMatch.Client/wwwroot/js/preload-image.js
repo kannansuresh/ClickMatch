@@ -3,6 +3,9 @@ function preloadImage(imageUrl) {
     img.src = imageUrl;
 }
 
-function preloadImages(imageUrls) {
-    imageUrls.forEach(preloadImage);
+function preloadImages(imageUrls) {    
+    for (let i = 0; i < imageUrls.length; i++) {
+        preloadImage(imageUrls[i]);
+    }
 }
+

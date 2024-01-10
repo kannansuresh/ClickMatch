@@ -1,4 +1,5 @@
 ﻿<div class="row">
+	<h4 class="mb-4">Enter your game preference</h4>
 	<form id="settings-form" class="mb-4" @onsubmit="HandleSubmitClick">
 		<div class="form-floating mb-3">
 			<select class="form-select" id="selectTheme" aria-label="Select Theme" value="@SelectedThemeId" @onchange="HandleThemeChange">
@@ -10,7 +11,7 @@
 			<label for="selectTheme">Select Theme</label>
 		</div>
 		<div class="form-floating mb-3">
-			<input class="form-control" id="enterNumberOfTiles" type="number" placeholder="Enter number of tiles" @bind="TileCount" />
+			<input class="form-control" id="enterNumberOfTiles" type="number" placeholder="Enter number of tiles" max="@SelectedTheme!.ItemCount" @bind="TileCount" />
 			<label for="enterNumberOfTiles">Enter number of tiles</label>
 			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
 		</div>
@@ -20,8 +21,6 @@
 	</form>
 </div>
 
-<div>Hello from settings @SelectedThemeId</div>
-
 
 
 @code {
@@ -29,12 +28,13 @@
 	[Parameter] public IEnumerable<IThemeData>? Themes { get; set; }
 	[Parameter] public string? SelectedThemeId { get; set; }
 	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
+	[Parameter] public int TileCount { get; set; }
 
-	private int TileCount { get; set; } = 16;
 	private IThemeData? SelectedTheme { get; set; }
 
 	protected override void OnInitialized()
 	{
+		TileCount = TileCount == 0 ? 16 : TileCount;
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
 	}
 

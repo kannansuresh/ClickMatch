@@ -1,15 +1,12 @@
-﻿@inject IJSRuntime jsRuntime
-
-
-@if (Tile is not null)
+﻿@if (Tile is not null)
 {
-	<div class="flip-card" @onclick="HandleTileClick">
-		<div class="flip-card-inner @flipTileClass">
+	<div class="flip-card" @onclick="HandleTileClick" style="@TileSize">
+		<div class="flip-card-inner @flipTileClass @matchedTileClass">
 			<div class="flip-card-front">
-				<p>@(Tile.ShowNumber ? Tile.PositionId : "T")</p>
+				<p class="fs-1">@(Tile.ShowNumber ? Tile.PositionId : "T")</p>
 			</div>
 
-			@if (Tile.IsShown)
+			@if (Tile.IsShown && !Tile.IsMatched)
 			{
 				@if (Tile.ContentIsImage())
 				{
@@ -20,9 +17,10 @@
 				else
 				{
 					<div class="flip-card-back flip-card-back-icon">
-						<i class="tile-icon @Tile.Content"></i>
+						<i class="fs-1 tile-icon @Tile.Content"></i>
 					</div>
-				}}
+				}
+			}
 		</div>
 	</div>
 }
@@ -30,16 +28,12 @@
 @code {
 	[Parameter, EditorRequired] public TileModel? Tile { get; set; }
 	[Parameter, EditorRequired] public EventCallback<TileModel> OnTileClick { get; set; }
+	[Parameter] public string TileSize { get; set; } = "height: 150px; width: 150px";
+	
 
 	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
 
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender && Tile!.ContentIsImage())
-		{
-			await jsRuntime.InvokeVoidAsync("preloadImage", Tile.Content);
-		}
-	}
+	private string matchedTileClass => Tile?.IsMatched ?? true ? "flip-card-matched" : "";
 
 	private async Task HandleTileClick()
 	{
