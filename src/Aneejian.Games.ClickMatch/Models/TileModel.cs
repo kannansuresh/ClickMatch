@@ -8,6 +8,7 @@ public class TileModel(Guid matchingId, int? positionId, string? content, bool s
 	public bool ShowNumber { get; set; } = showNumber;
 	public string? Content { get; set; } = content;
 	public bool IsShown { get; set; } = false;
+	public int FlipCount { get; set; } = 0;
 	public bool IsMatched { get; set; } = false;
 
 	private static readonly HashSet<string> imageFormats = new(StringComparer.OrdinalIgnoreCase)

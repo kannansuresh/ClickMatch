@@ -6,6 +6,7 @@ public class GameManagerService
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
 	public IGameSettings GameSettings { get; set; } = null!;
+	public IGameScorer GameScorer { get; set; } = null!;
 	public TileModel[] Tiles { get; set; } = [];
 
 	public int Moves { get; set; }
@@ -13,19 +14,31 @@ public class GameManagerService
 	public bool GameInProgress { get; set; }
 	public bool GameWon { get; set; }
 
+	public int Multiplier { get; set; } = 1;
+
 	private List<TileModel>? FlippedTiles { get; set; } = [];
 	private List<TileModel>? MatchedTiles { get; set; } = [];
 
 	public void StartGame(IGameSettings gameSettings)
 	{
 		GameSettings = gameSettings ?? throw new Exception("Game settings not set.");
+		GameScorer ??= new GameScorer();
+		GameScorer.Reset();
+		Tiles = GameSettings.GenerateTiles().ToArray();
+		GameInProgress = true;
+	}
+
+	public void ResetGame()
+	{
 		FlippedTiles = [];
 		MatchedTiles = [];
 		Moves = 0;
 		Misses = 0;
+		Multiplier = 1;
 		GameWon = false;
-		GameInProgress = true;
-		Tiles = GameSettings.GenerateTiles().ToArray();
+		GameInProgress = false;
+		Tiles = [];
+		GameScorer.Reset();
 		NotifyStateChanged();
 	}
 
@@ -34,7 +47,9 @@ public class GameManagerService
 		if (FlippedTiles!.Count < 2)
 		{
 			tile.IsShown = true;
+			tile.FlipCount += 1;
 			FlippedTiles.Add(tile);
+			NotifyStateChanged();
 		}
 		else
 		{
@@ -44,23 +59,28 @@ public class GameManagerService
 		if (FlippedTiles!.Count == 2)
 		{
 			Moves += 1;
+			await Task.Delay(500);
+
 			if (FlippedTiles[0].MatchingId == FlippedTiles[1].MatchingId)
 			{
-				await Task.Delay(500);
 				MatchedTiles!.AddRange(FlippedTiles);
+
+				GameScorer.CalculateScore(FlippedTiles[0].FlipCount + FlippedTiles[1].FlipCount, Tiles.Length);
+
 				foreach (TileModel flippedTile in FlippedTiles)
 				{
 					flippedTile.IsMatched = true;
 				}
+				Multiplier += Misses < Tiles.Length ? 1 : 0;
 			}
 			else
 			{
-				await Task.Delay(1000);
 				Misses += 1;
 				foreach (TileModel flippedTile in FlippedTiles)
 				{
 					flippedTile.IsShown = false;
 				}
+				Multiplier = 1;
 			}
 			FlippedTiles.Clear();
 		}
@@ -70,9 +90,10 @@ public class GameManagerService
 			GameInProgress = false;
 			GameWon = true;
 		}
-
+		GameScorer.Multiplier = Multiplier;
 		NotifyStateChanged();
 	}
+
 
 	public event Action? OnChange;
 	private void NotifyStateChanged() => OnChange?.Invoke();

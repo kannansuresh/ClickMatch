@@ -11,20 +11,24 @@
 {
 	<_TileGrid Tiles="Tiles" />
 
-	<p class="p-2">Moves: @gameManager.Moves Misses: @gameManager.Misses</p>
+	<p class="p-2">Moves: @gameManager.Moves | Misses: @gameManager.Misses | Score: @(gameManager.GameScorer.Score - (gameManager.Misses * 2)) | Bonus: @gameManager.GameScorer.Bonus | Multiplier: @gameManager.GameScorer.Multiplier</p>
+
+	<p>@gameManager.GameScorer.ToString()</p>
 
 
 	<div class="d-flex">
 		<button class="btn btn-danger btn-sm mt-2" @onclick=OnAbandonClick>Abandon Game</button>
+		<button class="btn btn-success btn-sm mt-2" @onclick=OnFilipAllClick>Flip all Tiles</button>
 	</div>
 }
 
 @if (gameManager.GameWon)
 {
 	<div class="d-flex flex-column justify-content-center align-items-center">
-		<h1 class="display-1 mb-4">You Won!</h1>
-		<h3 class="display-3 mb-4">Moves: @gameManager.Moves Misses: @gameManager.Misses</h3>
-		<button class="btn btn-primary w-100" @onclick=OnAbandonClick>Play Again</button>
+		<h1 class="mb-4">@(gameManager.GameScorer.TotalScore > 0 ? "You Won!":"You Lost!")</h1>
+		<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
+		<h3 class="mb-4">Moves: @gameManager.Moves Misses: @gameManager.Misses</h3>
+		<button class="btn btn-primary w-100.ss" @onclick=OnAbandonClick>Play Again</button>
 	</div>
 }
 
@@ -98,8 +102,14 @@
 
 	private void OnAbandonClick()
 	{
-		gameManager.GameInProgress = false;
-		gameManager.GameWon = false;
+		gameManager.ResetGame();
 		StateHasChanged();
+	}
+	private void OnFilipAllClick(MouseEventArgs e)
+	{
+		foreach (var tile in Tiles!)
+		{
+			tile.IsShown = !tile.IsShown;
+		}
 	}
 }
