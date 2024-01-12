@@ -11,7 +11,7 @@
 			<label for="selectTheme">Select Theme</label>
 		</div>
 		<div class="form-floating mb-3">
-			<input class="form-control" id="enterNumberOfTiles" type="number" placeholder="Enter number of tiles" max="@SelectedTheme!.ItemCount" @bind="TileCount" />
+			<input class="form-control" id="enterNumberOfTiles" type="number" placeholder="Enter number of tiles" max="@(SelectedTheme!.ItemCount * 2)" @bind="TileCount" />
 			<label for="enterNumberOfTiles">Enter number of tiles</label>
 			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
 		</div>

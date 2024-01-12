@@ -16,7 +16,9 @@
 
 	<div class="d-flex">
 		<button class="btn btn-danger btn-sm mt-2" @onclick=OnAbandonClick>Abandon Game</button>
-		<button class="btn btn-success btn-sm mt-2" @onclick=OnFilipAllClick>Flip all Tiles</button>
+		<_DevOnly>
+			<button class="btn btn-success btn-sm ms-5 mt-2" @onclick=OnFilipAllClick>Flip all Tiles</button>
+		</_DevOnly>
 	</div>
 }
 
@@ -27,7 +29,7 @@
 		<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
 		<h3 class="mb-4">Moves: @gameManager.Moves Misses: @gameManager.Misses</h3>
 		<h4 class="mb-4">@gameManager.GameScorer.ToString()</h4>
-		<button class="btn btn-primary w-100.ss" @onclick=OnAbandonClick>Play Again</button>
+		<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>Play Next Level</button>
 	</div>
 }
 
@@ -38,6 +40,7 @@
 	private IEnumerable<IThemeData>? Themes { get; set; }
 	private string SelectedThemeId { get; set; } = "";
 	private Config? Config { get; set; }
+	private ScoreCollector? ScoreCollector { get; set; }
 
 
 	protected override void OnInitialized()
@@ -63,7 +66,7 @@
 		TileCount = Config.DefaultTileCount;
 		SelectedThemeId = Config.DefaultTheme;
 		Themes = await themeService.GetThemesAsync(Config.LocalThemeInfo, Config.HostedThemeInfo);
-
+		ScoreCollector = new ScoreCollector();
 	}
 
 	private void PreloadImages()
@@ -78,6 +81,11 @@
 	}
 
 	private void OnSettingSave(IGameSettings settings)
+	{
+		StartNewGame(settings);
+	}
+
+	private void StartNewGame(IGameSettings settings)
 	{
 		try
 		{
@@ -94,9 +102,17 @@
 
 			throw;
 		}
+	}
 
-
-
+	private void OnPlayAgain()
+	{
+		if (gameManager.GameWon)
+		{
+			gameManager.GameSettings.NumberOfTiles = gameManager.GameSettings.NumberOfTiles + 2;
+		}
+		gameManager.ResetGame();
+		StartNewGame(gameManager.GameSettings);
+		StateHasChanged();
 	}
 
 	private void OnAbandonClick()

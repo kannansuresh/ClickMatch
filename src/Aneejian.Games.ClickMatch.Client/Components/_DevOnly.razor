@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@inject IWebAssemblyHostEnvironment Env
+
+@if (isDevelopment)
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    bool isDevelopment = false;
+
+    protected override void OnInitialized()
+    {
+        isDevelopment = Env.IsDevelopment();
+    }
+}

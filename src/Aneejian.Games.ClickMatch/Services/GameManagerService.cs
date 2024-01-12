@@ -95,5 +95,6 @@ public class GameManagerService
 
 
 	public event Action? OnChange;
+	
 	private void NotifyStateChanged() => OnChange?.Invoke();
 }
