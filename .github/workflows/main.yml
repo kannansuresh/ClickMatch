@@ -1,4 +1,7 @@
 name: Deploy to GitHub Pages
+env:
+  PUBLISH_DIR: release/wwwroot
+  CSPROJ_FILE: src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj
 
 on:
   workflow_dispatch:    
@@ -17,17 +20,22 @@ jobs:
         dotnet-version: 8.0
 
     - name: Publish .NET Core Project
-      run: dotnet publish src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj -c Release -o release --nologo
+      run: dotnet publish ${{env.CSPROJ_FILE}} -c Release -o release --nologo
 
-    # - name: Change base-tag in index.html from / to ClickMatch
-    #   run: sed -i 's/<base href="\/" \/>/<base href="\/ClickMatch\/" \/>/g' release/wwwroot/index.html
+    - name: Rewrite base href
+      uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+      with:
+        html_path: ${{ env.PUBLISH_DIR }}/index.html
+        base_href: /BlazorOnGitHubPages/
 
     - name: Add .nojekyll file
       run: touch release/wwwroot/.nojekyll
       
-    - name: Commit wwwroot to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@3.7.1
+    - name: GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v1.5.1
       with:
+        target_branch: gh-pages
+        build_dir: ${{ env.PUBLISH_DIR }}
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: release/wwwroot
