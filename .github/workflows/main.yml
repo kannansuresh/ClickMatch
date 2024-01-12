@@ -2,6 +2,7 @@ name: Deploy to GitHub Pages
 env:
   PUBLISH_DIR: release/wwwroot
   CSPROJ_FILE: src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj
+  BASE_HREF: /ClickMatch/
 
 on:
   workflow_dispatch:    
@@ -20,13 +21,13 @@ jobs:
         dotnet-version: 8.0
 
     - name: Publish .NET Core Project
-      run: dotnet publish ${{ env.CSPROJ_FILE }} -c Release -o release --nologo
+      run: dotnet publish ${{ env.CSPROJ_FILE }} -c Release
 
     - name: Rewrite base href
       uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
       with:
         html_path: ${{ env.PUBLISH_DIR }}/index.html
-        base_href: /BlazorOnGitHubPages/
+        base_href: ${{ env.BASE_HREF }}
 
     - name: Add .nojekyll file
       run: touch ${{ env.PUBLISH_DIR }}/.nojekyll
