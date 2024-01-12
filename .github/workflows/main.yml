@@ -1,0 +1,33 @@
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:    
+  push:
+    branches: [master]
+
+jobs:
+  deploy-to-github-pages:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+        dotnet-version: 8.0
+
+    - name: Publish .NET Core Project
+      run: dotnet publish src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj -c Release -o release --nologo
+
+    - name: Change base-tag in index.html from / to ClickMatch
+      run: sed -i 's/<base href="\/" \/>/<base href="\/ClickMatch\/" \/>/g' release/wwwroot/index.html
+
+    - name: Add .nojekyll file
+      run: touch release/wwwroot/.nojekyll
+      
+    - name: Commit wwwroot to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: release/wwwroot
