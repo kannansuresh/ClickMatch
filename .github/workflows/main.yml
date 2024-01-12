@@ -20,7 +20,7 @@ jobs:
         dotnet-version: 8.0
 
     - name: Publish .NET Core Project
-      run: dotnet publish ${{env.CSPROJ_FILE}} -c Release -o release --nologo
+      run: dotnet publish ${{ env.CSPROJ_FILE }} -c Release -o release --nologo
 
     - name: Rewrite base href
       uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
@@ -29,7 +29,7 @@ jobs:
         base_href: /BlazorOnGitHubPages/
 
     - name: Add .nojekyll file
-      run: touch release/wwwroot/.nojekyll
+      run: touch ${{ env.PUBLISH_DIR }}/.nojekyll
       
     - name: GitHub Pages
       if: success()
