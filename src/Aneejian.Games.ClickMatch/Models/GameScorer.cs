@@ -48,7 +48,7 @@ public class GameScorer : IGameScorer
 
 		double penaltyScale = GetPenaltyScale(totalTiles);
 
-		var totalScore = ((ScorePerFind * Multiplier) + efficiencyBonus) - (penaltyForExtraFlips * penaltyScale);
+		var totalScore = (ScorePerFind * Multiplier) - (penaltyForExtraFlips * penaltyScale);
 
 		Bonus += efficiencyBonus;
 		Score += Convert.ToInt32(totalScore);

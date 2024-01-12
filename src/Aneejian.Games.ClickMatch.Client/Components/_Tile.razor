@@ -1,6 +1,6 @@
 ﻿@if (Tile is not null)
 {
-	<div class="flip-card" @onclick="HandleTileClick" style="@TileSize">
+	<div class="flip-card position-relative" @onclick=HandleTileClick style=@TileSize>
 		<div class="flip-card-inner @flipTileClass @matchedTileClass">
 			<div class="flip-card-front">
 				<p class="fs-1">@(Tile.ShowNumber ? Tile.PositionId : "T")</p>
@@ -21,6 +21,9 @@
 					</div>
 				}
 			}
+		</div>
+		<div class="flip-counter text-center @matchedTileClass">
+			@Tile.FlipCount
 		</div>
 	</div>
 }
