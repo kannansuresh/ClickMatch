@@ -15,7 +15,7 @@ jobs:
   deploy-to-github-pages:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Rewrite base href
       uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
@@ -36,7 +36,7 @@ jobs:
       
     - name: GitHub Pages
       if: success()
-      uses: crazy-max/ghaction-github-pages@v1.5.1
+      uses: crazy-max/ghaction-github-pages@v4.0.0
       with:
         target_branch: gh-pages
         build_dir: ${{ env.PUBLISH_DIR }}
