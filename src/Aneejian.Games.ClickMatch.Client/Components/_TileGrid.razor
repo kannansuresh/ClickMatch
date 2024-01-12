@@ -30,12 +30,10 @@
 		if (Tiles != null && Tiles.Count() > 0)
 		{
 			(rows, columns) = GetGridDimensions();
-			Console.WriteLine($"Rows: {rows} Columns: {columns}");
 			tileWidth = CalculateTileWidth(1024, columns, 4);
 			tileHeight = CalculateTileWidth(768, rows, 4);
 			tileHeight = tileWidth = Math.Min(tileWidth, tileHeight);
 			int fontSize = (int)(tileWidth / 24);
-			Console.WriteLine(tileWidth);
 			maximumWidth = (columns * tileWidth) + (columns * 4) + "px";
 			tileSize = $"height: {tileHeight}px; width: {tileWidth}px; font-size:{fontSize}rem";
 		}

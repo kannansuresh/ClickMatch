@@ -16,9 +16,16 @@
 			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
 		</div>
 		<div class="d-grid">
-			<button class="btn btn-primary btn-lg" id="submitButton" type="submit">Start Game</button>
+			<button class="btn btn-primary btn-lg mb-4" id="submitButton" type="submit">Start Game</button>
 		</div>
+		@if (SelectedTheme.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
+		{
+			<div class="alert alert-info mb-4" role="alert">
+				@((MarkupString)SelectedTheme.Attribution)
+			</div>
+		}
 	</form>
+
 </div>
 
 

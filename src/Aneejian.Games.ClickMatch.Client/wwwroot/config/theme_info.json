@@ -5,7 +5,7 @@
     "theme_id": "bootstrap_icons",
     "more_info": {
       "difficulty": "easy",
-      "attribution": "<div>Icons from <a href='https://icons.bootstrap.com/' title='Bootstrap'>Bootstrap</a></div>",
+      "attribution": "<div>This theme use icons from <a href='https://icons.bootstrap.com/' title='Bootstrap'>Bootstrap</a></div>",
       "attribution_required": false
     },
     "item_count": 2051,

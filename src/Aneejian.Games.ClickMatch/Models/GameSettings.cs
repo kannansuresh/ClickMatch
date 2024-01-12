@@ -21,8 +21,6 @@ public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettin
 			uniquePositions.Add(Random.Shared.Next(1, NumberOfTiles + 1));
 		}
 
-		Console.WriteLine(string.Join(",", uniquePositions));
-
 		var itemIndex = 0;
 		var positionIndex = 0;
 
