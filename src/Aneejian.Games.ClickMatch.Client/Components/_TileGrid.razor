@@ -17,7 +17,7 @@
 	private string maximumWidth { get; set; } = "100%";
 	private double tileWidth { get; set; } = 150;
 	private double tileHeight { get; set; } = 150;
-	private string tileSize { get; set; } = "height: 150px; width: 150px";
+	private string tileSize { get; set; } = "height: 150px; width: 150px; font-size: 6rem";
 
 	private async Task HandleTileClick(TileModel tile)
 	{
@@ -34,9 +34,10 @@
 			tileWidth = CalculateTileWidth(1024, columns, 4);
 			tileHeight = CalculateTileWidth(768, rows, 4);
 			tileHeight = tileWidth = Math.Min(tileWidth, tileHeight);
+			int fontSize = (int)(tileWidth / 24);
 			Console.WriteLine(tileWidth);
 			maximumWidth = (columns * tileWidth) + (columns * 4) + "px";
-			tileSize = $"height: {tileHeight}px; width: {tileWidth}px";
+			tileSize = $"height: {tileHeight}px; width: {tileWidth}px; font-size:{fontSize}rem";
 		}
 	}
 

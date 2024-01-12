@@ -17,12 +17,12 @@
 				else
 				{
 					<div class="flip-card-back flip-card-back-icon">
-						<i class="fs-1 tile-icon @Tile.Content"></i>
+						<i class="tile-icon @Tile.Content"></i>
 					</div>
 				}
 			}
 		</div>
-		<div class="flip-counter badge badge-light @matchedTileClass">
+		<div class="flip-counter p-0 me-1 @matchedTileClass">
 			@Tile.FlipCount
 		</div>
 	</div>
@@ -31,7 +31,7 @@
 @code {
 	[Parameter, EditorRequired] public TileModel? Tile { get; set; }
 	[Parameter, EditorRequired] public EventCallback<TileModel> OnTileClick { get; set; }
-	[Parameter] public string TileSize { get; set; } = "height: 150px; width: 150px";
+	[Parameter] public string TileSize { get; set; } = "height: 150px; width: 150px; font-size: 6rem";
 	
 
 	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
