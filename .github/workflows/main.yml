@@ -19,8 +19,8 @@ jobs:
     - name: Publish .NET Core Project
       run: dotnet publish src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj -c Release -o release --nologo
 
-    - name: Change base-tag in index.html from / to ClickMatch
-      run: sed -i 's/<base href="\/" \/>/<base href="\/ClickMatch\/" \/>/g' release/wwwroot/index.html
+    # - name: Change base-tag in index.html from / to ClickMatch
+    #   run: sed -i 's/<base href="\/" \/>/<base href="\/ClickMatch\/" \/>/g' release/wwwroot/index.html
 
     - name: Add .nojekyll file
       run: touch release/wwwroot/.nojekyll
