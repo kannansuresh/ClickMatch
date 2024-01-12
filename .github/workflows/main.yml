@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
 env:
+  RELEASE_DIR: release
   PUBLISH_DIR: release/wwwroot
   CSPROJ_FILE: src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj
   BASE_HREF: /ClickMatch/
@@ -21,7 +22,7 @@ jobs:
         dotnet-version: 8.0
 
     - name: Publish .NET Core Project
-      run: dotnet publish ${{ env.CSPROJ_FILE }} -c Release
+      run: dotnet publish ${{ env.CSPROJ_FILE }} -c Release -o ${{ env.RELEASE_DIR }}
 
     - name: Rewrite base href
       uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
