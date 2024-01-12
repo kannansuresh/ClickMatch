@@ -2,8 +2,8 @@
 {
 	<div class="flip-card position-relative" @onclick=HandleTileClick style=@TileSize>
 		<div class="flip-card-inner @flipTileClass @matchedTileClass">
-			<div class="flip-card-front fs-1">
-				@(Tile.ShowNumber ? Tile.PositionId : "T")
+			<div class="flip-card-front">
+				@Tile.PositionId
 			</div>
 
 			@if (Tile.IsShown && !Tile.IsMatched)
