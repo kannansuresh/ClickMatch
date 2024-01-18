@@ -1,14 +1,65 @@
 ﻿@inject GameManagerService gameManager
+@inject IJSRuntime jsRuntime
 
-<div class="row g-1 justify-items-center mt-5" style="max-width: @maximumWidth">
-	@foreach (TileModel tile in Tiles)
-	{
-		<div class="col" style="@tileSize">
-			<_Tile Tile="tile" TileSize="@tileSize" OnTileClick="HandleTileClick" />
-		</div>
-
-	}
+<div class="justify-items-center mt-5">
+	<div class="tile-grid">
+		@foreach (TileModel tile in Tiles)
+		{
+			<div>
+				<_Tile Tile="tile"
+					   TileSize=""
+					   OnTileClick="HandleTileClick" />
+			</div>
+		}
+	</div>
 </div>
+
+<style>
+	.tile-grid {
+		display: grid;
+		grid-gap: 1px;
+	}
+
+		.tile-grid .flip-card {
+			height: @GetPercentageWidthOrHeight(@columns, "vw");
+			width: @GetPercentageWidthOrHeight(@columns, "vw");
+			max-height: 150px;
+			max-width: 150px;
+			min-width: 50px;
+			min-height: 50px;
+		}
+
+	@@media (min-width: 1400px) {
+		.tile-grid {
+			grid-template-columns: repeat(@columns, 1fr);
+		}
+	}
+
+	@@media (min-width: 1024px) and (max-width: 1399px) {
+		.tile-grid {
+			grid-template-columns: repeat(@columns, 1fr);
+		}
+	}
+
+	@@media (min-width: 768px) and (max-width: 1023px) {
+		.tile-grid {
+			grid-template-columns: repeat(@columns, 1fr);
+		}
+	}
+
+	@@media (min-width: 501px) and (max-width: 767px) {
+		.tile-grid {
+			grid-template-columns: repeat(@columns, 1fr);
+		}
+	}
+
+	@@media (max-width: 500px) {
+		.tile-grid {
+			grid-template-columns: repeat(@(Math.Min(columns, 4)), 1fr);
+		}
+	}
+
+</style>
 
 @code {
 	[Parameter] public TileModel[] Tiles { get; set; } = null!;
@@ -18,6 +69,14 @@
 	private double tileWidth { get; set; } = 150;
 	private double tileHeight { get; set; } = 150;
 	private string tileSize { get; set; } = "height: 150px; width: 150px; font-size: 6rem";
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await jsRuntime.InvokeVoidAsync("adjustFontSize", "flip-card");
+		}
+	}
 
 	private async Task HandleTileClick(TileModel tile)
 	{
@@ -50,27 +109,65 @@
 
 	private (int rows, int columns) GetGridDimensions()
 	{
-		int rows = columns = (int)Math.Sqrt(Tiles.Count());
-
-		while (rows * columns < Tiles.Count())
-		{
-			rows++;
-			columns++;
-		}
-
-		if (Tiles.Count() % rows == 0)
-		{
-			return (rows, columns);
-		}
-
-		while (rows >= columns)
-		{
-			rows--;
-			columns = Tiles.Count() / rows;
-		}
-
-		return (rows, columns);
+		return GetRowsAndColumns(Tiles.Count(), 10);
 	}
 
+	static int GetWidth(int columns, int maxWidth)
+	{
+		return (int)(100 / columns) - 5;
+		// return Math.Min((maxWidth / columns) - (columns - 1) - 10, 150);
+	}
+
+	static int GetPercentageWidthOrHeight(int number)
+	{
+		return (int)(100 / number) - 5;
+	}
+
+	static string GetPercentageWidthOrHeight(int number, string suffix)
+	{
+		return GetPercentageWidthOrHeight(number) + suffix;
+	}
+
+	static (int rows, int columns) GetRowsAndColumns(int number, int maxColumns = 10)
+	{
+		int sqrt = (int)Math.Sqrt(number);
+
+		if (sqrt * sqrt == number && sqrt <= maxColumns)
+		{
+			return (sqrt, sqrt);
+		}
+
+		int minDifference = int.MaxValue;
+		(int minRows, int minColumns) = (0, 0);
+
+		for (int cols = 4; cols <= maxColumns; cols++)
+		{
+			if (number % cols == 0)
+			{
+				int rows = number / cols;
+				int difference = Math.Abs(rows - cols);
+
+				if (difference < minDifference)
+				{
+					minDifference = difference;
+					minRows = rows;
+					minColumns = cols;
+				}
+			}
+		}
+
+		var tempRows = minRows;
+		var tempColumns = minColumns;
+
+		if (minColumns < minRows && minRows <= maxColumns)
+		{
+			tempRows = minColumns;
+			tempColumns = minRows;
+		}
+
+		return (tempRows, tempColumns);
+	}
 
 }
+
+

@@ -2,7 +2,7 @@
 
 public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettings
 {
-	public int NumberOfTiles { get; set; } = numberOfTiles % 2 == 0 ? numberOfTiles : numberOfTiles + 1;
+	public int NumberOfTiles { get; set; } = GetNearestMultipleFor4(numberOfTiles);
 	public IThemeData ThemeData { get; set; } = themeData;
 	public bool ShowTileNumbers { get; set; } = true;
 	public IEnumerable<string> Items => ThemeData.GetItems(NumberOfTiles / 2) ?? [];
@@ -39,5 +39,11 @@ public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettin
 		}
 
 		return tiles.OrderBy(x => x.PositionId);
+	}
+
+	private static int GetNearestMultipleFor4(int number)
+	{
+		int remainder = number % 4;
+		return remainder == 0 ? number : number + (4 - remainder);
 	}
 }

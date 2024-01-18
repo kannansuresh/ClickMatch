@@ -55,6 +55,8 @@
         height: 70%;
     }
 
+
+
 .flip-card-matched {
     visibility: hidden;
 }
@@ -67,3 +69,5 @@
     font-size: 0.5rem;
     display: none;
 }
+
+
