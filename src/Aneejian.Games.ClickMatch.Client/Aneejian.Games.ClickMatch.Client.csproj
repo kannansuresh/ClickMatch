@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\js\preload-image.js" />
+    <None Include="wwwroot\js\custom.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,4 @@
-﻿@inject IJSRuntime jsRuntime
-
-@if (Tile is not null)
+﻿@if (Tile is not null)
 {
 	<div class="flip-card position-relative" @onclick=HandleTileClick>
 		<div class="flip-card-inner @flipTileClass @matchedTileClass">
@@ -33,7 +31,6 @@
 @code {
 	[Parameter, EditorRequired] public TileModel? Tile { get; set; }
 	[Parameter, EditorRequired] public EventCallback<TileModel> OnTileClick { get; set; }
-	[Parameter] public string TileSize { get; set; } = "height: 150px; width: 150px; font-size: 6rem";
 
 	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
 

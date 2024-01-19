@@ -1,7 +1,14 @@
 ﻿.flip-card {
     perspective: 1000px;
-    margin: 2px;
+    margin: 1px;
     cursor: pointer;
+    height: var(--tile-size, 150px);
+    width: var(--tile-size, 150px);
+    min-width: 50px;
+    min-height: 50px;
+    max-height: 150px;
+    max-width: 150px;
+    font-size: var(--tile-font-size, 1rem);
 }
 
 .flip-card-inner {
@@ -25,11 +32,11 @@
 
 .flip-card-front {
     background-color: #3498db;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
 
 .flip-card-back {
@@ -55,8 +62,6 @@
         height: 70%;
     }
 
-
-
 .flip-card-matched {
     visibility: hidden;
 }
@@ -69,5 +74,3 @@
     font-size: 0.5rem;
     display: none;
 }
-
-
