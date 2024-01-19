@@ -4,7 +4,9 @@ namespace Aneejian.Games.ClickMatch.Services
 {
 	public interface IThemeService
 	{
-		Task<Config> GetConfigAsync(string configPath);
-		Task<IEnumerable<IThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo);
+		Config? ThemeConfig { get; }
+		IEnumerable<IThemeData>? ThemeDatas { get; }
+		bool IsInitialized { get; }
+		Task InitializeAsync();
 	}
 }

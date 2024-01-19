@@ -1,4 +1,7 @@
-﻿<div class="row settings-form">
+﻿@inject IThemeService themeService
+
+
+<div class="row settings-form">
 	<h4 class="mb-4">Enter your game preference</h4>
 	<form id="settings-form" class="mb-4" @onsubmit="HandleSubmitClick">
 		<div class="form-floating mb-3">
@@ -40,7 +43,9 @@
 
 	protected override void OnInitialized()
 	{
-		TileCount = TileCount == 0 ? 16 : TileCount;
+		Themes = Themes ?? themeService.ThemeDatas;
+		SelectedThemeId = SelectedThemeId ?? themeService.ThemeConfig.DefaultTheme;
+		TileCount = TileCount == 0 ? themeService.ThemeConfig.DefaultTileCount : TileCount;
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
 	}
 

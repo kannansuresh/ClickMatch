@@ -6,7 +6,7 @@
 @if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon)
 {
 	<_Branding/>
-	<_SettingsForm Themes=@Themes SelectedThemeId=@SelectedThemeId TileCount=@TileCount OnSubmitClick=@OnSettingSave />
+	<_SettingsForm SelectedThemeId=@SelectedThemeId TileCount=@TileCount OnSubmitClick=@OnSettingSave />
 }
 @if (Tiles is not null && gameManager.GameInProgress)
 {
@@ -47,6 +47,13 @@
 	protected override void OnInitialized()
 	{
 		gameManager.OnChange += OnChangeHandler;
+
+		Tiles = [];
+		Config = themeService.ThemeConfig;
+		TileCount = Config!.DefaultTileCount;
+		SelectedThemeId = Config.DefaultTheme;
+		Themes = themeService.ThemeDatas;
+		ScoreCollector = new ScoreCollector();
 	}
 
 	public void Dispose()
@@ -57,17 +64,6 @@
 	private async void OnChangeHandler()
 	{
 		await InvokeAsync(StateHasChanged);
-	}
-
-	protected override async Task OnInitializedAsync()
-	{
-
-		Tiles = [];
-		Config = await themeService.GetConfigAsync("config/config.json");
-		TileCount = Config.DefaultTileCount;
-		SelectedThemeId = Config.DefaultTheme;
-		Themes = await themeService.GetThemesAsync(Config.LocalThemeInfo, Config.HostedThemeInfo);
-		ScoreCollector = new ScoreCollector();
 	}
 
 	private void PreloadImages()

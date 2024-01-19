@@ -3,17 +3,34 @@ using System.Text.Json;
 
 namespace Aneejian.Games.ClickMatch.Services;
 
-public class ThemeService(HttpClient httpClient) : IThemeService
+public class ThemeService(HttpClient httpClient, string configPath) : IThemeService
 {
 	private readonly HttpClient httpClient = httpClient;
+	private readonly string configPath = configPath;
 
-	public async Task<Config> GetConfigAsync(string configPath)
+
+	public Config? ThemeConfig { get; set; }
+	public IEnumerable<IThemeData>? ThemeDatas { get; set; }
+
+	public bool IsInitialized => ThemeConfig != null && ThemeDatas != null;
+
+
+	public async Task InitializeAsync()
+	{
+		if (ThemeDatas != null) return;
+		var themeConfig = await GetConfigAsync(configPath);
+		var themeDatas = await GetThemesAsync(themeConfig.LocalThemeInfo, themeConfig.HostedThemeInfo);
+		ThemeConfig = themeConfig;
+		ThemeDatas = themeDatas;
+	}
+
+	private async Task<Config> GetConfigAsync(string configPath)
 	{
 		var config = await GetAsync<Config>(configPath, true);
 		return config ?? throw new Exception("Error getting config.");
 	}
 
-	public async Task<IEnumerable<IThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo)
+	private async Task<IEnumerable<IThemeData>> GetThemesAsync(string localThemeInfo, string hostedThemeInfo)
 	{
 		IEnumerable<IThemeData>? localThemes;
 		IEnumerable<IThemeData>? hostedThemes;
