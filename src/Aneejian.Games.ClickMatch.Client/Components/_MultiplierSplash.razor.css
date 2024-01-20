@@ -1,0 +1,51 @@
+﻿.multiplier-splash {
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.splash-background {
+    /* Adjust dimensions as needed */
+    width: 200px;
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    border-radius: 5px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    animation: fade-in-out 1s ease-in-out forwards;
+}
+
+@keyframes fade-in-out {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.multiplier-text {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #fff; /* Adjust color as needed */
+    /* Animation for text bounce (optional) */
+    animation: bounce-up 0.5s ease-in-out;
+}
+
+@keyframes bounce-up {
+    0% {
+        transform: translateY(10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
