@@ -7,15 +7,24 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(sp.GetRequiredService<HttpClient>(), "config/config.json"));
+builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, "config/config.json"));
 
 builder.Services.AddSingleton<GameManagerService>();
 
 var host = builder.Build();
 
-var themeService = host.Services.GetRequiredService<IThemeService>();
-await themeService.InitializeAsync();
+try
+{
+	var themeService = host.Services.GetRequiredService<IThemeService>();
+	await themeService.InitializeAsync();
+}
+catch (Exception ex)
+{
+	Console.WriteLine(ex.Message);
+}
+
+
 
 await host.RunAsync();

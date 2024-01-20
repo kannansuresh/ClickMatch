@@ -13,7 +13,7 @@
 
 <style>
 	.tile-grid {
-		display: grid;
+		display: @tileGridDisplay;
 		grid-gap: 1px;
 	}
 </style>
@@ -22,6 +22,7 @@
 	[Parameter] public TileModel[] Tiles { get; set; } = null!;
 	private int rows { get; set; }
 	private int columns { get; set; }
+	private string tileGridDisplay {get; set; } = "none";
 
 	protected override void OnParametersSet()
 	{
@@ -36,6 +37,8 @@
 		if (firstRender)
 		{
 			await jsRuntime.InvokeVoidAsync("styleGridAndTiles", "game-grid", "flip-card", columns);
+			tileGridDisplay = "grid";
+			StateHasChanged();
 		}
 	}
 
