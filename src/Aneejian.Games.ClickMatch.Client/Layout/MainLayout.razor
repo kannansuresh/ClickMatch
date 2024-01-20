@@ -2,6 +2,7 @@
 
 <ErrorBoundary>
     <ChildContent>
+        <_UpdateAvailable />
         @Body
     </ChildContent>
     <ErrorContent>
@@ -17,7 +18,7 @@
                 </figure>
                 <h5 class="mb-4">Something went wrong.</h5>
                 <h6 class="mb-4">Please try again later.</h6>
-                <a class="btn btn-primary" herf="">Go Home</a>
+                <button class="btn btn-primary" onclick="window.location.reload()">Reload</button>
             </div>
         </div>
     </ErrorContent>
