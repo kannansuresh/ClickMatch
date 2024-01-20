@@ -19,7 +19,7 @@
 			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
 		</div>
 		<div class="d-grid">
-			<button class="btn btn-primary btn-lg mb-4" id="submitButton" type="submit">Start Game</button>
+			<button class="btn btn-primary mb-4" id="submitButton" type="submit">Start Game</button>
 		</div>
 		@if (SelectedTheme.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
 		{
@@ -44,8 +44,8 @@
 	protected override void OnInitialized()
 	{
 		Themes = Themes ?? themeService.ThemeDatas;
-		SelectedThemeId = SelectedThemeId ?? themeService.ThemeConfig.DefaultTheme;
-		TileCount = TileCount == 0 ? themeService.ThemeConfig.DefaultTileCount : TileCount;
+		SelectedThemeId = SelectedThemeId ?? themeService!.ThemeConfig!.DefaultTheme;
+		TileCount = TileCount == 0 ? themeService!.ThemeConfig!.DefaultTileCount : TileCount;
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
 	}
 
