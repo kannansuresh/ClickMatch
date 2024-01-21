@@ -5,7 +5,7 @@
 	<div id="game-grid" class="tile-grid">
 		@foreach (TileModel tile in Tiles)
 		{			
-				<_Tile Tile="tile"
+				<_Tile Tile="tile" ShowTileNumber=@gameManager.GameSettings.ShowTileNumbers
 					   OnTileClick="HandleTileClick" />
 		}
 	</div>

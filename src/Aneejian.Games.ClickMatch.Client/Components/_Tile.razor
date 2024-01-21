@@ -3,7 +3,7 @@
 	<div class="flip-card position-relative" @onclick=HandleTileClick>
 		<div class="flip-card-inner user-select-none @flipTileClass @matchedTileClass">
 			<div class="flip-card-front">
-				@Tile.PositionId
+				@(ShowTileNumber ? Tile.PositionId.ToString() : "")
 			</div>
 
 			@if (Tile.IsShown && !Tile.IsMatched)
@@ -30,7 +30,9 @@
 
 @code {
 	[Parameter, EditorRequired] public TileModel? Tile { get; set; }
+	[Parameter] public bool ShowTileNumber { get; set; } = true;
 	[Parameter, EditorRequired] public EventCallback<TileModel> OnTileClick { get; set; }
+
 
 	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
 

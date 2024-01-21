@@ -18,6 +18,12 @@
 			<label for="enterNumberOfTiles">Enter number of tiles</label>
 			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
 		</div>
+		<div class="form-check mb-3">
+			<input class="form-check-input" type="checkbox" @bind=ShowTileNumber id="showTileNumber">
+			<label class="form-check-label" for="showTileNumber">
+				Show tile number in the grid
+			</label>
+		</div>
 		<div class="d-grid">
 			<button class="btn btn-primary mb-4" id="submitButton" type="submit">Start Game</button>
 		</div>
@@ -38,6 +44,7 @@
 	[Parameter] public string? SelectedThemeId { get; set; }
 	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
 	[Parameter] public int TileCount { get; set; }
+	[Parameter] public bool ShowTileNumber { get; set; } = true;
 
 	private IThemeData? SelectedTheme { get; set; }
 
@@ -52,7 +59,7 @@
 
 	private async Task HandleSubmitClick()
 	{
-		var gameSettings = new GameSettings(TileCount, SelectedTheme!);
+		var gameSettings = new GameSettings(TileCount, SelectedTheme!, ShowTileNumber);
 		await OnSubmitClick.InvokeAsync(gameSettings);
 	}
 

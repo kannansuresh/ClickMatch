@@ -3,37 +3,59 @@
 @inject GameManagerService gameManager
 @implements IDisposable
 
-@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
-{
-	<_Branding/>
-	<_SettingsForm SelectedThemeId=@SelectedThemeId TileCount=@TileCount OnSubmitClick=@OnSettingSave />
-}
-@if (Tiles is not null && gameManager.GameInProgress)
-{
-	<_TileGrid Tiles="Tiles" />
+<div class="d-flex flex-column justify-content-center align-items-center">
+	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
+	{
+		<div class="col">
+			<_Branding />
+		</div>
+		<div class="col">
+			<_SettingsForm SelectedThemeId=@SelectedThemeId TileCount=@TileCount ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
+		</div>
+	}
+	@if (Tiles is not null && gameManager is not null && gameManager.GameInProgress)
+	{
+		<div class="row mb-4">
+			<_TileGrid Tiles="Tiles" />
+		</div>
 
-	<_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />
 
-	<div class="m-5">@gameManager.GameScorer.ToString()</div>
+		<_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />
 
 
-	<div class="d-flex">
-		<button class="btn btn-danger btn-sm mt-2" @onclick=OnAbandonClick>Abandon Game</button>
-		<_DevOnly>
-			<button class="btn btn-success btn-sm ms-5 mt-2" @onclick=OnFilipAllClick>Flip all Tiles</button>
-		</_DevOnly>
-	</div>
-}
+		<div class="row mb-4 user-select-none">
+			<div>@gameManager.GameScorer.ToString()</div>
+		</div>
 
-@if (gameManager.GameWon || gameManager.GameLost)
-{
-	<div class="d-flex flex-column justify-content-center align-items-center text-center">
-		<h1 class="mb-4">@(gameManager.GameWon ? $"You cleared Level {gameManager.GameSettings.GameLevel}!" : $"You failed to clear Level {gameManager.GameSettings.GameLevel}")</h1>
-		<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
-		<h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
-		<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>@(gameManager.GameWon ? "Play Next Level": $"Replay Level {gameManager.GameSettings.GameLevel}")</button>
-	</div>
-}
+		<div class="d-flex row row-cols-auto g-2 mb-2 justify-content-center align-items-center">
+			<div class="form-check col">
+				<input class="btn-check" type="checkbox" @bind=gameManager.GameSettings!.ShowTileNumbers id="showTileNumber">
+				<label class="btn btn-primary btn-sm" for="showTileNumber">
+					@(gameManager.GameSettings.ShowTileNumbers ? "Hide tile number" : "Show tile number")
+				</label>
+			</div>
+			<div class="col">
+				<button class="btn btn-danger btn-sm" @onclick=OnAbandonClick>Abandon Game</button>
+			</div>
+			<_DevOnly>
+				<div class="col">
+					<button class="btn btn-success btn-sm" @onclick=OnFilipAllClick>Flip all Tiles</button>
+				</div>
+			</_DevOnly>
+		</div>
+
+	}
+
+	@if (gameManager!.GameWon || gameManager.GameLost)
+	{
+		<div class="d-flex flex-column justify-content-center align-items-center text-center">
+			<h1 class="mb-4">@(gameManager.GameWon ? $"You cleared Level {gameManager.GameSettings!.GameLevel}!" : $"You failed to clear Level {gameManager.GameSettings!.GameLevel}")</h1>
+			<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
+			<h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
+			<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>@(gameManager.GameWon ? "Play Next Level" : $"Replay Level {gameManager.GameSettings.GameLevel}")</button>
+		</div>
+	}
+</div>
 
 @code {
 

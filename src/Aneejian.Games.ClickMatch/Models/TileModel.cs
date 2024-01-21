@@ -1,11 +1,10 @@
 ﻿namespace Aneejian.Games.ClickMatch.Models;
 
-public class TileModel(Guid matchingId, int? positionId, string? content, bool showNumber)
+public class TileModel(Guid matchingId, int? positionId, string? content)
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
 	public Guid MatchingId { get; set; } = matchingId;
 	public int? PositionId { get; set; } = positionId;
-	public bool ShowNumber { get; set; } = showNumber;
 	public string? Content { get; set; } = content;
 	public bool IsShown { get; set; } = false;
 	public int FlipCount { get; set; } = 0;

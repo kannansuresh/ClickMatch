@@ -1,10 +1,10 @@
 ﻿namespace Aneejian.Games.ClickMatch.Models;
 
-public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettings
+public class GameSettings(int numberOfTiles, IThemeData themeData, bool showTileNumber = true) : IGameSettings
 {
 	public int NumberOfTiles { get; private set; } = GetNearestMultipleFor4(numberOfTiles);
 	public IThemeData ThemeData { get; set; } = themeData;
-	public bool ShowTileNumbers { get; set; } = true;
+	public bool ShowTileNumbers { get; set; } = showTileNumber;
 	public IEnumerable<string> Items => ThemeData.GetItems(NumberOfTiles / 2) ?? [];
 
 	public int GameLevel => NumberOfTiles / 4;
@@ -40,8 +40,8 @@ public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettin
 			var content = items[itemIndex];
 			var tile1PositionId = uniquePositions.ElementAt(positionIndex);
 			var tile2PositionId = uniquePositions.ElementAt(positionIndex + 1);
-			var tile1 = new TileModel(tilePairId, tile1PositionId, content, ShowTileNumbers);
-			var tile2 = new TileModel(tilePairId, tile2PositionId, content, ShowTileNumbers);
+			var tile1 = new TileModel(tilePairId, tile1PositionId, content);
+			var tile2 = new TileModel(tilePairId, tile2PositionId, content);
 			tiles.Add(tile1);
 			tiles.Add(tile2);
 			itemIndex++;
