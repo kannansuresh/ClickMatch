@@ -2,10 +2,18 @@
 
 public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettings
 {
-	public int NumberOfTiles { get; set; } = GetNearestMultipleFor4(numberOfTiles);
+	public int NumberOfTiles { get; private set; } = GetNearestMultipleFor4(numberOfTiles);
 	public IThemeData ThemeData { get; set; } = themeData;
 	public bool ShowTileNumbers { get; set; } = true;
 	public IEnumerable<string> Items => ThemeData.GetItems(NumberOfTiles / 2) ?? [];
+
+	public void SetupNextLevel(int newTileCount = 0)
+	{
+		if (newTileCount > 0)
+			NumberOfTiles = GetNearestMultipleFor4(newTileCount);
+		else
+			NumberOfTiles += 4;
+	}
 
 	public IEnumerable<TileModel> GenerateTiles()
 	{
