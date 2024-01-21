@@ -14,7 +14,7 @@
 
 	<_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />
 
-	<p class="mt-5">@gameManager.GameScorer.ToString()</p>
+	<div class="m-5">@gameManager.GameScorer.ToString()</div>
 
 
 	<div class="d-flex">
@@ -27,11 +27,11 @@
 
 @if (gameManager.GameWon)
 {
-	<div class="d-flex flex-column justify-content-center align-items-center">
+	<div class="d-flex flex-column justify-content-center align-items-center text-center">
 		<h1 class="mb-4">@(gameManager.GameScorer.TotalScore > 0 ? "You Won!" : "You Lost!")</h1>
 		<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
 		<h3 class="mb-4">Moves: @gameManager.Moves Misses: @gameManager.Misses</h3>
-		<h4 class="mb-4">@gameManager.GameScorer.ToString()</h4>
+		<h4 class="mb-4 text-wrap">@gameManager.GameScorer.ToString()</h4>
 		<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>Play Next Level</button>
 	</div>
 }
@@ -106,7 +106,7 @@
 	{
 		if (gameManager.GameWon)
 		{
-			gameManager.GameSettings.NumberOfTiles = gameManager.GameSettings.NumberOfTiles + 2;
+			gameManager.GameSettings.SetupNextLevel();
 		}
 		gameManager.ResetGame();
 		StartNewGame(gameManager.GameSettings);
