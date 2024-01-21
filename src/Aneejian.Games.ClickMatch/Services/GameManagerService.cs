@@ -13,6 +13,7 @@ public class GameManagerService
 	public int Misses { get; set; }
 	public bool GameInProgress { get; set; }
 	public bool GameWon { get; set; }
+	public bool GameLost { get; set; }
 
 	public int Multiplier { get; set; } = 1;
 
@@ -36,6 +37,7 @@ public class GameManagerService
 		Misses = 0;
 		Multiplier = 1;
 		GameWon = false;
+		GameLost = false;
 		GameInProgress = false;
 		Tiles = [];
 		GameScorer.Reset();
@@ -87,7 +89,8 @@ public class GameManagerService
 		if (MatchedTiles!.Count == Tiles.Length)
 		{
 			GameInProgress = false;
-			GameWon = true;
+			GameWon = GameScorer.Score > 0;
+			GameLost = !GameWon;
 		}
 		GameScorer.Multiplier = Multiplier;
 		NotifyStateChanged();

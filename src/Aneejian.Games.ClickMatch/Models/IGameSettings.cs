@@ -6,6 +6,7 @@ namespace Aneejian.Games.ClickMatch.Models
 		IEnumerable<string> Items { get; }
 		int NumberOfTiles { get; }
 		bool ShowTileNumbers { get; set; }
+		int GameLevel { get; }
 		IThemeData ThemeData { get; set; }
 
 		void SetupNextLevel(int newTileCount = 0);

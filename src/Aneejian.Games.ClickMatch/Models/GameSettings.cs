@@ -7,6 +7,8 @@ public class GameSettings(int numberOfTiles, IThemeData themeData) : IGameSettin
 	public bool ShowTileNumbers { get; set; } = true;
 	public IEnumerable<string> Items => ThemeData.GetItems(NumberOfTiles / 2) ?? [];
 
+	public int GameLevel => NumberOfTiles / 4;
+
 	public void SetupNextLevel(int newTileCount = 0)
 	{
 		if (newTileCount > 0)

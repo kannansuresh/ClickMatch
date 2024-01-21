@@ -3,7 +3,7 @@
 @inject GameManagerService gameManager
 @implements IDisposable
 
-@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon)
+@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
 {
 	<_Branding/>
 	<_SettingsForm SelectedThemeId=@SelectedThemeId TileCount=@TileCount OnSubmitClick=@OnSettingSave />
@@ -25,14 +25,13 @@
 	</div>
 }
 
-@if (gameManager.GameWon)
+@if (gameManager.GameWon || gameManager.GameLost)
 {
 	<div class="d-flex flex-column justify-content-center align-items-center text-center">
-		<h1 class="mb-4">@(gameManager.GameScorer.TotalScore > 0 ? "You Won!" : "You Lost!")</h1>
+		<h1 class="mb-4">@(gameManager.GameWon ? $"You cleared Level {gameManager.GameSettings.GameLevel}!" : $"You failed to clear Level {gameManager.GameSettings.GameLevel}")</h1>
 		<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
-		<h3 class="mb-4">Moves: @gameManager.Moves Misses: @gameManager.Misses</h3>
-		<h4 class="mb-4 text-wrap">@gameManager.GameScorer.ToString()</h4>
-		<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>Play Next Level</button>
+		<h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
+		<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>@(gameManager.GameWon ? "Play Next Level": $"Replay Level {gameManager.GameSettings.GameLevel}")</button>
 	</div>
 }
 
