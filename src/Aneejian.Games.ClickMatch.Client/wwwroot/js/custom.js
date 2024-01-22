@@ -1,4 +1,8 @@
-
+var path = window.location.pathname.split('/');
+var baseTag = document.getElementsByTagName('base');
+if (path.length > 1) {
+    baseTag[0].setAttribute('href', '/' + path[1] + '/');
+}
 //preload images for better user experience
 function preloadImage(imageUrl) {
     const img = new Image();
