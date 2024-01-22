@@ -4,7 +4,7 @@ env:
   PUBLISH_DIR: release/wwwroot
   CSPROJ_FILE: src/Aneejian.Games.ClickMatch.Client/Aneejian.Games.ClickMatch.Client.csproj
   INDEX_HTML: src/Aneejian.Games.ClickMatch.Client/wwwroot/index.html
-  BASE_HREF: /clickmatch/
+  BASE_HREF: /ClickMatch/
 
 on:
   workflow_dispatch:    
