@@ -36,23 +36,15 @@ public class GameScorer : IGameScorer
 		Reset();
 	}
 
-	public void CalculateScore(int numberOfFlips, int totalTiles)
+	public void CalculateScore(IEnumerable<TileModel> flippedTiles, int totalTiles)
 	{
-		int efficiencyBonus = 0;
-		int penaltyForExtraFlips = Math.Max(0, numberOfFlips - 2) * PenaltyForExtraFlips;
-
-		if (numberOfFlips == 2)
-		{
-			efficiencyBonus = PerfectFindBonus;
-		}
-
+		int penaltyForExtraFlips = Math.Max(0, flippedTiles.Sum(t => t.FlipCount) - 2) * PenaltyForExtraFlips;
 		double penaltyScale = GetPenaltyScale(totalTiles);
-
-		var totalScore = (ScorePerFind * Multiplier) - (penaltyForExtraFlips * penaltyScale);
-
-		Bonus += efficiencyBonus;
-		Score += Convert.ToInt32(totalScore);
+		var scoreForFind = (ScorePerFind * Multiplier) - (penaltyForExtraFlips * penaltyScale);
+		Bonus += flippedTiles.Any(t => t.FlipCount == 1) ? PerfectFindBonus : 0;
+		Score += Convert.ToInt32(scoreForFind);
 	}
+
 
 	public override string ToString()
 	{

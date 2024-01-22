@@ -34,10 +34,10 @@
 	}
 
 	// Call this method when a multiplier is earned
-	private async Task TriggerSplash(int multiplier)
+	private async Task TriggerSplash(int multiplier, string suffix = "x!")
 	{
 		Console.WriteLine("I was here to splash.");
-		await ShowSplash($"{multiplier}x!");
+		await ShowSplash($"{multiplier}{suffix}");
 	}
 
 }

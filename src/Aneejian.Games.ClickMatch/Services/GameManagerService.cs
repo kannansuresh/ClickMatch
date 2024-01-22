@@ -46,16 +46,11 @@ public class GameManagerService
 
 	public async Task FlipTile(TileModel tile)
 	{
-		if (FlippedTiles!.Count < 2)
-		{
-			tile.IsShown = true;
-			tile.FlipCount += 1;
-			FlippedTiles.Add(tile);
-		}
-		else
-		{
-			return;
-		}
+		if (FlippedTiles!.Count >= 2) return;
+
+		tile.IsShown = true;
+		tile.FlipCount += 1;
+		FlippedTiles.Add(tile);
 
 		if (FlippedTiles!.Count == 2)
 		{
@@ -65,22 +60,15 @@ public class GameManagerService
 			{
 				await Task.Delay(500);
 				MatchedTiles!.AddRange(FlippedTiles);
-				GameScorer.CalculateScore(FlippedTiles[0].FlipCount + FlippedTiles[1].FlipCount, Tiles.Length);
-
-				foreach (TileModel flippedTile in FlippedTiles)
-				{
-					flippedTile.IsMatched = true;
-				}
+				GameScorer.CalculateScore(FlippedTiles, Tiles.Length);
+				FlippedTiles.ConvertAll(t => t.IsMatched = true);
 				Multiplier += Misses < Tiles.Length ? 1 : 0;
 			}
 			else
 			{
 				Misses += 1;
 				await Task.Delay(1000);
-				foreach (TileModel flippedTile in FlippedTiles)
-				{
-					flippedTile.IsShown = false;
-				}
+				FlippedTiles.ConvertAll(t => t.IsShown = false);
 				Multiplier = 1;
 			}
 			FlippedTiles.Clear();
@@ -98,6 +86,6 @@ public class GameManagerService
 
 
 	public event Action? OnChange;
-	
+
 	private void NotifyStateChanged() => OnChange?.Invoke();
 }

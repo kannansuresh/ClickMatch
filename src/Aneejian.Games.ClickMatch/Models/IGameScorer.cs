@@ -2,12 +2,11 @@
 {
 	public interface IGameScorer
 	{
-		int Bonus { get; set; }
-		int Score { get; set; }
+		int Bonus { get; }
+		int Score { get; }
 		int TotalScore { get; }
 		int Multiplier { get; set; }
-
-		void CalculateScore(int numberOfFlips, int totalTiles);
+		void CalculateScore(IEnumerable<TileModel> flippedTiles, int totalTiles);
 		void ModifyScore(int score);
 		void Reset();
 	}
