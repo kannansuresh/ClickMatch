@@ -30,7 +30,7 @@
 		<div class="d-flex row row-cols-auto g-2 mb-2 justify-content-center align-items-center">
 			<div class="col">
 				<input class="btn-check" type="checkbox" @bind=gameManager.GameSettings!.ShowTileNumbers id="showTileNumber">
-				<label class="btn btn-primary btn-sm" for="showTileNumber">
+				<label class="btn btn-primary btn-sm" style="min-width: 125px" for="showTileNumber">
 					@(gameManager.GameSettings.ShowTileNumbers ? "Hide tile number" : "Show tile number")
 				</label>
 			</div>
