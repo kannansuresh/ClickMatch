@@ -1,20 +1,25 @@
 ﻿.multiplier-splash {
-    position: absolute;
+    position: fixed;
     align-items: center;
     justify-content: center;
     display: flex;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0 auto;
 }
 
 .splash-background {
-    /* Adjust dimensions as needed */
     width: 200px;
     height: 100px;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    background-color: rgba(0, 0, 0, 0.5); 
     border-radius: 5px;
     display: flex;
     align-content: center;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
     animation: fade-in-out 1s ease-in-out forwards;
 }
 
@@ -35,8 +40,7 @@
 .multiplier-text {
     font-size: 3rem;
     font-weight: bold;
-    color: #fff; /* Adjust color as needed */
-    /* Animation for text bounce (optional) */
+    color: #fff; 
     animation: bounce-up 0.5s ease-in-out;
 }
 
