@@ -10,7 +10,7 @@
 @code {
 
 	[Parameter] public int Multiplier { get; set; } = 1;
-	private string MultiplierText { get; set; } = "1x!"; // Example value
+	private string MultiplierText { get; set; } = "1x!";
 	private string elementStyle { get; set; } = "display: none;";
 
 
@@ -29,7 +29,7 @@
 	{
 		MultiplierText = multiplierText;
 		elementStyle = "display: flex;";
-		await Task.Delay(1500); // Adjust duration as needed
+		await Task.Delay(1500);
 		elementStyle = "display: none;";
 	}
 

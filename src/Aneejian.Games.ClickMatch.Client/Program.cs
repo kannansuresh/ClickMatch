@@ -11,6 +11,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, "config/config.json"));
 
+builder.Services.AddScoped<IndexedDbInterop>();
+
 builder.Services.AddSingleton<GameManagerService>();
 
 var host = builder.Build();

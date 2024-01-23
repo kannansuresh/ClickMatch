@@ -53,6 +53,10 @@
 			<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
 			<h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
 			<button class="btn btn-primary w-100.ss" @onclick=OnPlayAgain>@(gameManager.GameWon ? "Play Next Level" : $"Replay Level {gameManager.GameSettings.GameLevel}")</button>
+			@if (gameManager.GameWon)
+			{
+				<_Confetti />
+			}
 		</div>
 	}
 </div>

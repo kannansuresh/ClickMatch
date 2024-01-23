@@ -87,3 +87,8 @@ h1:focus {
     outline: none;
 }
 
+.validation-message {
+    color: var(--bs-form-invalid-color);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}

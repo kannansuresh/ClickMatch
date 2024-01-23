@@ -1,0 +1,115 @@
+﻿@inject IndexedDbInterop iDb
+
+<div class="container px-5 my-5">
+	<h3 class="mb-4 display-4">Add New User Profile</h3>
+
+	@if (AddedUser is not null)
+	{
+		<div class="card" style="width: fit-content;">
+			<div class="card-header">
+				User Profile created sucessfully
+			</div>
+			<div class="card-body">
+				<h1 class="card-title display-6 mb-4">Welcome, @AddedUser.Name</h1>
+				<p class="card-text">User ID: @AddedUser.Id</p>
+				<p class="card-text">User Name: @AddedUser.UserName</p>
+				<p class="card-text mb-4">Display Name: @AddedUser.Name</p>
+				<a href="#" class="btn btn-primary btn-sm">Go somewhere</a>
+			</div>
+		</div>
+	}
+	else
+	{
+		<EditForm Model=UserDataModel id="contactForm" OnValidSubmit="HandleSubmit">
+			<DataAnnotationsValidator />
+			<div class="form-floating mb-3">
+				<input class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind=UserDataModel!.UserName autocomplete="off" />
+				<label for="userName">User Name</label>
+				<ValidationMessage For="() => UserDataModel!.UserName" />
+				@if (UserNameAlreadyExist)
+				{
+					<div class="validation-message">User name not available.</div>
+				}
+			</div>
+			<div class="form-floating mb-3">
+				<input class="form-control" id="displayName" type="text" placeholder="Display Name" @bind=UserDataModel!.Name autocomplete="off" />
+				<label for="displayName">Display Name</label>
+				<ValidationMessage For="() => UserDataModel!.Name" />
+			</div>
+
+			<div class="form-floating mb-3">
+				<input class="form-control" id="password" type="password" placeholder="Password" @bind=UserDataModel!.Password @bind:event="oninput" />
+				<label for="password">Password</label>
+				<ValidationMessage For="() => UserDataModel!.Password" />
+			</div>
+			<div class="form-floating mb-3">
+				<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind=ConfirmPassword @bind:event="oninput" />
+				<label for="confirmPassword">Confirm Password</label>
+				@if (ConfirmPassword != UserDataModel!.Password)
+				{
+					<div class="validation-message">Passwords do not match.</div>
+				}
+			</div>
+
+			<div class="d-grid">
+				<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
+			</div>
+		</EditForm>
+
+	}
+
+</div>
+
+@code {
+	private UserDto? UserDataModel { get; set; }
+
+	private string ConfirmPassword { get; set; } = string.Empty;
+
+	private bool UserNameAlreadyExist = false;
+
+	private UserDto? AddedUser { get; set; }
+
+
+
+	protected override void OnInitialized()
+	{
+		UserDataModel = new UserDto();
+	}
+
+	private async Task CheckUserNameAvailability(ChangeEventArgs e)
+	{
+		var userName = e.Value?.ToString()?.Trim() ?? "";
+		userName = string.Join("", userName.ToCharArray().Where(c => char.IsLetterOrDigit(c) || c == '_'));
+		if (string.IsNullOrEmpty(userName)) return;
+		try
+		{
+			var userExist = await iDb.UserExists(userName);
+			UserNameAlreadyExist = userExist;
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+		}
+
+		e.Value = userName;
+		UserDataModel!.UserName = userName;
+	}
+
+	private async Task HandleSubmit(EditContext editContext)
+	{
+		if (ConfirmPassword != UserDataModel!.Password || UserNameAlreadyExist) return;
+		if (editContext.Validate() && UserDataModel is not null)
+		{
+			var userId = await iDb.AddNewUser(UserDataModel);
+
+			AddedUser = await iDb.GetUser(userId);
+
+			UserDataModel = new UserDto();
+			ConfirmPassword = string.Empty;
+		}
+		else
+		{
+			Console.WriteLine("Form is invalid.");
+		}
+	}
+}
