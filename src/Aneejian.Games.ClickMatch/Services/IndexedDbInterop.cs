@@ -5,19 +5,34 @@ using DbEnum = Enums.DbMethods;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 using Aneejian.Games.ClickMatch.Helpers;
+using System.Reflection;
+using System;
+using System.Resources;
 
-public class IndexedDbInterop
+public class IndexedDbInterop(IJSRuntime jsRuntime)
 {
-	private readonly IJSRuntime _jsRuntime;
+	private readonly IJSRuntime _jsRuntime = jsRuntime;
 
-	public IndexedDbInterop(IJSRuntime jsRuntime)
-	{
-		_jsRuntime = jsRuntime;
-	}
+	IJSObjectReference? _module = null;
 
 	private async Task<T> InvokeAsync<T>(DbEnum method, params object[] args)
 	{
-		return await _jsRuntime.InvokeAsync<T>(method.GetMethod(), args);
+
+		if (_module is null)
+		{
+			var jsFile = Assembly.GetExecutingAssembly().GetManifestResourceStream("Aneejian.Games.ClickMatch.Services.IndexedDbInterop.cs.js");
+			var jsFileContent = await GetFileContentAsync(jsFile);
+			_module ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/IndexedDb.js");
+		}		
+		return await _module.InvokeAsync<T>(method.GetMethod(), args);
+	}
+
+	private static async Task<string> GetFileContentAsync(Stream? file)
+	{
+		if (file is null)
+			return string.Empty;
+		using StreamReader reader = new(file);
+		return await reader.ReadToEndAsync();
 	}
 
 	public async Task<int> AddNewUser(UserDto user) => await InvokeAsync<int>(DbEnum.addNewUser, user);
