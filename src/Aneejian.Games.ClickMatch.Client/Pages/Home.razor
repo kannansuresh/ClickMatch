@@ -8,15 +8,12 @@
 <div class="container">
 	<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
 		<_Game />
-		<Component1 />
-		<button class="btn btn-primary" @onclick=OnClick>Click Me</button>
+		<div>
+			<a class="link-info text-decoration-none" href="/adduser">Add Profile</a>
+		</div>
 	</div>
 </div>
 
 @code {
-	private async Task OnClick()
-	{
-		var a = exampleJsInterop.Prompt("Enter your name");
-		await Task.Delay(1000);
-	}
+
 }
