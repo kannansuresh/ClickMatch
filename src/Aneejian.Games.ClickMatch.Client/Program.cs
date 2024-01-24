@@ -1,3 +1,4 @@
+using Aneejian.Games.ClickMatch;
 using Aneejian.Games.ClickMatch.Client;
 using Aneejian.Games.ClickMatch.Client.Services;
 using Aneejian.Games.ClickMatch.Services;
@@ -13,6 +14,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, "config/config.json"));
 
 builder.Services.AddScoped<IndexedDbService>();
+
+builder.Services.AddScoped<ExampleJsInterop>();
 
 builder.Services.AddSingleton<GameManagerService>();
 

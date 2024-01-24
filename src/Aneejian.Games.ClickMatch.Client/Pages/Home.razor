@@ -1,14 +1,22 @@
 ﻿@page "/"
 @inject IThemeService themeService
+@inject ExampleJsInterop exampleJsInterop
+@inject IJSRuntime jsRuntime
 
 <PageTitle>Click and Match</PageTitle>
 
 <div class="container">
 	<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
 		<_Game />
+		<Component1 />
+		<button class="btn btn-primary" @onclick=OnClick>Click Me</button>
 	</div>
 </div>
 
 @code {
-
+	private async Task OnClick()
+	{
+		var a = exampleJsInterop.Prompt("Enter your name");
+		await Task.Delay(1000);
+	}
 }
