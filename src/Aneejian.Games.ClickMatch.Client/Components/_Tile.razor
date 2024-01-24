@@ -8,7 +8,7 @@
 
 			@if (Tile.IsShown && !Tile.IsMatched)
 			{				
-				@if (Tile.ContentIsImage())
+				@if (Tile.IsImage)
 				{
 					<div class="flip-card-back flip-card-back-image">
 						<img src="@Tile.Content" alt="Tile-@Tile.PositionId" />
