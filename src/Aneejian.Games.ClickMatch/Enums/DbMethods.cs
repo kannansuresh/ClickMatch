@@ -1,6 +1,6 @@
 ﻿namespace Aneejian.Games.ClickMatch.Enums;
 
-internal enum DbMethods
+public enum DbMethods
 {
 	addNewUser,
 	addUserGame,

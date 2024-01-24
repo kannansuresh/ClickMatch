@@ -2,10 +2,10 @@
 
 namespace Aneejian.Games.ClickMatch.Helpers;
 
-internal static class ExtensionMethods
+public static class ExtensionMethods
 {
-	internal static string GetMethod(this DbMethods method)
-	{
-		return $"iDbWrapper.{method}";
-	}
+    public static string GetMethod(this DbMethods method)
+    {
+        return $"iDbWrapper.{method}";
+    }
 }

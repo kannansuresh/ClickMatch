@@ -1,7 +1,5 @@
 ﻿@inject IThemeService themeService
-@inject IJSRuntime jsRuntime
 @inject GameManagerService gameManager
-@implements IDisposable
 
 <div class="d-flex flex-column justify-content-center align-items-center">
 	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
@@ -93,17 +91,6 @@
 		await InvokeAsync(StateHasChanged);
 	}
 
-	private void PreloadImages()
-	{
-		if (Tiles is null) return;
-		IEnumerable<string?> images = [];
-		images = Tiles.Where(x => x.ContentIsImage()).Select(x => x.Content);
-		if (images != null && images.Any())
-		{
-			jsRuntime.InvokeVoidAsync("preloadImages", images);
-		}
-	}
-
 	private void OnSettingSave(IGameSettings settings)
 	{
 		StartNewGame(settings);
@@ -117,7 +104,6 @@
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
 			TileCount = gameManager.GameSettings.NumberOfTiles;
 			Tiles = gameManager!.Tiles;
-			PreloadImages();
 			StateHasChanged();
 		}
 		catch (Exception)

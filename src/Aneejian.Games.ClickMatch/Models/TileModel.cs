@@ -9,13 +9,14 @@ public class TileModel(Guid matchingId, int? positionId, string? content)
 	public bool IsShown { get; set; } = false;
 	public int FlipCount { get; set; } = 0;
 	public bool IsMatched { get; set; } = false;
+	public bool IsImage => ContentIsImage();
 
 	private static readonly HashSet<string> imageFormats = new(StringComparer.OrdinalIgnoreCase)
 	{
 		"jpeg", "jpg", "png", "gif", "webp", "svg", "tiff", "bmp"
 	};
 
-	public bool ContentIsImage()
+	private bool ContentIsImage()
 	{
 		if (string.IsNullOrWhiteSpace(Content))
 			return false;
