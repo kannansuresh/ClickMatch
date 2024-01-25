@@ -2,18 +2,25 @@
 @inject IThemeService themeService
 @inject ExampleJsInterop exampleJsInterop
 @inject IJSRuntime jsRuntime
+@inject NavigationManager navigationManager
 
 <PageTitle>Click and Match</PageTitle>
 
 <div class="container">
 	<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
 		<_Game />
-		<div>
-			<a class="link-info text-decoration-none" href="/adduser">Add Profile</a>
+		<div class="m-4">
+			<a class="btn btn-link icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" @onclick=NavigateToAddUser>
+				Add Profile
+				<svg class="bi bi-arrow-right" aria-hidden="true" style="width:0px; height:0px;"><i class="bi-arrow-right"></i></svg>
+			</a>
 		</div>
 	</div>
 </div>
 
 @code {
-
+	private void NavigateToAddUser()
+	{
+		navigationManager.NavigateTo("/adduser");
+	}
 }
