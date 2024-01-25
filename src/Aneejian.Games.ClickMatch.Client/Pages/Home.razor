@@ -12,7 +12,7 @@
 		<div class="m-4">
 			<a class="btn btn-link icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" @onclick=NavigateToAddUser>
 				Add Profile
-				<svg class="bi bi-arrow-right" aria-hidden="true" style="width:0px; height:0px;"><i class="bi-arrow-right"></i></svg>
+				<svg class="bi" aria-hidden="true" style="width:0px; height:0px;"><i class="bi-arrow-right"></i></svg>
 			</a>
 		</div>
 	</div>
@@ -21,6 +21,6 @@
 @code {
 	private void NavigateToAddUser()
 	{
-		navigationManager.NavigateTo("/adduser");
+		navigationManager.NavigateTo("adduser");
 	}
 }
