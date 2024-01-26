@@ -1,0 +1,55 @@
+﻿.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vmin;
+    padding: 2vmin;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+    .profile-image img,
+    .profile-image svg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-image svg {
+        color: rgba(151, 144, 144, 0.1);
+    }
+
+.profile:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+    .profile:hover svg {
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+.profile-info {
+    margin: 1rem 0;
+    font-size: 1.5vmin;
+    text-align: center;
+}
+
+.profile-name {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    font-weight: lighter;
+}
+
+.profile-user-name {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}

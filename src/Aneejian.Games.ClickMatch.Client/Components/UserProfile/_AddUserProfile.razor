@@ -1,71 +1,85 @@
-﻿@inject IndexedDbService iDb
+﻿@using Aneejian.Games.ClickMatch.Security
+@inject IndexedDbService iDb
 @inject IJSRuntime jsRuntime
 
-<div class="container px-5 my-5">
-	<h3 class="mb-4 display-4">Add New User Profile</h3>
+<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+	<_Branding />
+
 
 	@if (AddedUser is not null)
 	{
-		<div class="card" style="width: fit-content;">
-			<div class="card-header">
-				User Profile created sucessfully
+		<h3 class="mb-4 display-5">Welcome @AddedUser.Name</h3>
+		<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
+			<div class="col mb-4" style="width:fit-content">
+				<_UserProfileCard Profile=AddedUser />
 			</div>
-			<div class="card-body">
-				<h1 class="card-title display-6 mb-4">Welcome, @AddedUser.Name</h1>
-				<p class="card-text">User ID: @AddedUser.Id</p>
-				<p class="card-text">User Name: @AddedUser.UserName</p>
-				<p class="card-text mb-4">Display Name: @AddedUser.Name</p>
-				<a href="#" class="btn btn-primary btn-sm">Go somewhere</a>
+			<div class="col text-info text-center">
+				Click your profile card to continue.
 			</div>
 		</div>
 	}
 	else
 	{
-		<EditForm Model=UserDataModel id="contactForm" OnValidSubmit="HandleSubmit">
-			<DataAnnotationsValidator />
-			<AntiforgeryToken />
-			<div class="form-floating mb-3">
-				<input class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind=UserDataModel!.UserName autocomplete="off" />
-				<label for="userName">User Name</label>
-				<ValidationMessage For="() => UserDataModel!.UserName" />
-				@if (UserNameAlreadyExist)
-				{
-					<div class="validation-message">User name not available.</div>
-				}
+		<h3 class="mb-4 display-5">Add New User Profile</h3>
+		<div class="row row-cols-auto">
+			<div class="col">
+				<_UserProfileCard Profile=UserDataModel />
 			</div>
-			<div class="form-floating mb-3">
-				<input class="form-control" id="displayName" type="text" placeholder="Display Name" @bind=UserDataModel!.Name autocomplete="off" />
-				<label for="displayName">Display Name</label>
-				<ValidationMessage For="() => UserDataModel!.Name" />
-			</div>
+			<div class="col" style="width:80vmin;">
+				<EditForm Model=UserDataModel id="contactForm" OnValidSubmit="HandleSubmit">
+					<DataAnnotationsValidator />
+					<AntiforgeryToken />
+					<div class="form-floating mb-3">
+						<input class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind=UserDataModel!.UserName autocomplete="off" />
+						<label for="userName">User Name</label>
+						<ValidationMessage For="() => UserDataModel!.UserName" />
+						@if (UserNameAlreadyExist)
+						{
+							<div class="validation-message">User name not available.</div>
+						}
+					</div>
+					<div class="form-floating mb-3">
+						<input class="form-control" id="displayName" type="text" placeholder="Display Name" @bind=UserDataModel!.Name autocomplete="off" />
+						<label for="displayName">Display Name</label>
+						<ValidationMessage For="() => UserDataModel!.Name" />
+					</div>
 
-			<div class="form-floating mb-3">
-				<input class="form-control" id="password" type="password" placeholder="Password" @bind=UserDataModel!.Password @bind:event="oninput" />
-				<label for="password">Password</label>
-				<ValidationMessage For="() => UserDataModel!.Password" />
-			</div>
-			<div class="form-floating mb-3">
-				<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind=ConfirmPassword @bind:event="oninput" />
-				<label for="confirmPassword">Confirm Password</label>
-				@if (ConfirmPassword != UserDataModel!.Password)
-				{
-					<div class="validation-message">Passwords do not match.</div>
-				}
-			</div>
+					<div class="form-floating mb-3">
+						<input class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind=UserDataModel!.Avatar @bind:event="oninput" />
+						<label for="avatar">Avatar</label>
+						<ValidationMessage For="() => UserDataModel!.Avatar" />
+						<_AvatarSelector />
+					</div>
 
-			<div class="d-grid">
-				<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
-			</div>
-		</EditForm>
 
+
+					<div class="form-floating mb-3">
+						<input class="form-control" id="password" type="password" placeholder="Password" @bind=UserDataModel!.Password @bind:event="oninput" />
+						<label for="password">Password</label>
+						<ValidationMessage For="() => UserDataModel!.Password" />
+					</div>
+					<div class="form-floating mb-3">
+						<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind=ConfirmPassword @bind:event="oninput" />
+						<label for="confirmPassword">Confirm Password</label>
+						@if (ConfirmPassword != UserDataModel!.Password)
+						{
+							<div class="validation-message">Passwords do not match.</div>
+						}
+					</div>
+
+					<div class="d-grid">
+						<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
+					</div>
+				</EditForm>
+			</div>
+		</div>
 	}
-
 </div>
 
 <script>
-	async function addHash(hashValue, id){
+	async function addHash(hashValue, id) {
 		const db = iDbWrapper.db;
-		db.users.update(id, {hash: hashValue});
+		db.users.update(id, { hash: hashValue });
 	}
 </script>
 
@@ -109,6 +123,8 @@
 		if (ConfirmPassword != UserDataModel!.Password || UserNameAlreadyExist) return;
 		if (editContext.Validate() && UserDataModel is not null)
 		{
+			UserDataModel.Password = PasswordManager.HashPassword(UserDataModel.Password);
+
 			var userId = await iDb.AddNewUser(UserDataModel);
 
 			AddedUser = await iDb.GetUser(userId);

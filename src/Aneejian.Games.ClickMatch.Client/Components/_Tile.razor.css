@@ -9,6 +9,11 @@
     max-height: 150px;
     max-width: 150px;
     font-size: var(--tile-font-size, 1rem);
+    transition: all 0.2s ease-in-out;
+}
+
+.flip-card:hover{
+    transform: scale(0.98);
 }
 
 .flip-card-inner {

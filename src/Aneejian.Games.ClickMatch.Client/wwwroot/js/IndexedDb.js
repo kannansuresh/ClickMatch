@@ -47,6 +47,7 @@ class UserDTO {
         this.userName = user.userName;
         this.name = user.name;
         this.password = user.password;
+        this.avatar = user.avatar;
     }
 }
 

@@ -1,0 +1,68 @@
+﻿@using Aneejian.Games.ClickMatch.Security
+@inject IJSRuntime jsRuntime
+@inject IndexedDbService iDb
+@inject NavigationManager navigationManager
+
+
+<div class="text-center mb-5">
+	<h1 class="display-5">Who is playing?</h1>
+</div>
+
+<div class="profiles-container">
+
+	@if (Profiles is not null)
+	{
+		@foreach (var profile in Profiles)
+		{
+			<_UserProfileCard Profile=profile OnUserSelected=SelectUser />
+		}
+	}
+
+
+</div>
+
+@code {
+	private List<UserDto>? Profiles { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		Profiles = new();
+		var profiles = await iDb.GetUsers();
+
+		Profiles.AddRange(profiles);
+
+		if (profiles.Count() == 0)
+		{
+			var guestUserDto = new UserDto
+				{
+					UserName = "Guest",
+					Name = "Guest",
+					Password = PasswordManager.HashPassword("Guest"),
+					Avatar = "/images/guest-avatar.png"
+				};
+			await iDb.AddNewUser(guestUserDto);
+			Profiles.Add(guestUserDto);
+		}
+
+
+		var addUserDto = new UserDto
+			{
+				UserName = "+++",
+				Name = "Add New Profile",
+			};
+
+		Profiles.Add(addUserDto);
+	}
+
+	private async Task SelectUser(UserDto user)
+	{
+		await Task.Delay(1);
+
+		if (user.UserName == "+++")
+		{
+			navigationManager.NavigateTo("adduser");
+		}
+
+		await jsRuntime.InvokeVoidAsync("console.log", user);
+	}
+}

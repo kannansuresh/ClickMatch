@@ -1,5 +1,32 @@
-﻿<h3>_UserProfileCard</h3>
+﻿@if (Profile is not null)
+{
+	<div class="profile" @onclick=SelectUser>
+		<div class="profile-image">
+			@if (Profile.UserName == "+++")
+			{
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+				</svg>
+			}
+			else
+			{
+				<img src="@Profile.Avatar" alt="" loading="lazy" />
+			}
+		</div>
+		<div class="profile-info">
+			<div class="profile-name">@Profile.Name</div>
+			<div class="profile-user-name">(@Profile.UserName)</div>
+		</div>
+	</div>
+}
 
 @code {
-	[Parameter] public UserDto User { get; set; } = null!;
+	[Parameter] public UserDto Profile { get; set; } = null!;
+
+	[Parameter] public EventCallback<UserDto> OnUserSelected { get; set; }
+
+	private async Task SelectUser()
+	{
+		await OnUserSelected.InvokeAsync(Profile);
+	}
 }
