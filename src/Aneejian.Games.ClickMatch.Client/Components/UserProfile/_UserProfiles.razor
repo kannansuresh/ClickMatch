@@ -14,7 +14,7 @@
 	{
 		@foreach (var profile in Profiles)
 		{
-			<_UserProfileCard Profile=profile OnUserSelected=SelectUser />
+			<_UserProfileCard Profile=profile OnUserSelected=SelectUser OnUserDeleted=DeleteUser />
 		}
 	}
 
@@ -35,10 +35,10 @@
 		{
 			var guestUserDto = new UserDto
 				{
-					UserName = "Guest",
-					Name = "Guest",
-					Password = PasswordManager.HashPassword("Guest"),
-					Avatar = "/images/guest-avatar.png"
+					UserName = UiStrings.GuestUserName,
+					Name = UiStrings.GuestUserDisplayName,
+					Password = PasswordManager.HashPassword(UiStrings.GuestUserPassword),
+					Avatar = UiStrings.GuestUserAvatar
 				};
 			await iDb.AddNewUser(guestUserDto);
 			Profiles.Add(guestUserDto);
@@ -47,8 +47,8 @@
 
 		var addUserDto = new UserDto
 			{
-				UserName = "+++",
-				Name = "Add New Profile",
+				UserName = UiStrings.NewUserUserName,
+				Name = UiStrings.NewUserDisplayName,
 			};
 
 		Profiles.Add(addUserDto);
@@ -56,13 +56,22 @@
 
 	private async Task SelectUser(UserDto user)
 	{
-		await Task.Delay(1);
 
-		if (user.UserName == "+++")
+		if (user.UserName == UiStrings.NewUserUserName)
 		{
 			navigationManager.NavigateTo("adduser");
 		}
 
 		await jsRuntime.InvokeVoidAsync("console.log", user);
+	}
+
+	private void DeleteUser(UserDto user)
+	{
+
+		if (user.UserName == UiStrings.NewUserUserName)
+		{
+			return;
+		}
+		Profiles!.Remove(user);
 	}
 }

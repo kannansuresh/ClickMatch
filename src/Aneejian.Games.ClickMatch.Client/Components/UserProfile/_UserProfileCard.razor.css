@@ -8,6 +8,11 @@
     border-radius: 1rem;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    max-width: 200px;
+    word-break: break-all;
+    overflow-wrap: break-word;
 }
 
 .profile-image {
@@ -15,7 +20,9 @@
     height: 150px;
     border-radius: 50%;
     overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
+
 
     .profile-image img,
     .profile-image svg {
@@ -28,12 +35,12 @@
         color: rgba(151, 144, 144, 0.1);
     }
 
-.profile:hover {
+.profile-hover:hover {
     transform: scale(1.1);
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-    .profile:hover svg {
+    .profile-hover:hover svg {
         color: rgba(255, 255, 255, 0.3);
     }
 
@@ -44,12 +51,36 @@
 }
 
 .profile-name {
-    font-size: 1.3rem;
-    letter-spacing: 1px;
+    font-size: 1.2rem;
     font-weight: lighter;
 }
 
 .profile-user-name {
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.7);
+}
+
+.profile-delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    z-index: 1000;
+    opacity: 0;
+}
+
+    .profile-delete svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: rgba(255, 0, 0, 0.5);
+    }
+
+    .profile-delete:hover svg {
+        color: rgba(255, 0, 0, 1);
+    }
+
+.profile:hover .profile-delete {
+    opacity: 1;
 }

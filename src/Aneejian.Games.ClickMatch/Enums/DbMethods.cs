@@ -3,6 +3,7 @@
 public enum DbMethods
 {
 	addNewUser,
+	deleteUser,
 	addUserGame,
 	getUsers,
 	getUser,

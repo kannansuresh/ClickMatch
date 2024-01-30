@@ -1,6 +1,5 @@
 using Aneejian.Games.ClickMatch;
 using Aneejian.Games.ClickMatch.Client;
-using Aneejian.Games.ClickMatch.Client.Services;
 using Aneejian.Games.ClickMatch.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

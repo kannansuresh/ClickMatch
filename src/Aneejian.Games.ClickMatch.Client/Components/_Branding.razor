@@ -1,4 +1,4 @@
-﻿<div class="mb-2 mt-4">
+﻿<div @attributes=InputAttributes>
 	<div class="display-3 mb-2">Click & Match</div>
 	<div class="text-center">
 		<div>
@@ -9,3 +9,12 @@
 		</div>
 	</div>
 </div>
+
+@code{
+	[Parameter] public bool ShowMadeWithBlazor { get; set; } = true;
+	[Parameter] public bool ShowLinkToAneejian { get; set; } = true;
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? InputAttributes { get; set; }
+
+}

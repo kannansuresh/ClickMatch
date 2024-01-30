@@ -1,0 +1,35 @@
+<div class="splash text-center user-select-none" style="@elementStyle">
+	<div class="splash-background text-center" style="animation: fade-in-out @(AnimationDelay)s ease-in-out forwards;">
+		<div class="splash-text">@SplashText</div>
+	</div>
+</div>
+
+
+@code {
+
+	[Parameter] public string? SplashText { get; set; }
+	[Parameter] public int Delay { get; set; } = 1500;
+	private string elementStyle { get; set; } = "display: none;";
+
+	private int AnimationDelay => Delay / 1000;
+
+
+	protected override async Task OnParametersSetAsync()
+	{
+		elementStyle = "display: none;";
+		await base.OnParametersSetAsync();
+		if (!string.IsNullOrEmpty(SplashText))
+			await ShowSplash();
+	}
+
+
+	private async Task ShowSplash()
+	{		
+		elementStyle = "display: flex;";
+		await Task.Delay(Delay);
+		elementStyle = "display: none;";
+		SplashText = string.Empty;
+		Delay = 1500;
+	}
+
+}

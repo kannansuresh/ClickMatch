@@ -3,78 +3,85 @@
 @inject IJSRuntime jsRuntime
 
 <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-	<_Branding />
+	<_Branding class="mb-2 mt-5" />
 
-
-	@if (AddedUser is not null)
-	{
-		<h3 class="mb-4 display-5">Welcome @AddedUser.Name</h3>
-		<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
-			<div class="col mb-4" style="width:fit-content">
-				<_UserProfileCard Profile=AddedUser />
+	<div class="m-5 text-center">
+		@if (AddedUser is not null)
+		{
+			<h3 class="mb-4 display-6">Welcome @AddedUser.Name</h3>
+			<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
+				<div class="col mb-4" style="width:fit-content">
+					<_UserProfileCard Profile=AddedUser />
+				</div>
+				<div class="col text-info text-center">
+					Click your profile card to continue.
+				</div>
 			</div>
-			<div class="col text-info text-center">
-				Click your profile card to continue.
+		}
+		else
+		{
+			<h3 class="mb-4 display-6">Add New User Profile</h3>
+			<div class="row align-items-center justify-content-center p-5 pb-3" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; border-radius: 1rem;">
+				<div class="col mb-4 ms-0 me-2 align-items-center justify-content-center" style="max-width:fit-content;">
+					<_UserProfileCard Profile=UserDataModel ShowHoverEffect=ShowHoverEffect />
+				</div>
+				<div class="col mb-4 text-start" style="min-width:60vmin;">
+					<EditForm Model=UserDataModel id="contactForm" OnValidSubmit="HandleSubmit">
+						<DataAnnotationsValidator />
+						<AntiforgeryToken />
+						<div class="form-floating mb-3">
+							<input class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind=UserDataModel!.UserName autocomplete="off" maxlength="20" />
+							<label for="userName">User Name</label>
+							<ValidationMessage For="() => UserDataModel!.UserName" />
+							@if (UserNameAlreadyExist)
+							{
+								<div class="validation-message">User name not available.</div>
+							}
+						</div>
+						<div class="form-floating mb-3">
+							<input class="form-control" id="displayName" type="text" placeholder="Display Name" @bind=UserDataModel!.Name @bind:event="oninput" autocomplete="off" maxlength="20" />
+							<label for="displayName">Display Name</label>
+							<ValidationMessage For="() => UserDataModel!.Name" />
+						</div>
+
+						<div class="form-floating mb-3">
+							<input class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind=UserDataModel!.Avatar @bind:event="oninput" autocomplete="off" />
+							<label for="avatar">Avatar</label>
+							<div id="avatarHelpBlock" class="form-text">
+								Select an avatar from below or enter a URL to use your own avatar.
+							</div>
+							<ValidationMessage For="() => UserDataModel!.Avatar" />
+
+							<_AvatarSelector OnAvatarSelected="OnAvatarSelected" />
+						</div>
+
+
+
+						<div class="form-floating mb-3">
+							<input class="form-control" id="password" type="password" placeholder="Password" @bind=UserDataModel!.Password @bind:event="oninput" />
+							<label for="password">Password</label>
+							<ValidationMessage For="() => UserDataModel!.Password" />
+						</div>
+						<div class="form-floating mb-3">
+							<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind=ConfirmPassword @bind:event="oninput" />
+							<label for="confirmPassword">Confirm Password</label>
+							@if (ConfirmPassword != UserDataModel!.Password)
+							{
+								<div class="validation-message">Passwords do not match.</div>
+							}
+						</div>
+
+						<div class="d-grid">
+							<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
+						</div>
+					</EditForm>
+				</div>
 			</div>
-		</div>
-	}
-	else
-	{
-		<h3 class="mb-4 display-5">Add New User Profile</h3>
-		<div class="row row-cols-auto">
-			<div class="col">
-				<_UserProfileCard Profile=UserDataModel />
-			</div>
-			<div class="col" style="width:80vmin;">
-				<EditForm Model=UserDataModel id="contactForm" OnValidSubmit="HandleSubmit">
-					<DataAnnotationsValidator />
-					<AntiforgeryToken />
-					<div class="form-floating mb-3">
-						<input class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind=UserDataModel!.UserName autocomplete="off" />
-						<label for="userName">User Name</label>
-						<ValidationMessage For="() => UserDataModel!.UserName" />
-						@if (UserNameAlreadyExist)
-						{
-							<div class="validation-message">User name not available.</div>
-						}
-					</div>
-					<div class="form-floating mb-3">
-						<input class="form-control" id="displayName" type="text" placeholder="Display Name" @bind=UserDataModel!.Name autocomplete="off" />
-						<label for="displayName">Display Name</label>
-						<ValidationMessage For="() => UserDataModel!.Name" />
-					</div>
-
-					<div class="form-floating mb-3">
-						<input class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind=UserDataModel!.Avatar @bind:event="oninput" />
-						<label for="avatar">Avatar</label>
-						<ValidationMessage For="() => UserDataModel!.Avatar" />
-						<_AvatarSelector />
-					</div>
-
-
-
-					<div class="form-floating mb-3">
-						<input class="form-control" id="password" type="password" placeholder="Password" @bind=UserDataModel!.Password @bind:event="oninput" />
-						<label for="password">Password</label>
-						<ValidationMessage For="() => UserDataModel!.Password" />
-					</div>
-					<div class="form-floating mb-3">
-						<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind=ConfirmPassword @bind:event="oninput" />
-						<label for="confirmPassword">Confirm Password</label>
-						@if (ConfirmPassword != UserDataModel!.Password)
-						{
-							<div class="validation-message">Passwords do not match.</div>
-						}
-					</div>
-
-					<div class="d-grid">
-						<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
-					</div>
-				</EditForm>
-			</div>
-		</div>
-	}
+		}
+	</div>
 </div>
+
+<_Splasher SplashText=@SplashMessage Delay="2000" />
 
 <script>
 	async function addHash(hashValue, id) {
@@ -84,19 +91,25 @@
 </script>
 
 @code {
+
 	private UserDto? UserDataModel { get; set; }
 
 	private string ConfirmPassword { get; set; } = string.Empty;
 
 	private bool UserNameAlreadyExist = false;
 
+	private bool ShowHoverEffect { get; set; } = false;
+
 	private UserDto? AddedUser { get; set; }
+
+	private string SplashMessage { get; set; } = string.Empty;
 
 
 
 	protected override void OnInitialized()
 	{
 		UserDataModel = new UserDto();
+		base.OnInitialized();
 	}
 
 	private async Task CheckUserNameAvailability(ChangeEventArgs e)
@@ -120,6 +133,8 @@
 
 	private async Task HandleSubmit(EditContext editContext)
 	{
+		editContext.Validate();
+		StateHasChanged();
 		if (ConfirmPassword != UserDataModel!.Password || UserNameAlreadyExist) return;
 		if (editContext.Validate() && UserDataModel is not null)
 		{
@@ -129,9 +144,14 @@
 
 			AddedUser = await iDb.GetUser(userId);
 
+			SplashMessage = $"User profile created successfully.";
+
 			await jsRuntime.InvokeVoidAsync("addHash", AddedUser.GetHashCode().ToString(), AddedUser);
 
 			UserDataModel = new UserDto();
+
+			ShowHoverEffect = true;
+
 			ConfirmPassword = string.Empty;
 		}
 		else
@@ -139,4 +159,12 @@
 			Console.WriteLine("Form is invalid.");
 		}
 	}
+
+	private async Task OnAvatarSelected(string avatar)
+	{
+		UserDataModel!.Avatar = avatar;
+		await InvokeAsync(StateHasChanged);
+	}
+
+
 }
