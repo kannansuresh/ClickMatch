@@ -27,7 +27,7 @@
 		</div>
 		@if (OnUserDeleted.HasDelegate && Profile.UserName != UiStrings.NewUserUserName && Profile.UserName != UiStrings.GuestUserName)
 		{
-			<div class="profile-delete" data-bs-toggle="modal" data-bs-target="#delete-profile-modal" @onclick=InitiateProfileDeletion>
+			<div class="profile-delete" data-bs-toggle="modal" data-bs-target="#@ModalId" @onclick=InitiateProfileDeletion>
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
 					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
 				</svg>
@@ -37,11 +37,11 @@
 
 	@if (OnUserDeleted.HasDelegate && Profile.UserName != UiStrings.NewUserUserName && Profile.UserName != UiStrings.GuestUserName)
 	{
-		<div class="modal" tabindex="-1" id="delete-profile-modal">
+		<div class="modal" tabindex="-1" id="@ModalId">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">Delete Profile?</h5>
+						<h5 class="modal-title">Delete Profile @(Profile.UserName)?</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body d-flex flex-column justify-content-center align-items-center">
@@ -91,8 +91,9 @@
 
 	private string SplashMessage { get; set; } = string.Empty;
 
-
 	private ProfileDeleteRequest? DeleteRequest { get; set; }
+
+	private string ModalId => "delete-profile-modal" + Profile.Id;
 
 	private string PasswordValidationMessage { get; set; } = string.Empty;
 
@@ -106,6 +107,7 @@
 	private async Task DeleteUser()
 	{
 		await OnUserDeleted.InvokeAsync(Profile);
+
 	}
 
 	protected override void OnInitialized()
@@ -126,7 +128,7 @@
 		PasswordValidationMessage = DeleteRequest?.ErrorMessage ?? "";
 		if (profileDeleted)
 		{
-			await jsRuntime.InvokeVoidAsync("closeModal", "delete-profile-modal");
+			await jsRuntime.InvokeVoidAsync("closeModal", ModalId);
 			await DeleteUser();
 			SplashMessage = $"Profile deleted successfully.";
 		}

@@ -26,10 +26,13 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Profiles = new();
+		await FetchProfiles();
+	}
+
+	private async Task FetchProfiles()
+	{
 		var profiles = await iDb.GetUsers();
 
-		Profiles.AddRange(profiles);
 
 		if (profiles.Count() == 0)
 		{
@@ -41,9 +44,16 @@
 					Avatar = UiStrings.GuestUserAvatar
 				};
 			await iDb.AddNewUser(guestUserDto);
-			Profiles.Add(guestUserDto);
 		}
 
+		profiles = await iDb.GetUsers();
+
+		if (Profiles is not null)
+			Profiles.Clear();
+		else
+			Profiles = new List<UserDto>();
+
+		Profiles.AddRange(profiles);
 
 		var addUserDto = new UserDto
 			{
@@ -54,24 +64,26 @@
 		Profiles.Add(addUserDto);
 	}
 
-	private async Task SelectUser(UserDto user)
+	private void SelectUser(UserDto user)
 	{
-
 		if (user.UserName == UiStrings.NewUserUserName)
 		{
 			navigationManager.NavigateTo("adduser");
 		}
-
-		await jsRuntime.InvokeVoidAsync("console.log", user);
+		else
+		{
+			navigationManager.NavigateTo("/");
+		}
 	}
 
-	private void DeleteUser(UserDto user)
+	private async Task DeleteUser(UserDto user)
 	{
 
 		if (user.UserName == UiStrings.NewUserUserName)
 		{
 			return;
 		}
-		Profiles!.Remove(user);
+		await FetchProfiles();
+
 	}
 }
