@@ -1,6 +1,6 @@
 <div class="splash text-center user-select-none" style="@elementStyle">
 	<div class="splash-background text-center" style="animation: fade-in-out @(AnimationDelay)s ease-in-out forwards;">
-		<div class="splash-text">@SplashText</div>
+		<div class="splash-text" style="font-weight: @FontWeight;">@SplashText</div>
 	</div>
 </div>
 
@@ -9,6 +9,7 @@
 
 	[Parameter] public string? SplashText { get; set; }
 	[Parameter] public int Delay { get; set; } = 1500;
+	[Parameter] public string FontWeight { get; set; } = "normal";
 	private string elementStyle { get; set; } = "display: none;";
 
 	private int AnimationDelay => Delay / 1000;
