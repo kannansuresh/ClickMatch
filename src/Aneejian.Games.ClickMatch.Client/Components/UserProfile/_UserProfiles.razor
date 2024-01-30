@@ -18,11 +18,14 @@
 		}
 	}
 
+	<_Splasher SplashText=@SplashMessage />
 
 </div>
 
 @code {
 	private List<UserDto>? Profiles { get; set; }
+
+	private string SplashMessage { get; set; } = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -83,7 +86,9 @@
 		{
 			return;
 		}
+		SplashMessage = $"User profile '{user.Name}' deleted successfully.";
 		await FetchProfiles();
-
+		await Task.Delay(2000);
+		SplashMessage = string.Empty;
 	}
 }

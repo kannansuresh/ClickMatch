@@ -37,7 +37,7 @@
 }
 
 .splash-text {
-    font-size: 5vmin;
+    font-size: 3rem;
     color: #fff;
     animation: bounce-up 0.5s ease-in-out;
     padding: 3vmin;
