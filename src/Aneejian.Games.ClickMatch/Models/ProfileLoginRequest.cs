@@ -17,10 +17,10 @@ public class ProfileLoginRequest(SessionStorageService sessionStorageService)
 
 	public async Task<bool> LoginProfile(UserDto profile)
 	{
-		if (string.IsNullOrEmpty(Password) && profile.UserName != UiStrings.GuestUserName)
+		if (string.IsNullOrEmpty(Password) && profile.UserName != AppStrings.GuestUserName)
 			return false;
 
-		if (PasswordManager.ValidatePassword(Password, profile.Password) || profile.UserName == UiStrings.GuestUserName)
+		if (PasswordManager.ValidatePassword(Password, profile.Password) || profile.UserName == AppStrings.GuestUserName)
 		{
 			ErrorMessage = "";
 			await _sessionStorageService.SetValueAsync("profileId", profile.Id);

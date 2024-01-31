@@ -4,43 +4,43 @@ namespace Aneejian.Games.ClickMatch.Services
 {
 	public class SessionStorageService(IJSRuntime jsRuntime) : IAsyncDisposable
 	{
-		private IJSObjectReference? _storage;
+		private IJSObjectReference? _sessionStorageRef;
 		private readonly IJSRuntime _jsRuntime = jsRuntime;
 
 		private async Task EnsureStorageInitializedAsync()
 		{
-			_storage ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/sessionStorage.js");
+			_sessionStorageRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/sessionStorage.js");
 		}
 
 		public async Task<T> GetValueAsync<T>(string key)
 		{
 			await EnsureStorageInitializedAsync();
-			return await _storage!.InvokeAsync<T>("get", key);
+			return await _sessionStorageRef!.InvokeAsync<T>("get", key);
 		}
 
 		public async Task SetValueAsync<T>(string key, T value)
 		{
 			await EnsureStorageInitializedAsync();
-			await _storage!.InvokeVoidAsync("set", key, value);
+			await _sessionStorageRef!.InvokeVoidAsync("set", key, value);
 		}
 
 		public async Task ClearAsync()
 		{
 			await EnsureStorageInitializedAsync();
-			await _storage!.InvokeVoidAsync("clear");
+			await _sessionStorageRef!.InvokeVoidAsync("clear");
 		}
 
 		public async Task RemoveAsync(string key)
 		{
 			await EnsureStorageInitializedAsync();
-			await _storage!.InvokeVoidAsync("remove", key);
+			await _sessionStorageRef!.InvokeVoidAsync("remove", key);
 		}
 
 		public async ValueTask DisposeAsync()
 		{
-			if (_storage != null)
+			if (_sessionStorageRef != null)
 			{
-				await _storage.DisposeAsync();
+				await _sessionStorageRef.DisposeAsync();
 			}
 		}
 	}

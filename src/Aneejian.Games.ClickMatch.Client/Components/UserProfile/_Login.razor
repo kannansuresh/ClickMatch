@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime jsRuntime
 @inject SessionStorageService sessionStorageService
 @inject NavigationManager navigationManager
-@inject AuthenticationService authenticationService
+@inject BaseAuthenticationService authenticationService
 
 <div class="modal" tabindex="-1" id="@ModalId">
     <div class="modal-dialog modal-dialog-centered">
@@ -46,7 +46,7 @@
     [Parameter, EditorRequired] public UserDto Profile { get; set; } = null!;
     [Parameter] public EventCallback<UserDto> OnUserLogin { get; set; }
 
-    private bool GuestUser => Profile.UserName == UiStrings.GuestUserName;
+    private bool GuestUser => Profile.UserName == AppStrings.GuestUserName;
 
     InputText? inputPassword;
 
@@ -69,7 +69,7 @@
         LoginRequest = new ProfileLoginRequest(sessionStorageService);
         if (GuestUser)
         {
-            LoginRequest.Password = UiStrings.GuestUserPassword;
+            LoginRequest.Password = AppStrings.GuestUserPassword;
         }
         if (inputPassword is not null && inputPassword.Element.HasValue)
         {

@@ -26,6 +26,8 @@ public class IndexedDbService(IJSRuntime _jsRuntime)
 
 	public async Task<UserDto> GetUser(string userName) => await InvokeAsync<UserDto>(DbEnum.getUser, userName);
 
+	public async Task<UserDto> GetUser<T>(T idOrUserName) => await InvokeAsync<UserDto>(DbEnum.getUser, idOrUserName!);
+
 	public async Task<IEnumerable<UserDto>> GetUsers() => await InvokeAsync<IEnumerable<UserDto>>(DbEnum.getUsers);
 
 	public async Task DeleteUser(int id) => await InvokeAsync(DbEnum.deleteUser, id);

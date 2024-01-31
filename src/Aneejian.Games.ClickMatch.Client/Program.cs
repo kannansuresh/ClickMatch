@@ -1,6 +1,8 @@
 using Aneejian.Games.ClickMatch;
 using Aneejian.Games.ClickMatch.Client;
+using Aneejian.Games.ClickMatch.Constants;
 using Aneejian.Games.ClickMatch.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -10,11 +12,15 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, "config/config.json"));
+builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, AppStrings.ConfigFilePath));
 
-builder.Services.AddSingleton<AuthenticationService>();
+builder.Services.AddSingleton<BaseAuthenticationService>();
 
 builder.Services.AddScoped<IndexedDbService>();
+
+builder.Services.AddScoped<AuthenticationService>();
+
+builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 
 builder.Services.AddScoped<SessionStorageService>();
 
@@ -33,7 +39,5 @@ catch (Exception ex)
 {
 	Console.WriteLine(ex.Message);
 }
-
-
 
 await host.RunAsync();
