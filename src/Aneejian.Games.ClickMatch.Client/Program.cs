@@ -14,6 +14,8 @@ builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClie
 
 builder.Services.AddScoped<IndexedDbService>();
 
+builder.Services.AddScoped<SessionStorageService>();
+
 builder.Services.AddScoped<ExampleJsInterop>();
 
 builder.Services.AddSingleton<GameManagerService>();

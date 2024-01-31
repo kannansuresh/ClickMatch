@@ -1,0 +1,30 @@
+﻿@inject SessionStorageService sessionStorageService
+@inject NavigationManager navigationManager
+
+@page "/game"
+
+@if (LoggedInUserId == 0)
+{
+	if (LoginChecked)
+	{
+		navigationManager.NavigateTo("/");
+	}
+}
+else
+{
+	<_Game />
+}
+
+@code {
+	private int LoggedInUserId { get; set; }
+	private bool LoginChecked { get; set; } = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		LoginChecked = false;
+		var stringId = await sessionStorageService.GetValueAsync<string>("profileId");
+		if (!string.IsNullOrEmpty(stringId))
+			LoggedInUserId = int.Parse(stringId);
+		LoginChecked = true;
+	}
+}

@@ -1,11 +1,10 @@
 ﻿@using System.ComponentModel.DataAnnotations
-@inject IndexedDbService iDb
 @inject IJSRuntime jsRuntime
 
 
 @if (Profile is not null)
 {
-	<div class="profile @hoverClass" @onclick=SelectUser>
+	<div class="profile @hoverClass" @onclick=CheckUser>
 		<div class="profile-image">
 			@if (Profile.UserName == UiStrings.NewUserUserName)
 			{
@@ -27,7 +26,7 @@
 		</div>
 		@if (OnUserDeleted.HasDelegate && Profile.UserName != UiStrings.NewUserUserName && Profile.UserName != UiStrings.GuestUserName)
 		{
-			<div class="profile-delete" data-bs-toggle="modal" data-bs-target="#@ModalId">
+			<div class="profile-delete" data-bs-toggle="modal" data-bs-target="#@DeleteModalId">
 				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
 					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
 				</svg>
@@ -38,6 +37,11 @@
 	@if (OnUserDeleted.HasDelegate && Profile.UserName != UiStrings.NewUserUserName && Profile.UserName != UiStrings.GuestUserName)
 	{
 		<_DeleteUser Profile=Profile OnUserDeleted=DeleteUser />
+	}
+
+	@if (OnUserSelected.HasDelegate)
+	{
+		<_Login Profile=Profile OnUserLogin=SelectUser />
 	}
 }
 
@@ -50,7 +54,9 @@
 
 	[Parameter] public EventCallback<UserDto> OnUserDeleted { get; set; }
 
-	private string ModalId => "delete-profile-modal" + Profile.Id;
+	private string DeleteModalId => "delete-profile-modal" + Profile.Id;
+
+	private string LoginModalId => "login-profile-modal" + Profile.Id;
 
 	private string hoverClass => ShowHoverEffect ? "profile-hover" : "";
 
@@ -63,5 +69,21 @@
 	{
 		await OnUserDeleted.InvokeAsync(Profile);
 	}
+
+	private async Task CheckUser()
+	{
+		if (Profile.UserName == UiStrings.NewUserUserName)
+		{
+			await SelectUser();
+		}
+		else
+		{
+			await OpenLoginModal();
+		}
+	}
 		
+	private async Task OpenLoginModal()
+	{
+		await jsRuntime.InvokeVoidAsync("openModal", LoginModalId);
+	}
 }

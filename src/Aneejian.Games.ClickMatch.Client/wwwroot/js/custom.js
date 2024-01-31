@@ -14,7 +14,7 @@ function inputFocus(modalId, elementId) {
             myInput.focus()
         })
     } catch (e) {
-        // ignore
+        console.log(e)
     }
 
 }
@@ -26,7 +26,16 @@ function closeModal(modalId) {
         var modal = bootstrap.Modal.getInstance(myModalEl)
         modal.hide();
     } catch (e) {
-        // ignore
+        console.log(e)
     }
 }
 
+function openModal(modalId) {
+    try {
+        var myModalEl = document.getElementById(modalId);
+        var modal = bootstrap.Modal.getOrCreateInstance(myModalEl)
+        modal.show();
+    } catch (e) {
+        console.log(e)
+    }
+}
