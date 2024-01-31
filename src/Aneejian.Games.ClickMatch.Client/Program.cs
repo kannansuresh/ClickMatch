@@ -18,10 +18,6 @@ builder.Services.AddSingleton<BaseAuthenticationService>();
 
 builder.Services.AddScoped<IndexedDbService>();
 
-builder.Services.AddScoped<AuthenticationService>();
-
-builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
-
 builder.Services.AddScoped<SessionStorageService>();
 
 builder.Services.AddScoped<ExampleJsInterop>();

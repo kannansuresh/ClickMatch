@@ -9,7 +9,7 @@ namespace Aneejian.Games.ClickMatch.Services
 
 		private async Task EnsureStorageInitializedAsync()
 		{
-			_sessionStorageRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/js/sessionStorage.js");
+			_sessionStorageRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Aneejian.Games.ClickMatch/js/sessionStorage.js");
 		}
 
 		public async Task<T> GetValueAsync<T>(string key)
