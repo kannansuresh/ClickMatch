@@ -32,4 +32,10 @@ public class ProfileLoginRequest(SessionStorageService sessionStorageService)
 		}
 		return true;
 	}
+
+	public async Task<bool> LogoutProfile()
+	{
+        await _sessionStorageService.RemoveAsync("profileId");
+        return true;
+    }
 }

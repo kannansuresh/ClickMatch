@@ -1,6 +1,7 @@
 ﻿@using Aneejian.Games.ClickMatch.Security
 @inject IndexedDbService iDb
 @inject IJSRuntime jsRuntime
+@inject NavigationManager navigationManager
 
 <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
 	<_Branding class="mb-2 mt-5" />
@@ -11,7 +12,7 @@
 			<h3 class="mb-4 display-6">Welcome @AddedUser.Name</h3>
 			<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
 				<div class="col mb-4" style="width:fit-content">
-					<_UserProfileCard Profile=AddedUser />
+					<_UserProfileCard Profile=AddedUser OnUserSelected="OnUserSelect" />
 				</div>
 				<div class="col text-info text-center">
 					Click your profile card to continue.
@@ -110,6 +111,11 @@
 	{
 		UserDataModel = new UserDto();
 		base.OnInitialized();
+	}
+
+	private void OnUserSelect()
+	{
+        navigationManager.NavigateTo("/");
 	}
 
 	private async Task CheckUserNameAvailability(ChangeEventArgs e)

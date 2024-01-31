@@ -3,8 +3,7 @@
 
 <div class="d-flex flex-column justify-content-center align-items-center">
 	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
-	{
-		
+	{		
 		<div class="col">
 			<_SettingsForm SelectedThemeId=@SelectedThemeId TileCount=@TileCount ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
 		</div>
@@ -15,9 +14,7 @@
 			<_TileGrid Tiles="Tiles" />
 		</div>
 
-
 		<_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />
-
 
 		<div class="row mb-4 user-select-none">
 			<div>@gameManager.GameScorer.ToString()</div>
