@@ -9,25 +9,30 @@ namespace Aneejian.Games.ClickMatch.Services;
 public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 {
 	private readonly IJSRuntime _jsRuntime = _jsRuntime;
-	private IJSObjectReference? _indexedDbRef;
 	private IJSObjectReference? _dexieRef;
+	private IJSObjectReference? _module;
+	private IJSObjectReference? _indexedDbRef;
 
 	private async Task EnsureIndexedDbInitializedAsync()
 	{
+		if (_indexedDbRef != null)
+			return;
 		_dexieRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.Dexie);
-		_indexedDbRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.IndexedDb);
+		_module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.IndexedDb);
+		_indexedDbRef = await _module.InvokeAsync<IJSObjectReference>("createIndexedDb");
 	}
 
 	private async Task<T> InvokeAsync<T>(DbEnum method, params object[] args)
 	{
 		await EnsureIndexedDbInitializedAsync();
-		return await _jsRuntime.InvokeAsync<T>(method.GetMethod(), args);
+		var result = await _indexedDbRef!.InvokeAsync<T>(method.GetEnumString(), args);
+		return result;
 	}
 
 	private async Task InvokeAsync(DbEnum method, params object[] args)
 	{
 		await EnsureIndexedDbInitializedAsync();
-		await _jsRuntime.InvokeVoidAsync(method.GetMethod(), args);
+		await _indexedDbRef!.InvokeVoidAsync(method.GetEnumString(), args);
 	}
 
 	public async Task<int> AddNewUser(UserDto user) => await InvokeAsync<int>(DbEnum.addNewUser, user);
@@ -52,6 +57,8 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 	{
 		if (_indexedDbRef != null)
 			await _indexedDbRef.DisposeAsync();
+		if (_module != null)
+			await _module.DisposeAsync();
 		if (_dexieRef != null)
 			await _dexieRef.DisposeAsync();
 	}

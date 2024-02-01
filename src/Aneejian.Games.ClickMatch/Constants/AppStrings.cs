@@ -19,9 +19,9 @@ public struct AppStrings
 	}
 
 	public struct JSFiles
-	{
-		public const string Dexie = "./_content/Aneejian.Games.ClickMatch/js/dexie/dexie.min.js";
-		public const string IndexedDb = "./_content/Aneejian.Games.ClickMatch/js/indexedDb.js";
-		public const string SessionStorage = "./_content/Aneejian.Games.ClickMatch/js/sessionStorage.js";
+	{	
+		public const string Dexie = "./_content/Aneejian.Games.ClickMatch/js/dexie/dexie.js" ;
+		public const string IndexedDb = $"./_content/Aneejian.Games.ClickMatch/js/indexedDb.js?v=1.0.1";
+		public const string SessionStorage = "./_content/Aneejian.Games.ClickMatch/js/sessionStorage.js?v=1.0.0";
 	}
 }

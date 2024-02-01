@@ -1,4 +1,4 @@
-class IndexedDb {
+export class IndexedDb {
     constructor() {
         this.db = new Dexie('Aneejian.Games.ClickMatch');
         this.setupDatabase();
@@ -45,7 +45,7 @@ class IndexedDb {
     // Other database operations can be added here, such as update, delete, etc.
 }
 
-class UserDTO {
+export class UserDTO {
 
     constructor(user) {
         this.userName = user.userName;
@@ -55,5 +55,6 @@ class UserDTO {
     }
 }
 
-// Instantiate the IndexedDb class for global availability.
-window.iDbWrapper = new IndexedDb();
+export function createIndexedDb() {
+    return new IndexedDb();
+}

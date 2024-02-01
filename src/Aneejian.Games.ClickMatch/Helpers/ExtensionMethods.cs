@@ -4,8 +4,8 @@ namespace Aneejian.Games.ClickMatch.Helpers;
 
 public static class ExtensionMethods
 {
-    public static string GetMethod(this DbMethods method)
+    public static string GetEnumString<T>(this T enumValue) where T : Enum
     {
-        return $"iDbWrapper.{method}";
+        return enumValue.ToString();
     }
 }

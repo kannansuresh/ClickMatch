@@ -84,13 +84,6 @@
 
 <_Splasher SplashText=@SplashMessage Delay="2000" />
 
-<script>
-	async function addHash(hashValue, id) {
-		const db = iDbWrapper.db;
-		db.users.update(id, { hash: hashValue });
-	}
-</script>
-
 @code {
 
 	private UserDto? UserDataModel { get; set; }
@@ -115,7 +108,7 @@
 
 	private void OnUserSelect()
 	{
-        navigationManager.NavigateTo("/");
+		navigationManager.NavigateTo("/");
 	}
 
 	private async Task CheckUserNameAvailability(ChangeEventArgs e)
@@ -151,8 +144,6 @@
 			AddedUser = await iDb.GetUser(userId);
 
 			SplashMessage = $"User profile created successfully.";
-
-			await jsRuntime.InvokeVoidAsync("addHash", AddedUser.GetHashCode().ToString(), AddedUser);
 
 			UserDataModel = new UserDto();
 
