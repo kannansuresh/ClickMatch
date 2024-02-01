@@ -23,8 +23,6 @@ builder.Services.AddScoped<IndexedDbService>();
 
 builder.Services.AddScoped<SessionStorageService>();
 
-builder.Services.AddScoped<ExampleJsInterop>();
-
 builder.Services.AddSingleton<GameManagerService>();
 
 var host = builder.Build();
