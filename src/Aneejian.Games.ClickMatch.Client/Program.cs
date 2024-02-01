@@ -2,7 +2,7 @@ using Aneejian.Games.ClickMatch;
 using Aneejian.Games.ClickMatch.Client;
 using Aneejian.Games.ClickMatch.Constants;
 using Aneejian.Games.ClickMatch.Services;
-using Microsoft.AspNetCore.Components.Authorization;
+using Aneejian.Games.ClickMatch.Services.Authentication;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -15,6 +15,9 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, AppStrings.ConfigFilePath));
 
 builder.Services.AddSingleton<BaseAuthenticationService>();
+
+builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<AuthStateProvider>();
 
 builder.Services.AddScoped<IndexedDbService>();
 
