@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\js\dexie\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Aneejian.Games.ClickMatch\Aneejian.Games.ClickMatch.csproj" />
   </ItemGroup>
 

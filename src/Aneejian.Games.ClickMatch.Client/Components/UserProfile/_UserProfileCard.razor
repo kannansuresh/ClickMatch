@@ -7,7 +7,7 @@
 {
     <div class="profile @hoverClass" @onclick=CheckUserToLogin>
         <div class="profile-image">
-            @if (Profile.UserName == AppStrings.NewUserUserName)
+            @if (Profile.UserName == AppStrings.NewUser.UserName)
             {
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
@@ -25,7 +25,7 @@
             <div class="profile-name text-wrap">@(Profile.Name == "" ? "___" : Profile.Name)</div>
             <div class="profile-user-name text-wrap text-info">@(Profile.UserName == "" ? "___" : $"{Profile.UserName}")</div>
         </div>
-        @if (OnUserDeleted.HasDelegate && Profile.UserName != AppStrings.NewUserUserName && Profile.UserName != AppStrings.GuestUserName)
+        @if (OnUserDeleted.HasDelegate && Profile.UserName != AppStrings.NewUser.UserName && Profile.UserName != AppStrings.GuestUser.UserName)
         {
             <div class="profile-delete" @onclick=OpenDeleteModal>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -35,7 +35,7 @@
         }
     </div>
 
-    @if (OnUserDeleted.HasDelegate && Profile.UserName != AppStrings.NewUserUserName && Profile.UserName != AppStrings.GuestUserName)
+    @if (OnUserDeleted.HasDelegate && Profile.UserName != AppStrings.NewUser.UserName && Profile.UserName != AppStrings.GuestUser.UserName)
     {
         <_DeleteUser Profile=Profile OnUserDeleted=DeleteUser />
     }
@@ -78,7 +78,7 @@
             IgnoreLoginClick = false;
             return;
         }
-        if (Profile.UserName == AppStrings.NewUserUserName)
+        if (Profile.UserName == AppStrings.NewUser.UserName)
         {
             await SelectUser();
         }
