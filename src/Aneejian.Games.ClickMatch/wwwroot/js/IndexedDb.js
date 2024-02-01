@@ -9,9 +9,6 @@ class IndexedDb {
             users: "++id, &userName",
             games: "++id, userId, level, score, timeTaken, gameWon, gameAbandoned"
         });
-
-        // This defines the relationships between the tables (optional)
-        //this.db.games.mapToClass(GameDTO);
         this.db.users.mapToClass(UserDTO);
     }
 

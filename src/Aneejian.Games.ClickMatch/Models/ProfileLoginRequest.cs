@@ -17,10 +17,10 @@ public class ProfileLoginRequest(SessionStorageService sessionStorageService)
 
 	public async Task<bool> LoginProfile(UserDto profile)
 	{
-		if (string.IsNullOrEmpty(Password) && profile.UserName != AppStrings.GuestUserName)
+		if (string.IsNullOrEmpty(Password) && profile.UserName != AppStrings.GuestUser.UserName)
 			return false;
 
-		if (PasswordManager.ValidatePassword(Password, profile.Password) || profile.UserName == AppStrings.GuestUserName)
+		if (PasswordManager.ValidatePassword(Password, profile.Password) || profile.UserName == AppStrings.GuestUser.UserName)
 		{
 			ErrorMessage = "";
 			await _sessionStorageService.SetValueAsync("profileId", profile.Id);
@@ -35,7 +35,7 @@ public class ProfileLoginRequest(SessionStorageService sessionStorageService)
 
 	public async Task<bool> LogoutProfile()
 	{
-        await _sessionStorageService.RemoveAsync("profileId");
-        return true;
-    }
+		await _sessionStorageService.RemoveAsync("profileId");
+		return true;
+	}
 }

@@ -2,7 +2,7 @@
 using Microsoft.JSInterop;
 using DbEnum = Aneejian.Games.ClickMatch.Enums.DbMethods;
 using Aneejian.Games.ClickMatch.Helpers;
-using System;
+using Aneejian.Games.ClickMatch.Constants;
 
 namespace Aneejian.Games.ClickMatch.Services;
 
@@ -10,10 +10,12 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 {
 	private readonly IJSRuntime _jsRuntime = _jsRuntime;
 	private IJSObjectReference? _indexedDbRef;
+	private IJSObjectReference? _dexieRef;
 
 	private async Task EnsureIndexedDbInitializedAsync()
 	{
-		_indexedDbRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Aneejian.Games.ClickMatch/js/indexedDb.js");
+		_dexieRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.Dexie);
+		_indexedDbRef ??= await _jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.IndexedDb);
 	}
 
 	private async Task<T> InvokeAsync<T>(DbEnum method, params object[] args)
@@ -49,8 +51,8 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 	public async ValueTask DisposeAsync()
 	{
 		if (_indexedDbRef != null)
-		{
 			await _indexedDbRef.DisposeAsync();
-		}
+		if (_dexieRef != null)
+			await _dexieRef.DisposeAsync();
 	}
 }
