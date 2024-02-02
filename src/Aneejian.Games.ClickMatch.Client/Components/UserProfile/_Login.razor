@@ -14,28 +14,6 @@
                     <_UserProfileCard Profile="Profile" ShowHoverEffect=false />
                 </div>
                 <div class="w-75">
-                    @* <EditForm Model="@LoginRequest" OnValidSubmit="ValidatePassword">
-                        <DataAnnotationsValidator />
-                        <AntiforgeryToken />
-                        <div class="@(GuestUser ? "visually-hidden" : "")">
-                            <p>Enter profile password to login.</p>
-                            <div class="form-floating mb-3">
-                                <InputText type="password" class="form-control" id="@PasswordInputId" placeholder="Profile Password" @bind-Value=@LoginRequest!.Password @ref="inputPassword" />
-                                <label for="@PasswordInputId">Password</label>
-                                <ValidationMessage For="() => LoginRequest.Password" />
-                                @if (!string.IsNullOrEmpty(PasswordValidationMessage))
-                                {
-                                    <div class="validation-message">@PasswordValidationMessage</div>
-                                }
-                            </div>
-                        </div>
-                        <div class="d-flex gap-3 justify-content-center">
-                            <button type="submit" class="btn btn-success" @onclick=ValidatePassword>Login</button>
-                            <button type="button" class="btn btn-secondary" @onclick=@CloseModal>Close</button>
-                        </div>
-                        
-                    </EditForm> *@
-
                     <_LoginForm ShowLoginAsGuest=false ShowCloseButton=true OnCloseButtonClick="CloseModal" InputUserName="@Profile.UserName" InputPassword="@GuestUserPassword" OnLoginSuccess="@LoginUser" />
                 </div>
             </div>
@@ -51,51 +29,12 @@
     private bool GuestUser => Profile.UserName == AppStrings.GuestUser.UserName;
     private string GuestUserPassword => GuestUser ? AppStrings.GuestUser.Password : "";
 
-    InputText? inputPassword;
-
     private string ModalId => "login-profile-modal" + Profile.Id;
-    private string PasswordInputId => "login-password" + Profile.Id;
-
-    private string PasswordValidationMessage { get; set; } = string.Empty;
-
-    private ProfileLoginRequest? LoginRequest { get; set; }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        await InitiateProfileLogin();
-    }
-
-    private async Task InitiateProfileLogin()
-    {
-        PasswordValidationMessage = string.Empty;
-        LoginRequest = new ProfileLoginRequest(sessionStorageService);
-        if (GuestUser)
-        {
-            LoginRequest.Password = AppStrings.GuestUser.Password;
-        }
-        if (inputPassword is not null && inputPassword.Element.HasValue)
-        {
-            await inputPassword.Element.Value.FocusAsync();
-        }
-    }
-
-
-    private async Task ValidatePassword()
-    {
-        var profileLoggedIn = await LoginRequest!.LoginProfile(Profile);
-        PasswordValidationMessage = LoginRequest?.ErrorMessage ?? "";
-        if (profileLoggedIn)
-        {
-            await LoginUser();
-            authenticationService.Login();
-        }
-        StateHasChanged();
-    }
 
     private async Task LoginUser()
     {
         await CloseModal();
+        StateHasChanged();
         await OnUserLogin.InvokeAsync(Profile);
     }
 

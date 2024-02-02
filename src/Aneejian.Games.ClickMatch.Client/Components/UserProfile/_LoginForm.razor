@@ -5,12 +5,12 @@
 	<EditForm EditContext="@LoginContext" class="w-100" OnSubmit="Login">
 		<DataAnnotationsValidator />
 		<div class="form-floating mb-3 @UserNameClass">
-			<InputText class="form-control" autocomplete="off" id="userName" type="text" placeholder="User Name" @bind-Value=LoginRequest!.UserName />
+			<InputText class="form-control" autocomplete="off" id="@UserNameId" type="text" placeholder="User Name" @bind-Value=LoginRequest!.UserName />
 			<label for="userName">User Name</label>
 			<ValidationMessage For="() => LoginRequest.UserName" />
 		</div>
 		<div class="form-floating mb-3 @PasswordClass">
-			<InputText class="form-control" id="password" type="password" placeholder="Password" @bind-Value=LoginRequest!.Password />
+			<InputText class="form-control" id="@PasswordId" type="Password" placeholder="Password" @bind-Value=LoginRequest!.Password />
 			<label for="password">Password</label>
 			<ValidationMessage For="() => LoginRequest.Password" />
 		</div>
@@ -44,6 +44,9 @@
 	private string ErrorMessage { get; set; } = string.Empty;
 
 	private const string _invisibleClass = "visually-hidden";
+	private string _elementId = Guid.NewGuid().ToString();
+	string UserNameId => "userName" + _elementId;
+	string PasswordId => "password" + _elementId;
 	private string UserNameClass { get; set; } = string.Empty;
 	private string PasswordClass { get; set; } = string.Empty;
 

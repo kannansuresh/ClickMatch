@@ -26,7 +26,10 @@ function closeModal(modalId) {
         var modal = bootstrap.Modal.getInstance(myModalEl)
         modal.hide();
     } catch (e) {
-        console.log(e)
+        var modalBackdrop = document.querySelector('.modal-backdrop')
+        if (modalBackdrop) {
+            modalBackdrop.remove();
+        }
     }
 }
 

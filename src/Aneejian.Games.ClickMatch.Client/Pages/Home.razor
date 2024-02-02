@@ -3,42 +3,53 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
 @inject SessionStorageService sessionStorageService
-@inject BaseAuthenticationService authenticationService
+@inject AuthenticationService authenticationService
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
 
-@if (LoggedInUserId == 0)
+@if (authenticationService.IsAuthenticated)
 {
-	<_UserProfiles />
+	<_Game />
+	<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
 }
 else
 {
-	<_Game />
+	<_UserProfiles />
 }
 
 @code {
 	private int LoggedInUserId { get; set; }
-	private bool LoginChecked { get; set; } = false;
 
-	protected override void OnInitialized()
+	protected override async Task OnInitializedAsync()
 	{
-		CheckLogin();
-		authenticationService.OnChange += CheckLogin;
+		await CheckLogin();
+		authenticationService.OnAuthenticationStateChanged += CheckLogin;
 	}
 
-	private async void CheckLogin()
+	private async void CheckLogin(bool isAuthenticated)
 	{
-		LoginChecked = false;
+		if(!authenticationService.IsAuthenticated){
+			// await authenticationService.Logout();
+			StateHasChanged();
+			return;
+		}
+		await CheckLogin();
+	}
+
+	private async Task CheckLogin()
+	{
 		var stringId = await sessionStorageService.GetValueAsync<string>("profileId");
 		if (!string.IsNullOrEmpty(stringId))
+		{
 			LoggedInUserId = int.Parse(stringId);
-		LoginChecked = true;
+			await authenticationService.ValidateLoggedInUser(LoggedInUserId);
+		}
 		StateHasChanged();
 	}
 
 	public void Dispose()
 	{
-		authenticationService.OnChange -= StateHasChanged;
+		authenticationService.OnAuthenticationStateChanged -= CheckLogin;
 	}
 }
