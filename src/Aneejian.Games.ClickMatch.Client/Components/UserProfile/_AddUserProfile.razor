@@ -24,34 +24,35 @@
 			<div class="row align-items-center justify-content-center p-5 pb-3" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; border-radius: 1rem;">
 			<h3 class="mb-4 display-6">Add New User Profile</h3>
 				<div class="col mb-4 ms-0 me-2 align-items-center justify-content-center" style="max-width:fit-content;">
-					<_UserProfileCard Profile=UserDataModel ShowHoverEffect=ShowHoverEffect />
+					<_UserProfileCard Profile=RegisterRequest ShowHoverEffect=ShowHoverEffect />
 				</div>
 				<div class="col mb-4 text-start" style="min-width:60vmin;">
-					<EditForm Model=UserDataModel id="contactForm" OnValidSubmit="HandleSubmit">
+					<EditForm Model=RegisterRequest id="contactForm" OnValidSubmit="HandleSubmit">
 						<DataAnnotationsValidator />
+						<ValidationSummary />
 						<AntiforgeryToken />
 						<div class="form-floating mb-3">
-							<input class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind=UserDataModel!.UserName autocomplete="off" maxlength="20" />
+							<InputText class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind-Value=RegisterRequest!.UserName autocomplete="off" maxlength="20" />
 							<label for="userName">User Name</label>
-							<ValidationMessage For="() => UserDataModel!.UserName" />
+							<ValidationMessage For="() => RegisterRequest!.UserName" />
 							@if (UserNameAlreadyExist)
 							{
 								<div class="validation-message">User name not available.</div>
 							}
 						</div>
 						<div class="form-floating mb-3">
-							<input class="form-control" id="displayName" type="text" placeholder="Display Name" @bind=UserDataModel!.Name @bind:event="oninput" autocomplete="off" maxlength="20" />
+							<InputText class="form-control" id="displayName" type="text" placeholder="Display Name" @bind-Value=RegisterRequest!.Name autocomplete="off" maxlength="20" @oninput=SetDisplayName />
 							<label for="displayName">Display Name</label>
-							<ValidationMessage For="() => UserDataModel!.Name" />
+							<ValidationMessage For="() => RegisterRequest!.Name" />
 						</div>
 
 						<div class="form-floating mb-3">
-							<input class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind=UserDataModel!.Avatar @bind:event="oninput" autocomplete="off" />
+							<InputText class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind-Value=RegisterRequest!.Avatar autocomplete="off" />
 							<label for="avatar">Avatar</label>
 							<div id="avatarHelpBlock" class="form-text">
 								Select an avatar from below or enter a URL to use your own avatar.
 							</div>
-							<ValidationMessage For="() => UserDataModel!.Avatar" />
+							<ValidationMessage For="() => RegisterRequest!.Avatar" />
 
 							<_AvatarSelector OnAvatarSelected="OnAvatarSelected" />
 						</div>
@@ -59,17 +60,14 @@
 
 
 						<div class="form-floating mb-3">
-							<input class="form-control" id="password" type="password" placeholder="Password" @bind=UserDataModel!.Password @bind:event="oninput" />
+							<InputText class="form-control" id="password" type="password" placeholder="Password" @bind-Value=RegisterRequest!.InputPassword />
 							<label for="password">Password</label>
-							<ValidationMessage For="() => UserDataModel!.Password" />
+							<ValidationMessage For="() => RegisterRequest!.InputPassword" />
 						</div>
 						<div class="form-floating mb-3">
-							<input class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind=ConfirmPassword @bind:event="oninput" />
+							<InputText class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind-Value="RegisterRequest!.ConfirmPassword" />
 							<label for="confirmPassword">Confirm Password</label>
-							@if (ConfirmPassword != UserDataModel!.Password)
-							{
-								<div class="validation-message">Passwords do not match.</div>
-							}
+							<ValidationMessage For="() => RegisterRequest!.ConfirmPassword" />
 						</div>
 
 						<div class="d-grid">
@@ -86,9 +84,7 @@
 
 @code {
 
-	private UserDto? UserDataModel { get; set; }
-
-	private string ConfirmPassword { get; set; } = string.Empty;
+	private RegisterRequest? RegisterRequest { get; set; }
 
 	private bool UserNameAlreadyExist = false;
 
@@ -102,7 +98,9 @@
 
 	protected override void OnInitialized()
 	{
-		UserDataModel = new UserDto();
+		RegisterRequest = new RegisterRequest();
+		// setting up a dummy password as password is required for the form to be valid.
+		RegisterRequest.Password = "-";
 		base.OnInitialized();
 	}
 
@@ -127,29 +125,36 @@
 		}
 
 		e.Value = userName;
-		UserDataModel!.UserName = userName;
+		RegisterRequest!.UserName = userName;
 	}
+
+	private void SetDisplayName(ChangeEventArgs e)
+	{
+		var displayName = e.Value?.ToString()?.Trim() ?? "";
+		if (string.IsNullOrEmpty(displayName)) return;
+		e.Value = displayName;
+		RegisterRequest!.Name = displayName;
+	}
+
 
 	private async Task HandleSubmit(EditContext editContext)
 	{
 		editContext.Validate();
 		StateHasChanged();
-		if (ConfirmPassword != UserDataModel!.Password || UserNameAlreadyExist) return;
-		if (editContext.Validate() && UserDataModel is not null)
+		if (UserNameAlreadyExist) return;
+		if (editContext.Validate() && RegisterRequest is not null)
 		{
-			UserDataModel.Password = PasswordManager.HashPassword(UserDataModel.Password);
+			RegisterRequest.Password = RegisterRequest.InputPassword;
 
-			var userId = await iDb.AddNewUser(UserDataModel);
+			var userId = await iDb.AddNewUser(RegisterRequest);
 
 			AddedUser = await iDb.GetUser(userId);
 
 			SplashMessage = $"User profile created successfully.";
 
-			UserDataModel = new UserDto();
+			RegisterRequest = new RegisterRequest();
 
 			ShowHoverEffect = true;
-
-			ConfirmPassword = string.Empty;
 		}
 		else
 		{
@@ -159,7 +164,7 @@
 
 	private async Task OnAvatarSelected(string avatar)
 	{
-		UserDataModel!.Avatar = avatar;
+		RegisterRequest!.Avatar = avatar;
 		await InvokeAsync(StateHasChanged);
 	}
 

@@ -16,12 +16,12 @@ builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClie
 
 builder.Services.AddSingleton<BaseAuthenticationService>();
 
-builder.Services.AddScoped<AuthenticationService>();
-builder.Services.AddScoped<AuthStateProvider>();
+builder.Services.AddSingleton<AuthenticationService>();
+builder.Services.AddSingleton<AuthStateProvider>();
 
-builder.Services.AddScoped<IndexedDbService>();
+builder.Services.AddSingleton<IndexedDbService>();
 
-builder.Services.AddScoped<SessionStorageService>();
+builder.Services.AddSingleton<SessionStorageService>();
 
 builder.Services.AddSingleton<GameManagerService>();
 

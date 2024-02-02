@@ -43,7 +43,7 @@
 				{
 					UserName = AppStrings.GuestUser.UserName,
 					Name = AppStrings.GuestUser.DisplayName,
-					Password = PasswordManager.HashPassword(AppStrings.GuestUser.Password),
+					Password = AppStrings.GuestUser.Password,
 					Avatar = AppStrings.GuestUser.Avatar
 				};
 			await iDb.AddNewUser(guestUserDto);
