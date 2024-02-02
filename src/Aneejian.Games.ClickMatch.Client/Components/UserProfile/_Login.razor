@@ -14,7 +14,7 @@
                     <_UserProfileCard Profile="Profile" ShowHoverEffect=false />
                 </div>
                 <div class="w-75">
-                    <EditForm Model="@LoginRequest" OnValidSubmit="ValidatePassword">
+                    @* <EditForm Model="@LoginRequest" OnValidSubmit="ValidatePassword">
                         <DataAnnotationsValidator />
                         <AntiforgeryToken />
                         <div class="@(GuestUser ? "visually-hidden" : "")">
@@ -33,8 +33,10 @@
                             <button type="submit" class="btn btn-success" @onclick=ValidatePassword>Login</button>
                             <button type="button" class="btn btn-secondary" @onclick=@CloseModal>Close</button>
                         </div>
+                        
+                    </EditForm> *@
 
-                    </EditForm>
+                    <_LoginForm ShowLoginAsGuest=false ShowCloseButton=true OnCloseButtonClick="CloseModal" InputUserName="@Profile.UserName" InputPassword="@GuestUserPassword" OnLoginSuccess="@LoginUser" />
                 </div>
             </div>
         </div>
@@ -47,6 +49,7 @@
     [Parameter] public EventCallback<UserDto> OnUserLogin { get; set; }
 
     private bool GuestUser => Profile.UserName == AppStrings.GuestUser.UserName;
+    private string GuestUserPassword => GuestUser ? AppStrings.GuestUser.Password : "";
 
     InputText? inputPassword;
 

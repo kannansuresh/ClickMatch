@@ -4,6 +4,21 @@ public struct AppStrings
 {
 	public const string ConfigFilePath = "config/config.json";
 
+	public struct Pages
+	{
+		public const string Home = "/";
+		public const string Game = "/game";
+		public const string Login = "/login";
+		public const string AddProfile = "/adduser";
+	}
+
+	public struct SessionStorageKeys
+	{
+		public const string UserId = "profileId";
+		public const string LoginRequestId = "loginRequestId";
+		public const string Token = "token";
+	}
+
 	public struct GuestUser
 	{
 		public const string UserName = "guest";

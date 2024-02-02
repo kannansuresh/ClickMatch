@@ -1,0 +1,23 @@
+﻿@using Aneejian.Games.ClickMatch.Client.Components.UserProfile
+@inject NavigationManager navigationManager
+
+@attribute [Route(AppStrings.Pages.Login)]
+
+
+<div class="d-flex flex-column w-100 justify-content-center align-items-center">
+	<div class="mb-5 w-100">
+		<_LoginForm />
+	</div>
+
+	<div class="mb-4 text-lg-start">
+		
+		<button class="btn btn-link text-decoration-none text-info fs-5 icon-link icon-link-hover fw-light" @onclick=@AddNewProfile>Create a new profile<span class="bi pb-4"><span class="bi-arrow-right"></span></span></button>
+	</div>
+</div>
+
+@code {
+	private void AddNewProfile()
+	{
+		navigationManager.NavigateTo(AppStrings.Pages.AddProfile);
+	}
+}
