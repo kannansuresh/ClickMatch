@@ -3,81 +3,77 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
 
-<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-	<_Branding class="mb-2 mt-5" />
-
-	<div class="m-5 text-center">
-		@if (AddedUser is not null)
-		{
-			<h3 class="mb-4 display-6">Welcome @AddedUser.Name</h3>
-			<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
-				<div class="col mb-4" style="width:fit-content">
-					<_UserProfileCard Profile=AddedUser OnUserSelected="OnUserSelect" />
-				</div>
-				<div class="col text-info text-center">
-					Click your profile card to continue.
-				</div>
+<div class="m-5 text-center">
+	@if (AddedUser is not null)
+	{
+		<h3 class="mb-4 display-6">Welcome @AddedUser.Name</h3>
+		<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
+			<div class="col mb-4" style="width:fit-content">
+				<_UserProfileCard Profile=AddedUser OnUserSelected="OnUserSelect" />
 			</div>
-		}
-		else
-		{
-			<div class="row align-items-center justify-content-center p-5 pb-3" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; border-radius: 1rem;">
+			<div class="col text-info text-center">
+				Click your profile card to continue.
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="row align-items-center justify-content-center p-5 pb-3" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; border-radius: 1rem;">
 			<h3 class="mb-4 display-6">Add New User Profile</h3>
-				<div class="col mb-4 ms-0 me-2 align-items-center justify-content-center" style="max-width:fit-content;">
-					<_UserProfileCard Profile=RegisterRequest ShowHoverEffect=ShowHoverEffect />
-				</div>
-				<div class="col mb-4 text-start" style="min-width:60vmin;">
-					<EditForm Model=RegisterRequest id="contactForm" OnValidSubmit="HandleSubmit">
-						<DataAnnotationsValidator />
-						<ValidationSummary />
-						<AntiforgeryToken />
-						<div class="form-floating mb-3">
-							<InputText class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind-Value=RegisterRequest!.UserName autocomplete="off" maxlength="20" />
-							<label for="userName">User Name</label>
-							<ValidationMessage For="() => RegisterRequest!.UserName" />
-							@if (UserNameAlreadyExist)
-							{
-								<div class="validation-message">User name not available.</div>
-							}
-						</div>
-						<div class="form-floating mb-3">
-							<InputText class="form-control" id="displayName" type="text" placeholder="Display Name" @bind-Value=RegisterRequest!.Name autocomplete="off" maxlength="20" @oninput=SetDisplayName />
-							<label for="displayName">Display Name</label>
-							<ValidationMessage For="() => RegisterRequest!.Name" />
-						</div>
-
-						<div class="form-floating mb-3">
-							<InputText class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind-Value=RegisterRequest!.Avatar autocomplete="off" />
-							<label for="avatar">Avatar</label>
-							<div id="avatarHelpBlock" class="form-text">
-								Select an avatar from below or enter a URL to use your own avatar.
-							</div>
-							<ValidationMessage For="() => RegisterRequest!.Avatar" />
-
-							<_AvatarSelector OnAvatarSelected="OnAvatarSelected" />
-						</div>
-
-
-
-						<div class="form-floating mb-3">
-							<InputText class="form-control" id="password" type="password" placeholder="Password" @bind-Value=RegisterRequest!.InputPassword />
-							<label for="password">Password</label>
-							<ValidationMessage For="() => RegisterRequest!.InputPassword" />
-						</div>
-						<div class="form-floating mb-3">
-							<InputText class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind-Value="RegisterRequest!.ConfirmPassword" />
-							<label for="confirmPassword">Confirm Password</label>
-							<ValidationMessage For="() => RegisterRequest!.ConfirmPassword" />
-						</div>
-
-						<div class="d-grid">
-							<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
-						</div>
-					</EditForm>
-				</div>
+			<div class="col mb-4 ms-0 me-2 align-items-center justify-content-center" style="max-width:fit-content;">
+				<_UserProfileCard Profile=RegisterRequest ShowHoverEffect=ShowHoverEffect />
 			</div>
-		}
-	</div>
+			<div class="col mb-4 text-start" style="min-width:60vmin;">
+				<EditForm Model=RegisterRequest id="contactForm" OnValidSubmit="HandleSubmit">
+					<DataAnnotationsValidator />
+					<ValidationSummary />
+					<AntiforgeryToken />
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind-Value=RegisterRequest!.UserName autocomplete="off" maxlength="20" />
+						<label for="userName">User Name</label>
+						<ValidationMessage For="() => RegisterRequest!.UserName" />
+						@if (UserNameAlreadyExist)
+						{
+							<div class="validation-message">User name not available.</div>
+						}
+					</div>
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="displayName" type="text" placeholder="Display Name" @bind-Value=RegisterRequest!.Name autocomplete="off" maxlength="20" @oninput=SetDisplayName />
+						<label for="displayName">Display Name</label>
+						<ValidationMessage For="() => RegisterRequest!.Name" />
+					</div>
+
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar" @bind-Value=RegisterRequest!.Avatar autocomplete="off" />
+						<label for="avatar">Avatar</label>
+						<div id="avatarHelpBlock" class="form-text">
+							Select an avatar from below or enter a URL to use your own avatar.
+						</div>
+						<ValidationMessage For="() => RegisterRequest!.Avatar" />
+
+						<_AvatarSelector OnAvatarSelected="OnAvatarSelected" />
+					</div>
+
+
+
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="password" type="password" placeholder="Password" @bind-Value=RegisterRequest!.InputPassword />
+						<label for="password">Password</label>
+						<ValidationMessage For="() => RegisterRequest!.InputPassword" />
+					</div>
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="confirmPassword" type="password" placeholder="Confirm Password" @bind-Value="RegisterRequest!.ConfirmPassword" />
+						<label for="confirmPassword">Confirm Password</label>
+						<ValidationMessage For="() => RegisterRequest!.ConfirmPassword" />
+					</div>
+
+					<div class="d-grid">
+						<button class="btn btn-primary" id="submitButton" type="submit">Submit</button>
+					</div>
+				</EditForm>
+			</div>
+		</div>
+	}
 </div>
 
 <_Splasher SplashText=@SplashMessage Delay="2000" />

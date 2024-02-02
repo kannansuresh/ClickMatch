@@ -7,42 +7,38 @@
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
-<div class="container">
-    <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-        <_Branding class="mb-4" />
-        @if (LoggedInUserId == 0)
-        {
-            <_UserProfiles />
-        }
-        else
-        {
-            <_Game />
-        }
-    </div>
-</div>
+
+@if (LoggedInUserId == 0)
+{
+	<_UserProfiles />
+}
+else
+{
+	<_Game />
+}
 
 @code {
-    private int LoggedInUserId { get; set; }
-    private bool LoginChecked { get; set; } = false;
+	private int LoggedInUserId { get; set; }
+	private bool LoginChecked { get; set; } = false;
 
-    protected override void OnInitialized()
-    {
-        CheckLogin();
-        authenticationService.OnChange += CheckLogin;
-    }
+	protected override void OnInitialized()
+	{
+		CheckLogin();
+		authenticationService.OnChange += CheckLogin;
+	}
 
-    private async void CheckLogin()
-    {
-        LoginChecked = false;
-        var stringId = await sessionStorageService.GetValueAsync<string>("profileId");
-        if (!string.IsNullOrEmpty(stringId))
-            LoggedInUserId = int.Parse(stringId);
-        LoginChecked = true;
-        StateHasChanged();
-    }
+	private async void CheckLogin()
+	{
+		LoginChecked = false;
+		var stringId = await sessionStorageService.GetValueAsync<string>("profileId");
+		if (!string.IsNullOrEmpty(stringId))
+			LoggedInUserId = int.Parse(stringId);
+		LoginChecked = true;
+		StateHasChanged();
+	}
 
-    public void Dispose()
-    {
-        authenticationService.OnChange -= StateHasChanged;
-    }
+	public void Dispose()
+	{
+		authenticationService.OnChange -= StateHasChanged;
+	}
 }

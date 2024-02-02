@@ -1,25 +1,30 @@
 ﻿@inherits LayoutComponentBase
 
 <ErrorBoundary>
-    <ChildContent>
-        <_UpdateAvailable />
-        @Body
-    </ChildContent>
-    <ErrorContent>
-        <div class="container">
-            <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
-                <figure class="text-center">
-                  <blockquote class="blockquote">
-                    <p>Oh, dear! Oh, my!</p>
-                  </blockquote>
-                  <figcaption class="blockquote-footer">
-                    George Takei
-                  </figcaption>
-                </figure>
-                <h5 class="mb-4">Something went wrong.</h5>
-                <h6 class="mb-4">Please try again later.</h6>
-                <button class="btn btn-primary" onclick="window.location.reload()">Reload</button>
-            </div>
-        </div>
-    </ErrorContent>
+	<ChildContent>
+		<_UpdateAvailable />
+		<div class="container">
+			<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+				<_Branding class="mt-5 mb-4" />
+				@Body
+			</div>
+		</div>
+	</ChildContent>
+	<ErrorContent>
+		<div class="container">
+			<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+				<figure class="text-center">
+					<blockquote class="blockquote">
+						<p>Oh, dear! Oh, my!</p>
+					</blockquote>
+					<figcaption class="blockquote-footer">
+						George Takei
+					</figcaption>
+				</figure>
+				<h5 class="mb-4">Something went wrong.</h5>
+				<h6 class="mb-4">Please try again later.</h6>
+				<button class="btn btn-primary" onclick="window.location.reload()">Reload</button>
+			</div>
+		</div>
+	</ErrorContent>
 </ErrorBoundary>
