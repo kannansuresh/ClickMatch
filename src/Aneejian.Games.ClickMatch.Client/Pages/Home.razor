@@ -11,12 +11,15 @@
 @if (authenticationService.IsAuthenticated)
 {
 	<_Game />
-	<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
 }
 else
 {
 	<_UserProfiles />
 }
+
+<_AuthorizedOnly>
+	<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
+</_AuthorizedOnly>
 
 @code {
 	private int LoggedInUserId { get; set; }

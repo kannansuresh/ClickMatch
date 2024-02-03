@@ -3,10 +3,10 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
 
-<div class="m-5 text-center">
+<div class="text-center d-flex justify-content-center align-items-center flex-column">
 	@if (AddedUser is not null)
 	{
-		<h3 class="mb-4 display-6">Welcome @AddedUser.Name</h3>
+		<h1 class="mb-4 display-6">Welcome @AddedUser.Name</h1>
 		<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
 			<div class="col mb-4" style="width:fit-content">
 				<_UserProfileCard Profile=AddedUser OnUserSelected="OnUserSelect" />
@@ -18,13 +18,13 @@
 	}
 	else
 	{
-		<div class="row align-items-center justify-content-center p-5 pb-3" style="box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px; border-radius: 1rem;">
-			<h3 class="mb-4 display-6">Add New User Profile</h3>
+		<h3 class="h1 display-5 mt-5">Create New User Profile</h3>
+		<div class="d-flex flex-column align-items-center justify-content-center p-5 pb-3 w-75">
 			<div class="col mb-4 ms-0 me-2 align-items-center justify-content-center" style="max-width:fit-content;">
-				<_UserProfileCard Profile=RegisterRequest ShowHoverEffect=ShowHoverEffect />
+				<_UserProfileCard Profile=RegisterRequest ShowProfileInfo=true ShowHoverEffect=ShowHoverEffect />
 			</div>
 			<div class="col mb-4 text-start" style="min-width:60vmin;">
-				<EditForm Model=RegisterRequest id="contactForm" OnValidSubmit="HandleSubmit">
+				<EditForm EditContext=RegisterRequestContext id="contactForm" OnValidSubmit="HandleSubmit">
 					<DataAnnotationsValidator />
 					<ValidationSummary />
 					<AntiforgeryToken />
@@ -32,10 +32,6 @@
 						<InputText class="form-control" id="userName" type="text" placeholder="User Name" @oninput="CheckUserNameAvailability" @bind-Value=RegisterRequest!.UserName autocomplete="off" maxlength="20" />
 						<label for="userName">User Name</label>
 						<ValidationMessage For="() => RegisterRequest!.UserName" />
-						@if (UserNameAlreadyExist)
-						{
-							<div class="validation-message">User name not available.</div>
-						}
 					</div>
 					<div class="form-floating mb-3">
 						<InputText class="form-control" id="displayName" type="text" placeholder="Display Name" @bind-Value=RegisterRequest!.Name autocomplete="off" maxlength="20" @oninput=SetDisplayName />
@@ -53,8 +49,6 @@
 
 						<_AvatarSelector OnAvatarSelected="OnAvatarSelected" />
 					</div>
-
-
 
 					<div class="form-floating mb-3">
 						<InputText class="form-control" id="password" type="password" placeholder="Password" @bind-Value=RegisterRequest!.InputPassword />
@@ -76,27 +70,24 @@
 	}
 </div>
 
-<_Splasher SplashText=@SplashMessage Delay="2000" />
 
 @code {
 
 	private RegisterRequest? RegisterRequest { get; set; }
-
-	private bool UserNameAlreadyExist = false;
+	private EditContext? RegisterRequestContext { get; set; }
+	private ValidationMessageStore? MessageStore { get; set; }
 
 	private bool ShowHoverEffect { get; set; } = false;
 
 	private UserDto? AddedUser { get; set; }
 
-	private string SplashMessage { get; set; } = string.Empty;
-
-
-
 	protected override void OnInitialized()
 	{
 		RegisterRequest = new RegisterRequest();
 		// setting up a dummy password as password is required for the form to be valid.
-		RegisterRequest.Password = "-";
+		RegisterRequest.Password = "dummyPassword";
+		RegisterRequestContext = new EditContext(RegisterRequest);
+		MessageStore = new ValidationMessageStore(RegisterRequestContext);
 		base.OnInitialized();
 	}
 
@@ -113,7 +104,16 @@
 		try
 		{
 			var userExist = await iDb.UserExists(userName);
-			UserNameAlreadyExist = userExist;
+			if (userExist)
+			{
+				MessageStore!.Clear();
+				MessageStore!.Add(() => RegisterRequest!.UserName, "User name not available.");				
+			}
+			else
+			{
+				MessageStore!.Clear();
+			}
+			RegisterRequestContext!.NotifyValidationStateChanged();
 		}
 		catch (Exception ex)
 		{
@@ -135,27 +135,11 @@
 
 	private async Task HandleSubmit(EditContext editContext)
 	{
-		editContext.Validate();
-		StateHasChanged();
-		if (UserNameAlreadyExist) return;
-		if (editContext.Validate() && RegisterRequest is not null)
-		{
-			RegisterRequest.Password = RegisterRequest.InputPassword;
-
-			var userId = await iDb.AddNewUser(RegisterRequest);
-
-			AddedUser = await iDb.GetUser(userId);
-
-			SplashMessage = $"User profile created successfully.";
-
-			RegisterRequest = new RegisterRequest();
-
-			ShowHoverEffect = true;
-		}
-		else
-		{
-			Console.WriteLine("Form is invalid.");
-		}
+		RegisterRequest!.Password = RegisterRequest.InputPassword;
+		var userId = await iDb.AddNewUser(RegisterRequest);
+		AddedUser = await iDb.GetUser(userId);
+		RegisterRequest = new RegisterRequest();
+		ShowHoverEffect = true;
 	}
 
 	private async Task OnAvatarSelected(string avatar)
@@ -163,6 +147,5 @@
 		RegisterRequest!.Avatar = avatar;
 		await InvokeAsync(StateHasChanged);
 	}
-
 
 }

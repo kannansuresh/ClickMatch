@@ -9,7 +9,7 @@ public struct AppStrings
 		public const string Home = "/";
 		public const string Game = "/game";
 		public const string Login = "/login";
-		public const string AddProfile = "/adduser";
+		public const string Register = "/register";
 	}
 
 	public struct SessionStorageKeys

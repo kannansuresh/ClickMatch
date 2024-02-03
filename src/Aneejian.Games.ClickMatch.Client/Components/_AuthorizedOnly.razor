@@ -1,0 +1,23 @@
+﻿@inject AuthenticationService authenticationService
+
+@if (isAuthenticated)
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    bool isAuthenticated = false;
+
+    protected override void OnInitialized()
+    {
+        authenticationService.OnAuthenticationStateChanged += NotifyChange;
+    }
+
+    private void NotifyChange(bool authenticated)
+    {
+        isAuthenticated = authenticated;
+        StateHasChanged();
+    }
+}
