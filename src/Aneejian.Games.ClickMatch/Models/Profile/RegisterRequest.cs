@@ -1,4 +1,5 @@
-﻿using Aneejian.Games.ClickMatch.Data;
+﻿using Aneejian.Games.ClickMatch.Constants;
+using Aneejian.Games.ClickMatch.Data;
 using Aneejian.Games.ClickMatch.Security;
 using System.ComponentModel.DataAnnotations;
 
@@ -25,5 +26,15 @@ public class RegisterRequest : UserDto
 	[Required(ErrorMessage = "Password confirmation is required.")]
 	[Compare(nameof(InputPassword), ErrorMessage = "Password and Confirm Password do not match.")]
 	public string ConfirmPassword { get; set; } = string.Empty;
+
+	public RegisterRequest AddGuestUser()
+	{
+		UserName = AppStrings.GuestUser.UserName;
+		Name = AppStrings.GuestUser.DisplayName;
+		InputPassword = AppStrings.GuestUser.Password;
+		Avatar = AppStrings.GuestUser.Avatar;
+		Password = InputPassword;
+		return this;
+	}
 
 }

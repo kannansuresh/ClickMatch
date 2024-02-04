@@ -39,13 +39,7 @@
 
 		if (profiles.Count() == 0)
 		{
-			var guestUserDto = new UserDto
-				{
-					UserName = AppStrings.GuestUser.UserName,
-					Name = AppStrings.GuestUser.DisplayName,
-					Password = AppStrings.GuestUser.Password,
-					Avatar = AppStrings.GuestUser.Avatar
-				};
+			var guestUserDto = new RegisterRequest().AddGuestUser();
 			await iDb.AddNewUser(guestUserDto);
 		}
 
