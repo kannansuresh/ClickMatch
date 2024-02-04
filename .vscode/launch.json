@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "name": "C#: Aneejian.Games.ClickMatch.Client [Default Configuration]",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}\\src\\Aneejian.Games.ClickMatch.Client\\Aneejian.Games.ClickMatch.Client.csproj"
+    }
+  ]
+}
