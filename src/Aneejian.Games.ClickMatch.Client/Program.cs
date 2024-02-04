@@ -14,10 +14,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, AppStrings.ConfigFilePath));
 
-builder.Services.AddSingleton<BaseAuthenticationService>();
-
 builder.Services.AddSingleton<AuthenticationService>();
-builder.Services.AddSingleton<AuthStateProvider>();
 
 builder.Services.AddSingleton<IndexedDbService>();
 
