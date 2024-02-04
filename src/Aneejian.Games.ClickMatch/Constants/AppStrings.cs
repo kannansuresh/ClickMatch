@@ -2,7 +2,7 @@
 
 public struct AppStrings
 {
-	public const string ConfigFilePath = "config/config.json";
+	public const string ConfigFilePath = "config/config.json?v=1.0.0";
 
 	public struct Pages
 	{

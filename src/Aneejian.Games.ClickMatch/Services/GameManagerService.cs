@@ -1,13 +1,19 @@
-﻿using Aneejian.Games.ClickMatch.Models;
+﻿using Aneejian.Games.ClickMatch.Data;
+using Aneejian.Games.ClickMatch.Models;
+using Aneejian.Games.ClickMatch.Services.Authentication;
 
 namespace Aneejian.Games.ClickMatch.Services;
 
-public class GameManagerService
+public class GameManagerService(AuthenticationService authenticationService)
 {
-	public Guid Id { get; set; } = Guid.NewGuid();
+
+	private readonly AuthenticationService _authenticationService = authenticationService;
+
 	public IGameSettings GameSettings { get; set; } = null!;
 	public IGameScorer GameScorer { get; set; } = null!;
 	public TileModel[] Tiles { get; set; } = [];
+
+	public UserDto? Player { get; set; }
 
 	public int Moves { get; set; }
 	public int Misses { get; set; }
@@ -20,8 +26,9 @@ public class GameManagerService
 	private List<TileModel>? FlippedTiles { get; set; } = [];
 	private List<TileModel>? MatchedTiles { get; set; } = [];
 
-	public void StartGame(IGameSettings gameSettings)
+	public async void StartGame(IGameSettings gameSettings)
 	{
+		Player = await _authenticationService.GetAuthenticatedUser();
 		GameSettings = gameSettings ?? throw new Exception("Game settings not set.");
 		GameScorer ??= new GameScorer();
 		GameScorer.Reset();

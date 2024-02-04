@@ -4,23 +4,23 @@
 @inject NavigationManager navigationManager
 
 
-<div class="text-center mb-5">
-	<h1 class="display-5">Who is playing?</h1>
-</div>
+@if (Profiles is not null)
+{
+	<div class="text-center mb-5">
+		<h1 class="display-5">Who is playing?</h1>
+	</div>
 
-<div class="profiles-container">
+	<div class="profiles-container">
 
-	@if (Profiles is not null)
-	{
 		@foreach (var profile in Profiles)
 		{
 			<_UserProfileCard Profile=profile OnUserSelected=SelectUser OnUserDeleted=DeleteUser />
 		}
-	}
 
-	<_Splasher SplashText=@SplashMessage />
+		<_Splasher SplashText=@SplashMessage />
 
-</div>
+	</div>
+}
 
 @code {
 	private List<UserDto>? Profiles { get; set; }

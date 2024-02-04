@@ -7,9 +7,10 @@ export class IndexedDb {
     setupDatabase() {
         this.db.version(1).stores({
             users: "++id, &userName",
-            games: "++id, userId, level, score, timeTaken, gameWon, gameAbandoned"
+            games: "++id, userId, level, score, timeTaken, gameWon, gameLost, gameAbandoned"
         });
         this.db.users.mapToClass(UserDTO);
+        this.db.games.mapToClass(GameDTO);
     }
 
     async addNewUser(user) {
@@ -17,7 +18,7 @@ export class IndexedDb {
     }
 
     async addUserGame(game) {
-        return await this.db.games.add(game);
+        return await this.db.games.add(new GameDTO(game));
     }
 
     async getUsers() {
@@ -42,6 +43,21 @@ export class IndexedDb {
             return await this.db.users.delete(idOrUserName);
     }
 
+
+
+    async getUserGameLevel(userId) {
+        const userGames = await this.getGames(userId);
+        if (userGames.length === 0)
+            return 1;
+        else
+            return Math.max(...userGames.map(g => g.level));
+    }
+
+
+    async getGames(userId) {
+        return await this.db.games.where('userId').equals(userId).toArray();
+    }
+
     // Other database operations can be added here, such as update, delete, etc.
 }
 
@@ -53,6 +69,21 @@ export class UserDTO {
         this.password = user.password;
         this.avatar = user.avatar;
     }
+}
+
+export class GameDTO {
+
+    constructor(game) {
+        this.userId = game.userId;
+        this.level = game.level;
+        this.score = game.score;
+        this.timeTaken = game.timeTaken;
+        this.gameWon = game.gameWon;
+        this.gameLost = game.gameLost;
+        this.gameAbandoned = game.gameAbandoned;
+    }
+
+
 }
 
 export function createIndexedDb() {

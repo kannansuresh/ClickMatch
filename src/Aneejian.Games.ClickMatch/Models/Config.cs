@@ -13,6 +13,6 @@ public class Config
 	[JsonPropertyName("default_theme")]
 	public string DefaultTheme { get; set; } = string.Empty;
 
-	[JsonPropertyName("default_tile_count")]
-	public int DefaultTileCount { get; set; }
+	[JsonPropertyName("default_level")]
+	public int DefaultGameLevel { get; set; }
 }

@@ -1,72 +1,99 @@
-﻿@inject IThemeService themeService
+﻿<EditForm EditContext="SettingsRequestContext" id="settings-form" class="mb-4" OnValidSubmit="HandleSubmitClick">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+	<div class="form-floating mb-3">
+		<InputSelect class="form-select" id="selectTheme" aria-label="Select Theme" @bind-Value="@SettingsRequest!.ThemeId" @bind-Value:after="HandleThemeChange">
+			@foreach (var theme in Themes!)
+			{
+				<option value="@theme.ThemeId">@theme.ThemeName</option>
+			}
+		</InputSelect>
+		<label for="selectTheme">Select Theme</label>
+	</div>
+
+	<div class="form-floating mb-3">
+		<InputSelect class="form-select" id="selectLevel" aria-label="Select Level" @bind-Value="@SettingsRequest!.Level">
+			@foreach (int level in GameLevels!)
+			{
+				<option value="@level">@($"Level {level}")</option>
+			}
+		</InputSelect>
+
+		<label for="selectLevel">Select Level</label>
+		<div id="selectLevelHelpBlock" class="form-text">
+			This level will have @(SettingsRequest!.Level * 4) tiles.
+		</div>
+	</div>
 
 
-<div class="row settings-form">
-	<h4 class="mb-4">Enter your game preference</h4>
-	<form id="settings-form" class="mb-4" @onsubmit="HandleSubmitClick">
-		<div class="form-floating mb-3">
-			<select class="form-select" id="selectTheme" aria-label="Select Theme" value="@SelectedThemeId" @onchange="HandleThemeChange">
-				@foreach (var theme in Themes!)
-				{
-					<option value="@theme.ThemeId">@theme.ThemeName</option>
-				}
-			</select>
-			<label for="selectTheme">Select Theme</label>
+	<div class="form-check mb-3">
+		<InputCheckbox class="form-check-input" type="checkbox" @bind-Value=@SettingsRequest.ShowTileNumber id="showTileNumber" />
+		<label class="form-check-label" for="showTileNumber">
+			Show tile number in the grid
+		</label>
+	</div>
+	<div class="d-grid">
+		<button class="btn btn-primary mb-4" id="submitButton" type="submit">Start Game</button>
+	</div>
+	@if (SelectedTheme!.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
+	{
+		<div class="alert alert-info mb-4" role="alert">
+			@((MarkupString)SelectedTheme.Attribution)
 		</div>
-		<div class="form-floating mb-3">
-			<input class="form-control" id="enterNumberOfTiles" type="number" placeholder="Enter number of tiles" max="@(SelectedTheme!.ItemCount * 2)" @bind="TileCount" />
-			<label for="enterNumberOfTiles">Enter number of tiles</label>
-			<div class="invalid-feedback" data-sb-feedback="enterNumberOfTiles:required">Enter number of tiles is required.</div>
-		</div>
-		<div class="form-check mb-3">
-			<input class="form-check-input" type="checkbox" @bind=ShowTileNumber id="showTileNumber">
-			<label class="form-check-label" for="showTileNumber">
-				Show tile number in the grid
-			</label>
-		</div>
-		<div class="d-grid">
-			<button class="btn btn-primary mb-4" id="submitButton" type="submit">Start Game</button>
-		</div>
-		@if (SelectedTheme.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
-		{
-			<div class="alert alert-info mb-4" role="alert">
-				@((MarkupString)SelectedTheme.Attribution)
-			</div>
-		}
-	</form>
-</div>
+	}
+</EditForm>
 
 
 
 @code {
 
 	[Parameter] public IEnumerable<IThemeData>? Themes { get; set; }
+	[Parameter] public int MaxGameLevel { get; set; } = 50;
 	[Parameter] public string? SelectedThemeId { get; set; }
-	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
-	[Parameter] public int TileCount { get; set; }
+	[Parameter] public int GameLevel { get; set; }
 	[Parameter] public bool ShowTileNumber { get; set; } = true;
+	[Parameter] public EventCallback<SettingsRequest> OnSubmitClick { get; set; }
+
+	private SettingsRequest? SettingsRequest { get; set; }
+	private EditContext? SettingsRequestContext { get; set; }
+
+	private IEnumerable<int>? GameLevels { get; set; }
 
 	private IThemeData? SelectedTheme { get; set; }
 
 	protected override void OnInitialized()
 	{
-		Themes = Themes ?? themeService.ThemeDatas;
-		SelectedThemeId = SelectedThemeId ?? themeService!.ThemeConfig!.DefaultTheme;
-		TileCount = TileCount == 0 ? themeService!.ThemeConfig!.DefaultTileCount : TileCount;
+		SelectedThemeId = SelectedThemeId ?? Themes?.FirstOrDefault()?.ThemeId;
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+		SetGameLevels();
+		SettingsRequest = new SettingsRequest
+			{
+				ThemeId = SelectedThemeId!,
+				Level = GameLevel,
+				ShowTileNumber = ShowTileNumber
+			};
+		SettingsRequestContext = new EditContext(SettingsRequest);
+	}
+
+	private void SetGameLevels()
+	{
+		var imageCount = SelectedTheme?.ItemCount ?? 0;
+		var maxLevel = Math.Min(Math.Abs(imageCount / 4), MaxGameLevel);
+		GameLevels = Enumerable.Range(1, maxLevel);
 	}
 
 
 	private async Task HandleSubmitClick()
 	{
-		var gameSettings = new GameSettings(TileCount, SelectedTheme!, ShowTileNumber);
-		await OnSubmitClick.InvokeAsync(gameSettings);
+		await OnSubmitClick.InvokeAsync(SettingsRequest);
 	}
 
-	private void HandleThemeChange(ChangeEventArgs e)
+	private void HandleThemeChange()
 	{
-		SelectedThemeId = e.Value?.ToString();
-		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SettingsRequest!.ThemeId);
+		SetGameLevels();
+		StateHasChanged();
 	}
 
 }

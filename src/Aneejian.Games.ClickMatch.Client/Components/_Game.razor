@@ -1,11 +1,12 @@
-﻿@inject IThemeService themeService
+﻿@using System.Diagnostics
+@inject IThemeService themeService
 @inject GameManagerService gameManager
 
 <div class="d-flex flex-column justify-content-center align-items-center">
 	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
 	{		
 		<div class="col">
-			<_SettingsForm SelectedThemeId=@SelectedThemeId TileCount=@TileCount ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
+			 <_GameSettings SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
 		</div>
 	}
 	@if (Tiles is not null && gameManager is not null && gameManager.GameInProgress)
@@ -57,7 +58,7 @@
 @code {
 
 	private TileModel[]? Tiles { get; set; }
-	private int TileCount { get; set; }
+	private int GameLevel { get; set; }
 	private IEnumerable<IThemeData>? Themes { get; set; }
 	private string SelectedThemeId { get; set; } = "";
 	private Config? Config { get; set; }
@@ -70,7 +71,7 @@
 
 		Tiles = [];
 		Config = themeService.ThemeConfig;
-		TileCount = Config!.DefaultTileCount;
+		GameLevel = Config!.DefaultGameLevel;
 		SelectedThemeId = Config.DefaultTheme;
 		Themes = themeService.ThemeDatas;
 		ScoreCollector = new ScoreCollector();
@@ -97,14 +98,13 @@
 		{
 			gameManager.StartGame(settings);
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
-			TileCount = gameManager.GameSettings.NumberOfTiles;
+			GameLevel = gameManager.GameSettings.GameLevel;
 			Tiles = gameManager!.Tiles;
 			StateHasChanged();
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-
-			throw;
+			Debug.WriteLine(ex.Message);
 		}
 	}
 

@@ -114,6 +114,19 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 		IsAuthenticated = false;
 	}
 
+	public async Task<UserDto> GetAuthenticatedUser()
+	{
+		if (!IsAuthenticated)
+			throw new Exception("No user is authenticated.");
+		var userId = await _sessionStorageService.GetValueAsync<string>(AppStrings.SessionStorageKeys.UserId);
+		var user = await GetUser(Convert.ToInt32(userId));
+		var userIsLoggedIn = await ValidateLoggedInUser(user);
+		if (userIsLoggedIn)
+			return user;
+		else
+			throw new Exception("User is not logged in.");
+	}
+
 	private async Task<UserDto> GetUser<T>(T userIdOrName)
 	{
 		var user = await _indexedDbService.GetUser(userIdOrName);
