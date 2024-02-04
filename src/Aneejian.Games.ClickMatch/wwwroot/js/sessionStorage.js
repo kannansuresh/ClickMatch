@@ -1,6 +1,4 @@
 ﻿export function get(key) {
-    console.log('sessionStorage.get');
-    console.log(window.sessionStorage.getItem(key))
     return window.sessionStorage.getItem(key);
 }
 

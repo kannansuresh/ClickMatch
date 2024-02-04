@@ -73,52 +73,52 @@
 
 @code {
 
-	private RegisterRequest? RegisterRequest { get; set; }
-	private EditContext? RegisterRequestContext { get; set; }
-	private ValidationMessageStore? MessageStore { get; set; }
+    private RegisterRequest? RegisterRequest { get; set; }
+    private EditContext? RegisterRequestContext { get; set; }
+    private ValidationMessageStore? MessageStore { get; set; }
 
-	private bool ShowHoverEffect { get; set; } = false;
+    private bool ShowHoverEffect { get; set; } = false;
 
-	private UserDto? AddedUser { get; set; }
+    private UserDto? AddedUser { get; set; }
 
-	protected override void OnInitialized()
-	{
-		RegisterRequest = new RegisterRequest();
-		// setting up a dummy password as password is required for the form to be valid.
-		RegisterRequest.Password = "dummyPassword";
-		RegisterRequestContext = new EditContext(RegisterRequest);
-		MessageStore = new ValidationMessageStore(RegisterRequestContext);
-		base.OnInitialized();
-	}
+    protected override void OnInitialized()
+    {
+        RegisterRequest = new RegisterRequest();
+        // setting up a dummy password as password is required for the form to be valid.
+        RegisterRequest.Password = "dummyPassword";
+        RegisterRequestContext = new EditContext(RegisterRequest);
+        MessageStore = new ValidationMessageStore(RegisterRequestContext);
+        base.OnInitialized();
+    }
 
-	private void OnUserSelect()
-	{
-		navigationManager.NavigateTo("/");
-	}
+    private void OnUserSelect()
+    {
+        navigationManager.NavigateTo("/");
+    }
 
-	private async Task CheckUserNameAvailability(ChangeEventArgs e)
-	{
-		var userName = e.Value?.ToString()?.Trim() ?? "";
-		userName = string.Join("", userName.ToCharArray().Where(c => char.IsLetterOrDigit(c) || c == '_'));
-		if (string.IsNullOrEmpty(userName)) return;
-		try
-		{
-			var userExist = await iDb.UserExists(userName);
-			if (userExist)
-			{
-				MessageStore!.Clear();
-				MessageStore!.Add(() => RegisterRequest!.UserName, "User name not available.");				
-			}
-			else
-			{
-				MessageStore!.Clear();
-			}
-			RegisterRequestContext!.NotifyValidationStateChanged();
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine(ex.Message);
-		}
+    private async Task CheckUserNameAvailability(ChangeEventArgs e)
+    {
+        var userName = e.Value?.ToString()?.Trim() ?? "";
+        userName = string.Join("", userName.ToCharArray().Where(c => char.IsLetterOrDigit(c) || c == '_'));
+        if (string.IsNullOrEmpty(userName)) return;
+        try
+        {
+            var userExist = await iDb.UserExists(userName);
+            if (userExist)
+            {
+                MessageStore!.Clear();
+                MessageStore!.Add(() => RegisterRequest!.UserName, "User name not available.");				
+            }
+            else
+            {
+                MessageStore!.Clear();
+            }
+            RegisterRequestContext!.NotifyValidationStateChanged();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex.Message);
+        }
 
 		e.Value = userName;
 		RegisterRequest!.UserName = userName;

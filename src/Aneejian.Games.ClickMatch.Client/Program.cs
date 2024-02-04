@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Aneejian.Games.ClickMatch;
 using Aneejian.Games.ClickMatch.Client;
 using Aneejian.Games.ClickMatch.Constants;
@@ -31,7 +32,7 @@ try
 }
 catch (Exception ex)
 {
-	Console.WriteLine(ex.Message);
+	Debug.WriteLine(ex.Message);
 }
 
 await host.RunAsync();
