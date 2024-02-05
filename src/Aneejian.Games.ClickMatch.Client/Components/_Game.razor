@@ -9,7 +9,7 @@
 			 <_GameSettings SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
 		</div>
 	}
-	@if (Tiles is not null && gameManager is not null && gameManager.GameInProgress)
+	@if (Tiles is not null && Tiles.Length > 0 && gameManager is not null && gameManager.GameInProgress)
 	{
 		<div class="row mb-4">
 			<_TileGrid Tiles="Tiles" />
@@ -68,7 +68,6 @@
 	protected override void OnInitialized()
 	{
 		gameManager.OnChange += OnChangeHandler;
-
 		Tiles = [];
 		Config = themeService.ThemeConfig;
 		GameLevel = Config!.DefaultGameLevel;
@@ -96,6 +95,7 @@
 	{
 		try
 		{
+			Tiles = [];
 			gameManager.StartGame(settings);
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
 			GameLevel = gameManager.GameSettings.GameLevel;

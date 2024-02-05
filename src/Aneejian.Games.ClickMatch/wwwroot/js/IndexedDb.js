@@ -21,6 +21,10 @@ export class IndexedDb {
         return await this.db.games.add(new GameDTO(game));
     }
 
+    async updateUserGame(game) {
+        return await this.db.games.update(game.id, new GameDTO(game));
+    }
+
     async getUsers() {
         return await this.db.users.toArray();
     }
@@ -64,6 +68,7 @@ export class IndexedDb {
 export class UserDTO {
 
     constructor(user) {
+        this.id = user.id == 0 || null ? undefined : user.id;
         this.userName = user.userName;
         this.name = user.name;
         this.password = user.password;
@@ -74,6 +79,7 @@ export class UserDTO {
 export class GameDTO {
 
     constructor(game) {
+        this.id = game.id == 0 || null ? undefined : game.id;
         this.userId = game.userId;
         this.level = game.level;
         this.score = game.score;

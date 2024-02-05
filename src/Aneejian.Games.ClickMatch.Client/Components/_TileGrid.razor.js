@@ -9,13 +9,15 @@ export const preloadImages = imageUrls => {
     }
 };
 
-export const styleGridAndTiles = (gridId, tileClass, initialColumnCount) => {
+export async function styleGridAndTiles(gridId, tileClass, initialColumnCount) {
     const minWidth = 50;
     const maxWidth = 150;
-    const grid = document.getElementById(gridId);
-    const tiles = grid.getElementsByClassName(tileClass);
-    const adjustGrid = () => {
 
+    // Wait for elements to be available using async/await
+    const grid = await waitForElm('#' + gridId);
+    const tiles = await waitForElm('.' + tileClass);
+
+    const adjustGrid = async () => {
         let viewPortWidth = window.innerWidth - 20;
         let columnWidth = viewPortWidth / initialColumnCount - (initialColumnCount - 1);
         let adjustedColumnCount = initialColumnCount;
@@ -28,6 +30,7 @@ export const styleGridAndTiles = (gridId, tileClass, initialColumnCount) => {
             }
             columnWidth = viewPortWidth / adjustedColumnCount - (adjustedColumnCount - 1);
         }
+
         columnWidth = Math.min(Math.max(columnWidth, minWidth), maxWidth);
 
         grid.style.gridTemplateColumns = `repeat(${adjustedColumnCount}, 1fr)`;
@@ -40,12 +43,33 @@ export const styleGridAndTiles = (gridId, tileClass, initialColumnCount) => {
         timeoutId = setTimeout(adjustGrid, 100);
     };
 
-    adjustGrid();
+    await adjustGrid(); // Initially call adjustGrid asynchronously
     window.addEventListener('resize', throttledResizeListener);
-};
+}
 
 const setTileSize = (tiles, widthToSet) => {
-    const grid = tiles[0].parentNode;
+    let grid = tiles[0].parentNode;
     grid.style.setProperty('--tile-size', `${widthToSet}px`);
     grid.style.setProperty('--tile-font-size', `${widthToSet / 2}px`);
 };
+
+function waitForElm(selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                observer.disconnect();
+                resolve(document.querySelector(selector));
+            }
+        });
+
+        // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}

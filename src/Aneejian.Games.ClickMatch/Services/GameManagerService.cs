@@ -4,10 +4,11 @@ using Aneejian.Games.ClickMatch.Services.Authentication;
 
 namespace Aneejian.Games.ClickMatch.Services;
 
-public class GameManagerService(AuthenticationService authenticationService)
+public class GameManagerService(AuthenticationService authenticationService, IndexedDbService indexedDbService)
 {
 
 	private readonly AuthenticationService _authenticationService = authenticationService;
+	private readonly IndexedDbService _indexedDbService = indexedDbService;
 
 	public IGameSettings GameSettings { get; set; } = null!;
 	public IGameScorer GameScorer { get; set; } = null!;
@@ -20,6 +21,9 @@ public class GameManagerService(AuthenticationService authenticationService)
 	public bool GameInProgress { get; set; }
 	public bool GameWon { get; set; }
 	public bool GameLost { get; set; }
+
+	private int IndexedDbGameId { get; set; }
+	private GameDto? GameData { get; set; }
 
 	public int Multiplier { get; set; } = 1;
 
@@ -34,6 +38,23 @@ public class GameManagerService(AuthenticationService authenticationService)
 		GameScorer.Reset();
 		Tiles = GameSettings.GenerateTiles().ToArray();
 		GameInProgress = true;
+		await SaveGameData();
+	}
+
+	private async Task SaveGameData()
+	{
+		GameDto gameData = new()
+		{
+			UserId = Player!.Id,
+			Level = GameSettings.GameLevel,
+			Score = GameScorer.Score,
+			TimeTaken = 0,
+			GameWon = GameWon,
+			GameLost = GameLost
+		};
+		GameData = gameData;
+		IndexedDbGameId = await _indexedDbService.AddUserGame(GameData);
+		GameData.Id = IndexedDbGameId;
 	}
 
 	public void ResetGame()
@@ -46,6 +67,8 @@ public class GameManagerService(AuthenticationService authenticationService)
 		GameWon = false;
 		GameLost = false;
 		GameInProgress = false;
+		GameData = null;
+		IndexedDbGameId = 0;
 		Tiles = [];
 		GameScorer.Reset();
 		NotifyStateChanged();
@@ -83,12 +106,22 @@ public class GameManagerService(AuthenticationService authenticationService)
 
 		if (MatchedTiles!.Count == Tiles.Length)
 		{
-			GameInProgress = false;
-			GameWon = GameScorer.Score > 0;
-			GameLost = !GameWon;
+			await SetGameResult();
 		}
 		GameScorer.Multiplier = Multiplier;
 		NotifyStateChanged();
+	}
+
+	private async Task SetGameResult()
+	{
+		GameInProgress = false;
+		GameWon = GameScorer.Score > 0;
+		GameLost = !GameWon;
+		GameData!.Score = GameScorer.TotalScore;
+		GameData.TimeTaken = 0;
+		GameData.GameWon = GameWon;
+		GameData.GameLost = GameLost;
+		await _indexedDbService.UpdateUserGame(GameData);
 	}
 
 

@@ -39,7 +39,7 @@
     {
         if (firstRender)
         {
-            await using (_jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/_TileGrid.razor.js"))
+            await using (_jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.TileGrid))
             {
                 var images = Tiles.Where(tile => tile.IsImage)
                               .Select(tile => tile.Content)
