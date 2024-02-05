@@ -9,13 +9,12 @@ export const preloadImages = imageUrls => {
     }
 };
 
-export async function styleGridAndTiles(gridId, tileClass, initialColumnCount) {
+export async function styleGridAndTiles(gridId, initialColumnCount) {
     const minWidth = 50;
     const maxWidth = 150;
 
     // Wait for elements to be available using async/await
     const grid = await waitForElm('#' + gridId);
-    const tiles = await waitForElm('.' + tileClass);
 
     const adjustGrid = async () => {
         let viewPortWidth = window.innerWidth - 20;
@@ -34,7 +33,7 @@ export async function styleGridAndTiles(gridId, tileClass, initialColumnCount) {
         columnWidth = Math.min(Math.max(columnWidth, minWidth), maxWidth);
 
         grid.style.gridTemplateColumns = `repeat(${adjustedColumnCount}, 1fr)`;
-        setTileSize(tiles, columnWidth);
+        setTileSize(grid, columnWidth);
     };
 
     let timeoutId;
@@ -47,8 +46,7 @@ export async function styleGridAndTiles(gridId, tileClass, initialColumnCount) {
     window.addEventListener('resize', throttledResizeListener);
 }
 
-const setTileSize = (tiles, widthToSet) => {
-    let grid = tiles[0].parentNode;
+const setTileSize = (grid, widthToSet) => {
     grid.style.setProperty('--tile-size', `${widthToSet}px`);
     grid.style.setProperty('--tile-font-size', `${widthToSet / 2}px`);
 };
