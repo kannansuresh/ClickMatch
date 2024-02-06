@@ -1,6 +1,6 @@
 body {
     font-family: system-ui;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .valid.modified:not([type=checkbox]) {

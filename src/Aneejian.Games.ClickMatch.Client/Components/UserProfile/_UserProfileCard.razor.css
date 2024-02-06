@@ -10,39 +10,39 @@
     transition: all 0.2s ease-in-out;
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    max-width: 200px;
+    max-width: 12.5rem;
     word-break: break-all;
     overflow-wrap: break-word;
 }
 
 .profile-image {
-    width: 150px;
-    height: 150px;
+    width: 9.375rem;
+    height: 9.375rem;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 
-    .profile-image img,
-    .profile-image svg {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+.profile-image img,
+.profile-image svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    .profile-image svg {
-        color: rgba(151, 144, 144, 0.1);
-    }
+.profile-image svg {
+    color: rgba(151, 144, 144, 0.1);
+}
 
 .profile-hover:hover {
     transform: scale(1.1);
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-    .profile-hover:hover svg {
-        color: rgba(255, 255, 255, 0.3);
-    }
+.profile-hover:hover svg {
+    color: rgba(255, 255, 255, 0.3);
+}
 
 .profile-info {
     margin: 1rem 0;
@@ -71,15 +71,15 @@
     opacity: 0;
 }
 
-    .profile-delete svg {
-        width: 1.5rem;
-        height: 1.5rem;
-        color: rgba(255, 0, 0, 0.5);
-    }
+.profile-delete svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: rgba(255, 0, 0, 0.5);
+}
 
-    .profile-delete:hover svg {
-        color: rgba(255, 0, 0, 1);
-    }
+.profile-delete:hover svg {
+    color: rgba(255, 0, 0, 1);
+}
 
 .profile:hover .profile-delete {
     opacity: 1;
