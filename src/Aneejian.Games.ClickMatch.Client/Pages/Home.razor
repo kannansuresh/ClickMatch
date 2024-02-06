@@ -1,9 +1,8 @@
 ﻿@page "/"
 @inject IThemeService themeService
-@inject IJSRuntime jsRuntime
-@inject NavigationManager navigationManager
 @inject SessionStorageService sessionStorageService
 @inject AuthenticationService authenticationService
+@implements IAsyncDisposable
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
@@ -29,7 +28,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		
+
 		await CheckLogin();
 		authenticationService.OnAuthenticationStateChanged += CheckLogin;
 	}
@@ -38,7 +37,6 @@ else
 	{
 		if (!authenticationService.IsAuthenticated)
 		{
-			// await authenticationService.Logout();
 			StateHasChanged();
 			return;
 		}
@@ -56,8 +54,20 @@ else
 		StateHasChanged();
 	}
 
-	public void Dispose()
+	public async ValueTask DisposeAsync()
 	{
-		authenticationService.OnAuthenticationStateChanged -= CheckLogin;
+		if (authenticationService != null)
+		{
+			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
+			await authenticationService.Logout();
+			await authenticationService.DisposeAsync();
+		}
+
+		if (sessionStorageService != null)
+		{
+			await sessionStorageService.ClearAsync();
+			await sessionStorageService.DisposeAsync();
+		}
 	}
+
 }

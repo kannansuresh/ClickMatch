@@ -1,6 +1,7 @@
 ﻿using Aneejian.Games.ClickMatch.Data;
 using Aneejian.Games.ClickMatch.Models;
 using Aneejian.Games.ClickMatch.Services.Authentication;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Aneejian.Games.ClickMatch.Services;
 
@@ -129,4 +130,5 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 	public event Action? OnChange;
 
 	private void NotifyStateChanged() => OnChange?.Invoke();
+
 }
