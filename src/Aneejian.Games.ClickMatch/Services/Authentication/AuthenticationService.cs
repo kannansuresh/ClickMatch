@@ -5,7 +5,7 @@ using Aneejian.Games.ClickMatch.Security;
 
 namespace Aneejian.Games.ClickMatch.Services.Authentication;
 
-public class AuthenticationService(IndexedDbService indexedDbService, SessionStorageService sessionStorageService) : IAsyncDisposable
+public class AuthenticationService(IndexedDbService indexedDbService, SessionStorageService sessionStorageService)
 {
 	private bool _isAuthenticated;
 	private string? _authenticationErrorMessage;
@@ -141,17 +141,4 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 
 	private void NotifyAuthenticationStateChanged() => OnAuthenticationStateChanged?.Invoke(IsAuthenticated);
 
-	public async ValueTask DisposeAsync()
-	{
-		if (_sessionStorageService != null)
-		{
-			await _sessionStorageService.DisposeAsync();
-		}
-
-		if (_indexedDbService != null)
-		{
-			await _indexedDbService.DisposeAsync();
-		}
-
-	}
 }

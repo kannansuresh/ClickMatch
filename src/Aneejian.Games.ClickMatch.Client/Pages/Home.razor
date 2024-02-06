@@ -6,16 +6,13 @@
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
-@if (authenticationService.IsAuthenticated)
-{
-	<_Game />
-}
-else
+@if (!authenticationService.IsAuthenticated)
 {
 	<_UserProfiles />
 }
 
 <_AuthorizedOnly>
+	<_Game />
 	<div class="m-5" style="position: fixed; top:0; left:0;">
 		<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
 	</div>
@@ -58,16 +55,10 @@ else
 	{
 		if (authenticationService != null)
 		{
-			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
 			await authenticationService.Logout();
-			await authenticationService.DisposeAsync();
+			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
 		}
 
-		if (sessionStorageService != null)
-		{
-			await sessionStorageService.ClearAsync();
-			await sessionStorageService.DisposeAsync();
-		}
 	}
 
 }
