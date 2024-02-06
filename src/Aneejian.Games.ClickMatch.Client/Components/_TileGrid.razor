@@ -2,120 +2,119 @@
 @implements IAsyncDisposable
 @inject IJSRuntime jsRuntime
 
-<div class="justify-items-center mt-5">
-    <div id="game-grid" class="tile-grid">
-        @foreach (TileModel tile in Tiles)
-        {
-            <_Tile Tile="tile" ShowTileNumber=@gameManager.GameSettings.ShowTileNumbers
-                   OnTileClick="HandleTileClick" />
-        }
-    </div>
+<div class="justify-items-center">
+	<div id="game-grid" class="tile-grid">
+		@foreach (TileModel tile in Tiles)
+		{
+			<_Tile Tile="tile" ShowTileNumber=@gameManager.GameSettings.ShowTileNumbers
+				   OnTileClick="HandleTileClick" />
+		}
+	</div>
 </div>
 
 <style>
-    .tile-grid {
-        display: @tileGridDisplay;
-        grid-gap: 1px;
-    }
+	.tile-grid {
+		display: @tileGridDisplay;
+		grid-gap: 1px;
+	}
 </style>
 
 @code {
-    [Parameter] public TileModel[] Tiles { get; set; } = null!;
-    private int rows { get; set; }
-    private int columns { get; set; }
-    private string tileGridDisplay { get; set; } = "none";
+	[Parameter] public TileModel[] Tiles { get; set; } = null!;
+	private int rows { get; set; }
+	private int columns { get; set; }
+	private string tileGridDisplay { get; set; } = "none";
 
-    private IJSObjectReference? _jsModule;
+	private IJSObjectReference? _jsModule;
 
-    protected override void OnParametersSet()
-    {
-        if (Tiles != null && Tiles.Count() > 0)
-        {
-            (rows, columns) = GetGridDimensions();
-        }
-    }
+	protected override void OnParametersSet()
+	{
+		if (Tiles != null && Tiles.Count() > 0)
+		{
+			(rows, columns) = GetGridDimensions();
+		}
+	}
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await using (_jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.TileGrid))
-            {
-                var images = Tiles.Where(tile => tile.IsImage)
-                              .Select(tile => tile.Content)
-                              .Distinct()
-                              .ToList();
-                if (images.Count > 0)
-                {
-                    await _jsModule.InvokeVoidAsync("preloadImages", images);
-                }
-                await _jsModule.InvokeVoidAsync("styleGridAndTiles", "game-grid", "flip-card", columns);
-            }
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await using (_jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.TileGrid))
+			{
+				var images = Tiles.Where(tile => tile.IsImage)
+									.Select(tile => tile.Content)
+									.Distinct()
+									.ToList();
+				if (images.Count > 0)
+				{
+					await _jsModule.InvokeVoidAsync("preloadImages", images);
+				}
+				await _jsModule.InvokeVoidAsync("styleGridAndTiles", "game-grid", columns);
+			}
 
-            tileGridDisplay = "grid";
-            StateHasChanged();
+			tileGridDisplay = "grid";
+			StateHasChanged();
+		}
+	}
 
-        }
-    }
+	private async Task HandleTileClick(TileModel tile)
+	{
+		await gameManager.FlipTile(tile);
+		StateHasChanged();
+	}
 
-    private async Task HandleTileClick(TileModel tile)
-    {
-        await gameManager.FlipTile(tile);
-        StateHasChanged();
-    }
+	private (int rows, int columns) GetGridDimensions()
+	{
+		return GetRowsAndColumns(Tiles.Count(), 10);
+	}
 
-    private (int rows, int columns) GetGridDimensions()
-    {
-        return GetRowsAndColumns(Tiles.Count(), 10);
-    }
+	static (int rows, int columns) GetRowsAndColumns(int number, int maxColumns = 10)
+	{
+		int sqrt = (int)Math.Sqrt(number);
 
-    static (int rows, int columns) GetRowsAndColumns(int number, int maxColumns = 10)
-    {
-        int sqrt = (int)Math.Sqrt(number);
+		if (sqrt * sqrt == number && sqrt <= maxColumns)
+		{
+			return (sqrt, sqrt);
+		}
 
-        if (sqrt * sqrt == number && sqrt <= maxColumns)
-        {
-            return (sqrt, sqrt);
-        }
+		int minDifference = int.MaxValue;
+		(int minRows, int minColumns) = (0, 0);
 
-        int minDifference = int.MaxValue;
-        (int minRows, int minColumns) = (0, 0);
+		for (int cols = 4; cols <= maxColumns; cols++)
+		{
+			if (number % cols == 0)
+			{
+				int rows = number / cols;
+				int difference = Math.Abs(rows - cols);
 
-        for (int cols = 4; cols <= maxColumns; cols++)
-        {
-            if (number % cols == 0)
-            {
-                int rows = number / cols;
-                int difference = Math.Abs(rows - cols);
+				if (difference < minDifference)
+				{
+					minDifference = difference;
+					minRows = rows;
+					minColumns = cols;
+				}
+			}
+		}
 
-                if (difference < minDifference)
-                {
-                    minDifference = difference;
-                    minRows = rows;
-                    minColumns = cols;
-                }
-            }
-        }
+		var tempRows = minRows;
+		var tempColumns = minColumns;
 
-        var tempRows = minRows;
-        var tempColumns = minColumns;
+		if (minColumns < minRows && minRows <= maxColumns)
+		{
+			tempRows = minColumns;
+			tempColumns = minRows;
+		}
 
-        if (minColumns < minRows && minRows <= maxColumns)
-        {
-            tempRows = minColumns;
-            tempColumns = minRows;
-        }
-
-        return (tempRows, tempColumns);
-    }
+		return (tempRows, tempColumns);
+	}
 
 
-    public async ValueTask DisposeAsync()
-    {
-        if (_jsModule is not null)
-        {
-            await _jsModule.DisposeAsync();
-        }
-    }
+	public async ValueTask DisposeAsync()
+	{
+		if (_jsModule is not null)
+		{
+			await _jsModule.DisposeAsync();
+		}
+	}
 
 }

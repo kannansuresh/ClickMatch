@@ -7,7 +7,6 @@
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
-
 @if (authenticationService.IsAuthenticated)
 {
 	<_Game />
@@ -18,21 +17,27 @@ else
 }
 
 <_AuthorizedOnly>
-	<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
+	<div class="m-5" style="position: fixed; top:0; left:0;">
+		<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
+	</div>
 </_AuthorizedOnly>
 
 @code {
 	private int LoggedInUserId { get; set; }
 
+	private IThemeService ThemeService => themeService;
+
 	protected override async Task OnInitializedAsync()
 	{
+		
 		await CheckLogin();
 		authenticationService.OnAuthenticationStateChanged += CheckLogin;
 	}
 
 	private async void CheckLogin(bool isAuthenticated)
 	{
-		if(!authenticationService.IsAuthenticated){
+		if (!authenticationService.IsAuthenticated)
+		{
 			// await authenticationService.Logout();
 			StateHasChanged();
 			return;

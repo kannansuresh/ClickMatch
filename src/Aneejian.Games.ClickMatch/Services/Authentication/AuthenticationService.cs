@@ -9,6 +9,7 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 {
 	private bool _isAuthenticated;
 	private string? _authenticationErrorMessage;
+	private UserDto? _authenticatedUser;
 	private readonly IndexedDbService _indexedDbService = indexedDbService;
 	private readonly SessionStorageService _sessionStorageService = sessionStorageService;
 
@@ -23,6 +24,9 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 			NotifyAuthenticationStateChanged();
 		}
 	}
+
+	public UserDto? AuthenticatedUser => _authenticatedUser ?? null;
+
 	public string AuthenticationErrorMessage => _authenticationErrorMessage ?? "";
 
 	public async Task<bool> Login(string userName, string password)
@@ -68,6 +72,7 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 		if (checkToken)
 		{
 			_authenticationErrorMessage = "";
+			_authenticatedUser = user;
 			IsAuthenticated = true;
 			return true;
 		}
@@ -86,11 +91,12 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 			if (PasswordManager.ValidatePassword(password, user.Password))
 			{
 				_authenticationErrorMessage = "";
-				IsAuthenticated = true;
 				await _sessionStorageService.SetValueAsync(AppStrings.SessionStorageKeys.UserId, user.Id);
 				var loginRequestId = Guid.NewGuid().ToString();
 				await _sessionStorageService.SetValueAsync(AppStrings.SessionStorageKeys.LoginRequestId, loginRequestId);
 				await _sessionStorageService.SetValueAsync(AppStrings.SessionStorageKeys.Token, user.HashUserDto(loginRequestId));
+				_authenticatedUser = user;
+				IsAuthenticated = true;
 				return true;
 			}
 			else

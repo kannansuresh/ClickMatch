@@ -6,13 +6,13 @@
 	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
 	{		
 		<div class="col">
-			 <_GameSettings SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
+			<_GameSettings SelectedThemeId=@(gameManager.GameSettings?.ThemeData.ThemeId ?? SelectedThemeId) GameLevel=@GameLevel ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
 		</div>
 	}
-	@if (Tiles is not null && Tiles.Length > 0 && gameManager is not null && gameManager.GameInProgress)
+	@if (gameManager.Tiles is not null && gameManager is not null && gameManager.GameInProgress)
 	{
 		<div class="row mb-4">
-			<_TileGrid Tiles="Tiles" />
+			<_TileGrid Tiles="gameManager.Tiles" />
 		</div>
 
 		<_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />

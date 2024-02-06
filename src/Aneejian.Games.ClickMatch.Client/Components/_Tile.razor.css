@@ -12,10 +12,6 @@
     transition: all 0.2s ease-in-out;
 }
 
-.flip-card:hover{
-    transform: scale(0.98);
-}
-
 .flip-card-inner {
     width: 100%;
     height: 100%;

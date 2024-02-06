@@ -32,13 +32,14 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 
 	public async void StartGame(IGameSettings gameSettings)
 	{
-		Player = await _authenticationService.GetAuthenticatedUser();
+		Player = _authenticationService.AuthenticatedUser;
 		GameSettings = gameSettings ?? throw new Exception("Game settings not set.");
 		GameScorer ??= new GameScorer();
 		GameScorer.Reset();
 		Tiles = GameSettings.GenerateTiles().ToArray();
 		GameInProgress = true;
 		await SaveGameData();
+		NotifyStateChanged();
 	}
 
 	private async Task SaveGameData()
