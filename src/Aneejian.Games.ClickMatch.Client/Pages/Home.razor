@@ -8,57 +8,55 @@
 
 @if (!authenticationService.IsAuthenticated)
 {
-	<_UserProfiles />
+    <_UserProfiles />
 }
 
 <_AuthorizedOnly>
-	<_Game />
-	<div class="m-5" style="position: fixed; top:0; left:0;">
-		<button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
-	</div>
+    <CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
+        <_Game />
+        <div class="m-5" style="position: fixed; top:0; left:0;">
+            <button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
+        </div>
+    </CascadingValue>
 </_AuthorizedOnly>
 
 @code {
-	private int LoggedInUserId { get; set; }
+    private UserDto? LoggedInUser { get; set; }
 
-	private IThemeService ThemeService => themeService;
+    private IThemeService ThemeService => themeService;
 
-	protected override async Task OnInitializedAsync()
-	{
+    protected override void OnInitialized()
+    {
+        CheckLogin();
+        authenticationService.OnAuthenticationStateChanged += CheckLogin;
+        base.OnInitialized();
+    }
 
-		await CheckLogin();
-		authenticationService.OnAuthenticationStateChanged += CheckLogin;
-	}
+    private void CheckLogin(bool isAuthenticated)
+    {
+        if (!authenticationService.IsAuthenticated)
+        {
+            StateHasChanged();
+            return;
+        }
+        CheckLogin();
+    }
 
-	private async void CheckLogin(bool isAuthenticated)
-	{
-		if (!authenticationService.IsAuthenticated)
-		{
-			StateHasChanged();
-			return;
-		}
-		await CheckLogin();
-	}
+    private void CheckLogin()
+    {
+        var autheticatedUser = authenticationService.AuthenticatedUser;
+        LoggedInUser = autheticatedUser;
+        StateHasChanged();
+    }
 
-	private async Task CheckLogin()
-	{
-		var stringId = await sessionStorageService.GetValueAsync<string>("profileId");
-		if (!string.IsNullOrEmpty(stringId))
-		{
-			LoggedInUserId = int.Parse(stringId);
-			await authenticationService.ValidateLoggedInUser(LoggedInUserId);
-		}
-		StateHasChanged();
-	}
+    public async ValueTask DisposeAsync()
+    {
+        if (authenticationService != null)
+        {
+            await authenticationService.Logout();
+            authenticationService.OnAuthenticationStateChanged -= CheckLogin;
+        }
 
-	public async ValueTask DisposeAsync()
-	{
-		if (authenticationService != null)
-		{
-			await authenticationService.Logout();
-			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
-		}
-
-	}
+    }
 
 }

@@ -49,7 +49,7 @@ export class IndexedDb {
 
 
 
-    async getUserGameLevel(userId) {
+    async getUserMaxGameLevel(userId) {
         const userGames = await this.getGames(userId);
         if (userGames.length === 0)
             return 1;

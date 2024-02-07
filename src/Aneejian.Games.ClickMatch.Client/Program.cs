@@ -1,11 +1,9 @@
-using System.Diagnostics;
 using Aneejian.Games.ClickMatch;
 using Aneejian.Games.ClickMatch.Client;
-using Aneejian.Games.ClickMatch.Constants;
 using Aneejian.Games.ClickMatch.Services;
-using Aneejian.Games.ClickMatch.Services.Authentication;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using System.Diagnostics;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -13,26 +11,18 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddSingleton<IThemeService>(sp => new ThemeService(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }, AppStrings.ConfigFilePath));
-
-builder.Services.AddSingleton<AuthenticationService>();
-
-builder.Services.AddSingleton<IndexedDbService>();
-
-builder.Services.AddSingleton<SessionStorageService>();
-
-builder.Services.AddSingleton<GameManagerService>();
+builder.Services.AddClickMatch(builder.HostEnvironment.BaseAddress);
 
 var host = builder.Build();
 
 try
 {
-	var themeService = host.Services.GetRequiredService<IThemeService>();
-	await themeService.InitializeAsync();
+    var themeService = host.Services.GetRequiredService<IThemeService>();
+    await themeService.InitializeAsync();
 }
 catch (Exception ex)
 {
-	Debug.WriteLine(ex.Message);
+    Debug.WriteLine(ex.Message);
 }
 
 await host.RunAsync();

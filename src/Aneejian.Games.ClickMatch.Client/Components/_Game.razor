@@ -58,7 +58,8 @@
 @code {
 
 	private TileModel[]? Tiles { get; set; }
-	private int GameLevel { get; set; }
+	private int GameLevel { get; set; } = 1;
+	private int MaxGameLevel { get; set; } = 1;
 	private IEnumerable<IThemeData>? Themes { get; set; }
 	private string SelectedThemeId { get; set; } = "";
 	private Config? Config { get; set; }

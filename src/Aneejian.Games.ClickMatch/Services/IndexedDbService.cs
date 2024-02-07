@@ -51,6 +51,8 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 
 	public async Task<bool> UserExists(string userName) => await InvokeAsync<bool>(DbEnum.userExists, userName);
 
+	public async Task<int> GetUserMaxGameLevel(int userId) => await InvokeAsync<int>(DbEnum.getUserMaxGameLevel, userId);
+
 	public async Task<int> AddUserGame(GameDto game) => await InvokeAsync<int>(DbEnum.addUserGame, game);
 
 	public async Task UpdateUserGame(GameDto game) => await InvokeAsync(DbEnum.updateUserGame, game);
