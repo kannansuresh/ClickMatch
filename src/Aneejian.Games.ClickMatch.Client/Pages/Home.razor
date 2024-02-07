@@ -13,10 +13,11 @@
 
 <_AuthorizedOnly>
     <CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
+        <p class="mb-4 text-warning">You are loggedin as @($"{LoggedInUser!.Name} ({LoggedInUser.UserName}).") <span><button class="btn btn-link" @onclick=@authenticationService.Logout>Logout</button></span></p>
         <_Game />
-        <div class="m-5" style="position: fixed; top:0; left:0;">
+        @* <div class="m-5" style="position: fixed; top:0; left:0;">
             <button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
-        </div>
+        </div> *@
     </CascadingValue>
 </_AuthorizedOnly>
 
