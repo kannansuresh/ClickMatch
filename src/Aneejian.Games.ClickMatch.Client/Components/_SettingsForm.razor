@@ -89,7 +89,6 @@
         SelectedThemeId = SelectedThemeId ?? Themes?.FirstOrDefault()?.ThemeId;
         SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
         await SetGameLevels();
-
     }
 
     private async Task SetGameLevels()

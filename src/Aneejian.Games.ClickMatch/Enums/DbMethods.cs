@@ -9,5 +9,5 @@ public enum DbMethods
 	getUsers,
 	getUser,
 	userExists,
-    getUserMaxGameLevel
+	getUserMaxGameLevel
 }
