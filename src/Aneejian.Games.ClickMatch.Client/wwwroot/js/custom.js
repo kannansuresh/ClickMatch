@@ -29,7 +29,7 @@ function closeModal(modalId) {
 
 function closeModalBackdrop() {
     try {
-        var modalBackdrop = document.querySelector('.modal-backdrop')
+        const modalBackdrop = document.querySelector('.modal-backdrop')
         if (modalBackdrop) {
             modalBackdrop.remove();
         }
@@ -40,9 +40,13 @@ function closeModalBackdrop() {
 
 function openModal(modalId) {
     try {
-        var myModalEl = document.getElementById(modalId);
-        var modal = bootstrap.Modal.getOrCreateInstance(myModalEl)
+        const myModalEl = document.getElementById(modalId);
+        const modal = bootstrap.Modal.getOrCreateInstance(myModalEl)
         modal.show();
+        const inputElements = myModalEl.querySelectorAll('input')
+        if (inputElements.length > 1) {
+            inputElements[0].classList.contains('visually-hidden') ? inputElements[1].focus() : inputElements[0].focus()
+        }
     } catch (e) {
         console.error(e)
     }

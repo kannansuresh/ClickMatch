@@ -3,7 +3,7 @@
 @inject IJSRuntime jsRuntime
 
 <div class="justify-items-center">
-	<div id="game-grid" class="tile-grid">
+	<div @ref=GameGrid id="game-grid" class="tile-grid">
 		@foreach (TileModel tile in Tiles)
 		{
 			<_Tile Tile="tile" ShowTileNumber=@gameManager.GameSettings.ShowTileNumbers
@@ -24,6 +24,8 @@
 	private int rows { get; set; }
 	private int columns { get; set; }
 	private string tileGridDisplay { get; set; } = "none";
+
+	private ElementReference GameGrid;
 
 	private IJSObjectReference? _jsModule;
 
@@ -49,7 +51,7 @@
 				{
 					await _jsModule.InvokeVoidAsync("preloadImages", images);
 				}
-				await _jsModule.InvokeVoidAsync("styleGridAndTiles", "game-grid", columns);
+				await _jsModule.InvokeVoidAsync("styleGridAndTiles", GameGrid, columns);
 			}
 
 			tileGridDisplay = "grid";
