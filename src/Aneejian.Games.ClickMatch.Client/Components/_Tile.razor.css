@@ -58,9 +58,10 @@
         color: #fff;
     }
 
-    .flip-card-back img {
+    .flip-card-back img,
+    .flip-card-back picture{
         width: auto;
-        height: 85%;
+        height: 90%;
     }
 
 .flip-card-matched {

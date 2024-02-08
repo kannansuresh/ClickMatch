@@ -51,10 +51,14 @@ export class IndexedDb {
 
     async getUserMaxGameLevel(userId) {
         const userGames = await this.getGames(userId);
+        let maxLevelsWon = 1;
         if (userGames.length === 0)
-            return 1;
-        else
-            return Math.max(...userGames.map(g => g.level));
+            return maxLevelsWon
+        else {
+            const gameWon = userGames.filter(g => g.gameWon);
+            maxLevelsWon = Math.max(...gameWon.map(g => g.level));
+        }
+        return maxLevelsWon + 1;
     }
 
 

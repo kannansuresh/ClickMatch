@@ -21,9 +21,11 @@ function closeModal(modalId) {
         const myModalEl = document.getElementById(modalId);
         const modal = bootstrap.Modal.getInstance(myModalEl)
         modal.hide()
+        return true
     } catch (e) {
         console.info('Failed to close modal as it is not found. Trying to remove the modal backdrop.' + e)
         closeModalBackdrop()
+        return true
     }
 }
 

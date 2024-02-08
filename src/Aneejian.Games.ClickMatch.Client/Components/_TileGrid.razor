@@ -43,19 +43,31 @@
 		{
 			await using (_jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", AppStrings.JSFiles.TileGrid))
 			{
-				var images = Tiles.Where(tile => tile.IsImage)
-									.Select(tile => tile.Content)
-									.Distinct()
-									.ToList();
-				if (images.Count > 0)
+
+				var webPImages = Tiles.Where(tile => tile.IsImage && tile.ContentWebp != "")
+					.Select(tile => tile.ContentWebp)
+					.Distinct()
+					.ToList();
+
+				if (webPImages.Count > 0)
 				{
-					await _jsModule.InvokeVoidAsync("preloadImages", images);
+					await _jsModule.InvokeVoidAsync("preloadImages", webPImages);
 				}
+
+
+				var images = Tiles.Where(tile => tile.IsImage && tile.ContentWebp == "")
+										.Select(tile => tile.Content)
+										.Distinct()
+										.ToList();
+					if (images.Count > 0)
+					{
+						await _jsModule.InvokeVoidAsync("preloadImages", images);
+					}
+
 				await _jsModule.InvokeVoidAsync("styleGridAndTiles", GameGrid, columns);
 			}
 
 			tileGridDisplay = "grid";
-			StateHasChanged();
 		}
 	}
 

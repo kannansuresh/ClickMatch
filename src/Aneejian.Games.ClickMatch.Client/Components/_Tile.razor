@@ -11,7 +11,11 @@
 				@if (Tile.IsImage)
 				{
 					<div class="flip-card-back flip-card-back-image">
-						<img src="@Tile.Content" alt="Tile-@Tile.PositionId" />
+						<picture>
+							<source srcset="@Tile.ContentWebp" type="image/webp">
+							<source srcset="@Tile.Content" type="image/jpeg">
+							<img src="@Tile.Content" alt="Tile-@Tile.PositionId" />
+						</picture>
 					</div>
 				}
 				else

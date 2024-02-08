@@ -13,7 +13,7 @@
 					<_UserProfileCard Profile="Profile" ShowHoverEffect=false />
 				</div>
 				<div class="w-75">
-					<_LoginForm ShowLoginAsGuest=false ShowCloseButton=true OnCloseButtonClick="CloseModal" InputUserName="@Profile.UserName" InputPassword="@GuestUserPassword" OnLoginSuccess="@LoginUser"/>
+					<_LoginForm ShowLoginAsGuest=false ShowCloseButton=true OnCloseButtonClick="CloseModal" InputUserName="@Profile.UserName" InputPassword="@GuestUserPassword" OnLoginSuccess="@LoginUser" />
 				</div>
 			</div>
 		</div>
@@ -32,14 +32,17 @@
 
 	private async Task LoginUser()
 	{
-		await CloseModal();
-		await OnUserLogin.InvokeAsync(Profile);
-		StateHasChanged();
+		var modalClosed = await CloseModal();
+		if (modalClosed)
+		{
+			await OnUserLogin.InvokeAsync(Profile);
+			StateHasChanged();
+		}
 	}
 
-	private async Task CloseModal()
+	private async Task<bool> CloseModal()
 	{
-		await jsRuntime.InvokeVoidAsync("closeModal", ModalId);
+		return await jsRuntime.InvokeAsync<bool>("closeModal", ModalId);
 	}
 
 }

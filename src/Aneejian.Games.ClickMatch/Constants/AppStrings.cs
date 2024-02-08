@@ -36,7 +36,7 @@ public struct AppStrings
 	public struct JSFiles
 	{	
 		public const string Dexie = "./_content/Aneejian.Games.ClickMatch/js/dexie/dexie.js" ;
-		public const string IndexedDb = $"./_content/Aneejian.Games.ClickMatch/js/indexedDb.js?v=1.0.2";
+		public const string IndexedDb = $"./_content/Aneejian.Games.ClickMatch/js/indexedDb.js?v=1.0.4";
 		public const string SessionStorage = "./_content/Aneejian.Games.ClickMatch/js/sessionStorage.js?v=1.0.0";
 		public const string TileGrid = "./Components/_TileGrid.razor.js?v=1.0.5";
 	}
