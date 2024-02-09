@@ -126,7 +126,7 @@
 		var level = 1;
 		try
 		{
-			level = await indexedDbService.GetUserMaxGameLevel(LoggedInUser!.Id);
+			level += await indexedDbService.GetUserMaxGameLevel(LoggedInUser!.Id);
 		}
 		catch (Exception ex)
 		{
