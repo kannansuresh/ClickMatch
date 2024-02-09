@@ -35,6 +35,10 @@ function closeModalBackdrop() {
         if (modalBackdrop) {
             modalBackdrop.remove();
         }
+        const body = document.querySelector('body')
+        body.classList.remove('modal-open')
+        body.style = ''
+
     } catch (e) {
         console.error(e)
     }

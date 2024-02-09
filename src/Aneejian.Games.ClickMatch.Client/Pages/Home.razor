@@ -2,62 +2,73 @@
 @inject IThemeService themeService
 @inject SessionStorageService sessionStorageService
 @inject AuthenticationService authenticationService
+@inject GameManagerService gameManager
 @implements IAsyncDisposable
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
-@if (!authenticationService.IsAuthenticated)
+@if (!authenticationService.IsAuthenticated || ShowProfiles)
 {
-    <_UserProfiles />
+	<_UserProfiles OnUserSelected="OnUserSelected" />
 }
 
 <_AuthorizedOnly>
-    <CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
-        <p class="mb-4 text-warning">You are loggedin as @($"{LoggedInUser!.Name} ({LoggedInUser.UserName}).") <span><button class="btn btn-link" @onclick=@authenticationService.Logout>Logout</button></span></p>
-        <_Game />
-        @* <div class="m-5" style="position: fixed; top:0; left:0;">
-            <button class="btn btn-danger btn-sm" @onclick=@authenticationService.Logout>Logout</button>
-        </div> *@
-    </CascadingValue>
+	<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
+		<p class="mb-4 text-warning">You are loggedin as @($"{LoggedInUser!.Name} ({LoggedInUser.UserName}).") <span><button class="btn btn-link" @onclick=@authenticationService.Logout>Logout</button></span></p>
+		<_Game />
+	</CascadingValue>
 </_AuthorizedOnly>
 
 @code {
-    private UserDto? LoggedInUser { get; set; }
+	private UserDto? LoggedInUser { get; set; }
 
-    private IThemeService ThemeService => themeService;
+	private bool ShowProfiles { get; set; } = true;
 
-    protected override void OnInitialized()
-    {
-        CheckLogin();
-        authenticationService.OnAuthenticationStateChanged += CheckLogin;
-        base.OnInitialized();
-    }
+	private IThemeService ThemeService => themeService;
 
-    private void CheckLogin(bool isAuthenticated)
-    {
-        if (!authenticationService.IsAuthenticated)
-        {
-            StateHasChanged();
-            return;
-        }
-        CheckLogin();
-    }
+	protected override void OnInitialized()
+	{
+		CheckLogin();
+		authenticationService.OnAuthenticationStateChanged += CheckLogin;
+		base.OnInitialized();
+	}
 
-    private void CheckLogin()
-    {
-        var autheticatedUser = authenticationService.AuthenticatedUser;
-        LoggedInUser = autheticatedUser;
-        StateHasChanged();
-    }
+	private void CheckLogin(bool isAuthenticated)
+	{
+		if (!authenticationService.IsAuthenticated)
+		{
+			StateHasChanged();
+			try { gameManager.ResetGame(); }
+			catch { }
+			ShowProfiles = true;
+			LoggedInUser = null;
+			return;
+		}
+		CheckLogin();
+	}
 
-    public async ValueTask DisposeAsync()
-    {
-        if (authenticationService != null)
-        {
-            await authenticationService.Logout();
-            authenticationService.OnAuthenticationStateChanged -= CheckLogin;
-        }
+	private void OnUserSelected(UserDto user)
+	{
+		LoggedInUser = user;
+		ShowProfiles = false;
+		StateHasChanged();
+	}
 
-    }
+	private void CheckLogin()
+	{
+		var autheticatedUser = authenticationService.AuthenticatedUser;
+		LoggedInUser = autheticatedUser;
+		StateHasChanged();
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		if (authenticationService != null)
+		{
+			await authenticationService.Logout();
+			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
+		}
+
+	}
 
 }

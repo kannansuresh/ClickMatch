@@ -79,6 +79,10 @@
 		{
 			return "";
 		}
+		if (Profile.Avatar == AppStrings.GuestUser.Avatar)
+		{
+			return Path.ChangeExtension(Profile.Avatar, "webp");
+		}
 		if (Profile.Avatar.ToLower().Contains("aneejian.com") || Profile.Avatar.ToLower().Contains("kannansuresh"))
 		{
 			return Profile.Avatar.ToWebp();

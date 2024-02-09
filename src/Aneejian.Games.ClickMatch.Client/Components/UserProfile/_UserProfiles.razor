@@ -14,7 +14,9 @@
 
 		@foreach (var profile in Profiles)
 		{
-			<_UserProfileCard Profile=profile OnUserSelected=SelectUser OnUserDeleted=DeleteUser />
+			<_UserProfileCard Profile=profile
+							  OnUserSelected=SelectUser
+							  OnUserDeleted=DeleteUser />
 		}
 
 		<_Splasher SplashText=@SplashMessage />
@@ -24,6 +26,9 @@
 
 @code {
 	private List<UserDto>? Profiles { get; set; }
+
+	[Parameter] 
+	public EventCallback<UserDto> OnUserSelected { get; set; }
 
 	private string SplashMessage { get; set; } = string.Empty;
 
@@ -67,7 +72,10 @@
 		{
 			navigationManager.NavigateTo(AppStrings.Pages.Register);
 		}
+		OnUserSelected.InvokeAsync(user);
 	}
+
+
 
 	private async Task DeleteUser(UserDto user)
 	{

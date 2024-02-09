@@ -1,132 +1,134 @@
 ﻿@inject IndexedDbService indexedDbService
 
 <EditForm EditContext="SettingsRequestContext" id="settings-form" class="mb-4" OnValidSubmit="HandleSubmitClick">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-floating mb-3">
-        <InputSelect class="form-select" id="selectTheme" aria-label="Select Theme" @bind-Value="@SettingsRequest!.ThemeId" @bind-Value:after="HandleThemeChange">
-            @foreach (var theme in Themes!)
-            {
-                <option value="@theme.ThemeId">@theme.ThemeName</option>
-            }
-        </InputSelect>
-        <label for="selectTheme">Select Theme</label>
-    </div>
+	<DataAnnotationsValidator />
+	<AntiforgeryToken />
+	<ValidationSummary />
+	<div class="form-floating mb-3">
+		<InputSelect class="form-select" id="selectTheme" aria-label="Select Theme" @bind-Value="@SettingsRequest!.ThemeId" @bind-Value:after="HandleThemeChange">
+			@foreach (var theme in Themes!)
+			{
+				<option value="@theme.ThemeId">@theme.ThemeName</option>
+			}
+		</InputSelect>
+		<label for="selectTheme">Select Theme</label>
+	</div>
 
-    <div class="form-floating mb-3">
-        @if (GameLevels == null)
-        {
-            <p>Loading...</p>
-        }
-        else
-        {
-            <InputSelect class="form-select" id="selectLevel" aria-label="Select Level" @bind-Value="@SettingsRequest!.Level">
-                @foreach (int level in GameLevels!)
-                {
-                    <option value="@level">@($"Level {level}")</option>
-                }
-            </InputSelect>
-        }
-
-
-        <label for="selectLevel">Select Level</label>
-        <div id="selectLevelHelpBlock" class="form-text">
-            This level will have @(SettingsRequest!.Level * 4) tiles.
-        </div>
-    </div>
+	<div class="form-floating mb-3">
+		@if (GameLevels == null)
+		{
+			<p>Loading...</p>
+		}
+		else
+		{
+			<InputSelect class="form-select" id="selectLevel" aria-label="Select Level" @bind-Value="@SettingsRequest!.Level">
+				@foreach (int level in GameLevels!)
+				{
+					<option value="@level">@($"Level {level}")</option>
+				}
+			</InputSelect>
+		}
 
 
-    <div class="form-check mb-3">
-        <InputCheckbox class="form-check-input" type="checkbox" @bind-Value=@SettingsRequest.ShowTileNumber id="showTileNumber" />
-        <label class="form-check-label" for="showTileNumber">
-            Show tile number in the grid
-        </label>
-    </div>
-    <div class="d-grid">
-        <button class="btn btn-primary mb-4" id="submitButton" type="submit">Start Game</button>
-    </div>
-    @if (SelectedTheme!.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
-    {
-        <div class="alert alert-info mb-4" role="alert">
-            @((MarkupString)SelectedTheme.Attribution)
-        </div>
-    }
+		<label for="selectLevel">Select Level</label>
+		<div id="selectLevelHelpBlock" class="form-text">
+			This level will have @(SettingsRequest!.Level * 4) tiles.
+		</div>
+	</div>
+
+
+	<div class="form-check mb-3">
+		<InputCheckbox class="form-check-input" type="checkbox" @bind-Value=@SettingsRequest.ShowTileNumber id="showTileNumber" />
+		<label class="form-check-label" for="showTileNumber">
+			Show tile number in the grid
+		</label>
+	</div>
+	<div class="d-grid">
+		<button class="btn btn-primary mb-4" id="submitButton" type="submit">Start Game</button>
+	</div>
+	@if (SelectedTheme!.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
+	{
+		<div class="alert alert-info mb-4" role="alert">
+			@((MarkupString)SelectedTheme.Attribution)
+		</div>
+	}
 </EditForm>
 
 
 
 @code {
 
-    [Parameter] public IEnumerable<IThemeData>? Themes { get; set; }
-    [Parameter] public string? SelectedThemeId { get; set; }
-    [Parameter] public int GameLevel { get; set; }
-    [Parameter] public bool ShowTileNumber { get; set; } = true;
-    [Parameter] public EventCallback<SettingsRequest> OnSubmitClick { get; set; }
-    [CascadingParameter(Name = "LoggedInUser")] public UserDto? LoggedInUser { get; set; }
+	[Parameter] public IEnumerable<IThemeData>? Themes { get; set; }
+	[Parameter] public string? SelectedThemeId { get; set; }
+	[Parameter] public int GameLevel { get; set; }
+	[Parameter] public bool ShowTileNumber { get; set; } = true;
+	[Parameter] public EventCallback<SettingsRequest> OnSubmitClick { get; set; }
+	[CascadingParameter(Name = "LoggedInUser")] public UserDto? LoggedInUser { get; set; }
 
-    private SettingsRequest? SettingsRequest { get; set; }
-    private EditContext? SettingsRequestContext { get; set; }
+	private SettingsRequest? SettingsRequest { get; set; }
+	private EditContext? SettingsRequestContext { get; set; }
 
-    public int MaxGameLevel { get; set; } = 1;
-    private IEnumerable<int>? GameLevels { get; set; }
+	public int MaxGameLevel { get; set; } = 1;
+	private IEnumerable<int>? GameLevels { get; set; }
 
-    private IThemeData? SelectedTheme { get; set; }
+	private IThemeData? SelectedTheme { get; set; }
 
-    protected override void OnInitialized()
-    {
-        SettingsRequest = new SettingsRequest
-            {
-                ThemeId = SelectedThemeId!,
-                Level = GameLevel,
-                ShowTileNumber = ShowTileNumber
-            };
-        SettingsRequestContext = new EditContext(SettingsRequest);
-        base.OnInitialized();
-    }
+	protected override void OnInitialized()
+	{
+		SettingsRequest = new SettingsRequest
+			{
+				ThemeId = SelectedThemeId!,
+				Level = GameLevel,
+				ShowTileNumber = ShowTileNumber
+			};
+		SettingsRequestContext = new EditContext(SettingsRequest);
+		base.OnInitialized();
+	}
 
-    protected override async Task OnInitializedAsync()
-    {
-        SelectedThemeId = SelectedThemeId ?? Themes?.FirstOrDefault()?.ThemeId;
-        SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
-        await SetGameLevels();
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		SelectedThemeId = SelectedThemeId ?? Themes?.FirstOrDefault()?.ThemeId;
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+		await SetGameLevels();
+	}
 
-    private async Task SetGameLevels()
-    {
-        var imageCount = SelectedTheme?.ItemCount ?? 0;
-        MaxGameLevel = await GetUserMaxLevel();
-        var maxLevel = Math.Min(Math.Abs(imageCount / 4), MaxGameLevel);
-        GameLevels = Enumerable.Range(1, maxLevel).Reverse();
-        GameLevel = Math.Max(MaxGameLevel, GameLevel);
-        SettingsRequest!.Level = GameLevel;
-    }
+	private async Task SetGameLevels()
+	{
+		var imageCount = SelectedTheme?.ItemCount ?? 0;
+		MaxGameLevel = await GetUserMaxLevel();
+		var maxLevel = Math.Min(Math.Abs(imageCount / 4), MaxGameLevel);
+		GameLevels = Enumerable.Range(1, maxLevel).Reverse();
+		GameLevel = Math.Max(MaxGameLevel, GameLevel);
+		SettingsRequest!.Level = GameLevel;
+	}
 
-    private async Task<int> GetUserMaxLevel()
-    {
-        var level = 1;
-        try
-        {
-            level = await indexedDbService.GetUserMaxGameLevel(LoggedInUser!.Id);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-        return level;
-    }
+	private async Task<int> GetUserMaxLevel()
+	{
+		var level = 1;
+		try
+		{
+			level = await indexedDbService.GetUserMaxGameLevel(LoggedInUser!.Id);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.Message);
+		}
+		return level;
+	}
 
 
-    private async Task HandleSubmitClick()
-    {
-        await OnSubmitClick.InvokeAsync(SettingsRequest);
-    }
+	private async Task HandleSubmitClick()
+	{
+		SettingsRequest!.Level = Math.Min(SettingsRequest!.Level, MaxGameLevel);
+		await OnSubmitClick.InvokeAsync(SettingsRequest);
+	}
 
-    private async Task HandleThemeChange()
-    {
+	private async Task HandleThemeChange()
+	{
 
-        SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SettingsRequest!.ThemeId);
-        await SetGameLevels();
-        // StateHasChanged();
-    }
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SettingsRequest!.ThemeId);
+		await SetGameLevels();
+		// StateHasChanged();
+	}
 
 }
