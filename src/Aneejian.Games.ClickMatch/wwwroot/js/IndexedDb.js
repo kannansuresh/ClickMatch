@@ -41,25 +41,25 @@ export class IndexedDb {
     }
 
     async deleteUser(idOrUserName) {
-        if (isNaN(idOrUserName))
-            return await this.db.users.delete({ userName: idOrUserName });
-        else
-            return await this.db.users.delete(idOrUserName);
+        const user = await this.getUser(idOrUserName);
+        await this.db.games.where('userId').equals(user.id).delete();
+        return await this.db.users.delete(user.id)
     }
 
 
 
     async getUserMaxGameLevel(userId) {
         const userGames = await this.getGames(userId);
-        let maxLevelsWon = 1;
         if (userGames.length === 0)
-            return maxLevelsWon
-        else {
-            const gameWon = userGames.filter(g => g.gameWon);
-            maxLevelsWon = Math.max(...gameWon.map(g => g.level));
-        }
-        return maxLevelsWon + 1;
+            return 0;
+        const levelsWon = new Set(userGames.filter(game => game.gameWon).map(game => game.level));
+        const maxLevel = Math.max(...levelsWon);
+        if (maxLevel === levelsWon.size)
+            return maxLevel;
+        const missingLevel = levelsWon.size > 0 ? levelsWon.find((level) => !levelsWon.has(level + 1)) : 0;
+        return missingLevel - 1 || Math.max(...levelsWon);
     }
+
 
 
     async getGames(userId) {
