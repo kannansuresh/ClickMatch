@@ -1,26 +1,76 @@
 ﻿@page "/"
 @inject IThemeService themeService
-@inject ExampleJsInterop exampleJsInterop
-@inject IJSRuntime jsRuntime
-@inject NavigationManager navigationManager
+@inject SessionStorageService sessionStorageService
+@inject AuthenticationService authenticationService
+@inject GameManagerService gameManager
+@implements IAsyncDisposable
 
-<PageTitle>Click and Match</PageTitle>
+<PageTitle>Aneejian | Click and Match</PageTitle>
 
-<div class="container">
-	<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+@if (!authenticationService.IsAuthenticated || ShowProfiles)
+{
+	<_UserProfiles OnUserSelected="OnUserSelected" />
+}
+
+<_AuthorizedOnly>
+	<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
+		<p class="mb-4 text-warning">You are loggedin as @($"{LoggedInUser!.Name} ({LoggedInUser.UserName}).") <span><button class="btn btn-link" @onclick=@authenticationService.Logout>Logout</button></span></p>
 		<_Game />
-		<div class="m-4">
-			<a class="btn btn-link icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" @onclick=NavigateToAddUser>
-				Add Profile
-				<svg class="bi" aria-hidden="true" style="width:0px; height:0px;"><i class="bi-arrow-right"></i></svg>
-			</a>
-		</div>
-	</div>
-</div>
+	</CascadingValue>
+</_AuthorizedOnly>
 
 @code {
-	private void NavigateToAddUser()
+	private UserDto? LoggedInUser { get; set; }
+
+	private bool ShowProfiles { get; set; } = true;
+
+	private IThemeService ThemeService => themeService;
+
+	protected override void OnInitialized()
 	{
-		navigationManager.NavigateTo("adduser");
+		CheckLogin();
+		authenticationService.OnAuthenticationStateChanged += CheckLogin;
+		base.OnInitialized();
 	}
+
+	private void CheckLogin(bool isAuthenticated)
+	{
+		if (!authenticationService.IsAuthenticated)
+		{
+			StateHasChanged();
+			try { gameManager.ResetGame(); }
+			catch { }
+			ShowProfiles = true;
+			LoggedInUser = null;
+			return;
+		}
+		CheckLogin();
+	}
+
+	private void OnUserSelected(UserDto user)
+	{
+		LoggedInUser = user;
+		ShowProfiles = false;
+		StateHasChanged();
+	}
+
+	private void CheckLogin()
+	{
+		var autheticatedUser = authenticationService.AuthenticatedUser;
+		LoggedInUser = autheticatedUser;
+		if (autheticatedUser is not null)
+			ShowProfiles = false;
+		StateHasChanged();
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		if (authenticationService != null)
+		{
+			await authenticationService.Logout();
+			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
+		}
+
+	}
+
 }

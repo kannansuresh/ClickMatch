@@ -1,0 +1,41 @@
+﻿@inject IThemeService themeService
+
+
+<div class="row settings-form">
+	<h4 class="mb-4">Enter your game preference</h4>
+	<_SettingsForm Themes=@Themes SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@ShowTileNumber OnSubmitClick="HandleSubmitClick" />
+</div>
+
+
+
+@code {
+
+	[Parameter] public IEnumerable<IThemeData>? Themes { get; set; }
+	[Parameter] public string? SelectedThemeId { get; set; }
+	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
+	[Parameter] public int GameLevel { get; set; }
+	[Parameter] public bool ShowTileNumber { get; set; } = true;
+
+	private IEnumerable<int>? GameLevels { get; set; } = new List<int>();
+
+	private IThemeData? SelectedTheme { get; set; }
+
+	protected override void OnInitialized()
+	{
+
+		Themes = Themes ?? themeService.ThemeDatas;
+		SelectedThemeId = SelectedThemeId ?? themeService!.ThemeConfig!.DefaultTheme;
+		GameLevel = GameLevel == 0 ? themeService!.ThemeConfig!.DefaultGameLevel : GameLevel;
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+	}
+
+	private async Task HandleSubmitClick(SettingsRequest request)
+	{
+		GameLevel = request.Level;
+		ShowTileNumber = request.ShowTileNumber;
+		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == request.ThemeId);
+		var gameSettings = new GameSettings(GameLevel, SelectedTheme!, ShowTileNumber);
+		await OnSubmitClick.InvokeAsync(gameSettings);
+	}
+
+}

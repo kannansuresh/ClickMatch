@@ -1,0 +1,48 @@
+﻿@inject IJSRuntime jsRuntime
+@inject SessionStorageService sessionStorageService
+@inject NavigationManager navigationManager
+
+<div class="modal" tabindex="-1" id="@ModalId">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-body d-flex flex-column justify-content-center align-items-center">
+				<div class="mb-4 text-center">
+					<h4>Login to @(Profile.Name)'s profile</h4>
+				</div>
+				<div class="mb-4">
+					<_UserProfileCard Profile="Profile" ShowHoverEffect=false />
+				</div>
+				<div class="w-75">
+					<_LoginForm ShowLoginAsGuest=false ShowCloseButton=true OnCloseButtonClick="CloseModal" InputUserName="@Profile.UserName" InputPassword="@GuestUserPassword" OnLoginSuccess="@LoginUser" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter, EditorRequired] public UserDto Profile { get; set; } = null!;
+	[Parameter] public EventCallback<UserDto> OnUserLogin { get; set; }
+
+	private bool GuestUser => Profile.UserName == AppStrings.GuestUser.UserName;
+	private string GuestUserPassword => GuestUser ? AppStrings.GuestUser.Password : "";
+
+	private string ModalId => "login-profile-modal" + Profile.Id;
+
+	private async Task LoginUser()
+	{
+		var modalClosed = await CloseModal();
+		if (modalClosed)
+		{
+			await OnUserLogin.InvokeAsync(Profile);
+			StateHasChanged();
+		}
+	}
+
+	private async Task<bool> CloseModal()
+	{
+		return await jsRuntime.InvokeAsync<bool>("closeModal", ModalId);
+	}
+
+}

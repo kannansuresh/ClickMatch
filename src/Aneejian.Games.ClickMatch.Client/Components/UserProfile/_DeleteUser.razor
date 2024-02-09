@@ -1,0 +1,97 @@
+﻿@inject IJSRuntime jsRuntime
+@inject IndexedDbService iDb
+
+<div class="modal" tabindex="-1" id="@ModalId">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Delete Profile @(Profile.Name)?</h5>
+				<button type="button" class="btn-close" @onclick=@CloseModal aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex flex-column justify-content-center align-items-center">
+				<div class="mb-4">
+					<_UserProfileCard Profile="Profile" ShowHoverEffect=false />
+				</div>
+				<div class="">
+					<EditForm Model="@DeleteRequest" OnValidSubmit="ValidateConfirmationPassword">
+						<DataAnnotationsValidator />
+						<AntiforgeryToken />
+						<p>Enter profile password to confirm profile deletion.</p>
+						<div class="form-floating mb-3">
+							<InputText type="password" class="form-control" id="@PasswordInputId" placeholder="Profile Password" @bind-Value=@DeleteRequest!.ConfirmationPassword @ref="inputPassword" />
+							<label for="@PasswordInputId">Password</label>
+							<ValidationMessage For="() => DeleteRequest.ConfirmationPassword" />
+							@if (!string.IsNullOrEmpty(PasswordValidationMessage))
+							{
+								<div class="validation-message">@PasswordValidationMessage</div>
+							}
+						</div>
+						<div class="d-grid justify-content-end">
+							<button type="submit" class="btn btn-danger btn-sm" @onclick=ValidateConfirmationPassword>Delete Profile</button>
+						</div>
+					</EditForm>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary btn-sm" @onclick=@CloseModal>Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter, EditorRequired] public UserDto Profile { get; set; } = null!;
+	[Parameter] public EventCallback<UserDto> OnUserDeleted { get; set; }
+
+	InputText? inputPassword;
+
+	private string ModalId => "delete-profile-modal" + Profile.Id;
+	private string PasswordInputId => "password" + Profile.Id;
+
+	private string PasswordValidationMessage { get; set; } = string.Empty;
+	private string SplashMessage { get; set; } = string.Empty;
+
+	private ProfileDeleteRequest? DeleteRequest { get; set; }
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		await InitiateProfileDeletion();
+	}
+
+	private async Task InitiateProfileDeletion()
+	{
+		PasswordValidationMessage = string.Empty;
+		DeleteRequest = new ProfileDeleteRequest(iDb);
+		if (inputPassword is not null && inputPassword.Element.HasValue)
+		{
+			await inputPassword.Element.Value.FocusAsync();
+		}
+	}
+
+
+	private async Task ValidateConfirmationPassword()
+	{
+		var profileDeleted = await DeleteRequest!.DeleteProfile(Profile);
+		PasswordValidationMessage = DeleteRequest?.ErrorMessage ?? "";
+		if (profileDeleted)
+		{
+			SplashMessage = $"Profile deleted successfully.";
+			await CloseModal();
+			await DeleteUser();
+		}
+		StateHasChanged();
+	}
+
+	private async Task DeleteUser()
+	{
+		await OnUserDeleted.InvokeAsync(Profile);
+	}
+
+	private async Task CloseModal()
+	{
+		await jsRuntime.InvokeVoidAsync("closeModal", ModalId);
+	}
+
+}

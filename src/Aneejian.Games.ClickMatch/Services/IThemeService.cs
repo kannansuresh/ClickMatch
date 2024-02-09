@@ -1,12 +1,11 @@
 ﻿using Aneejian.Games.ClickMatch.Models;
 
-namespace Aneejian.Games.ClickMatch.Services
+namespace Aneejian.Games.ClickMatch.Services;
+
+public interface IThemeService
 {
-	public interface IThemeService
-	{
-		Config? ThemeConfig { get; }
-		IEnumerable<IThemeData>? ThemeDatas { get; }
-		bool IsInitialized { get; }
-		Task InitializeAsync();
-	}
+	Config? ThemeConfig { get; }
+	IEnumerable<IThemeData>? ThemeDatas { get; }
+	bool IsInitialized { get; }
+	Task InitializeAsync();
 }

@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;1,300;1,400&display=swap');
-
 body {
-    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
+    font-family: system-ui;
+    font-size: 1rem;
 }
 
 .valid.modified:not([type=checkbox]) {

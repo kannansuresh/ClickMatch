@@ -9,13 +9,11 @@ export const preloadImages = imageUrls => {
     }
 };
 
-export const styleGridAndTiles = (gridId, tileClass, initialColumnCount) => {
+export async function styleGridAndTiles(grid, initialColumnCount) {
     const minWidth = 50;
     const maxWidth = 150;
-    const grid = document.getElementById(gridId);
-    const tiles = grid.getElementsByClassName(tileClass);
-    const adjustGrid = () => {
 
+    const adjustGrid = async () => {
         let viewPortWidth = window.innerWidth - 20;
         let columnWidth = viewPortWidth / initialColumnCount - (initialColumnCount - 1);
         let adjustedColumnCount = initialColumnCount;
@@ -28,10 +26,11 @@ export const styleGridAndTiles = (gridId, tileClass, initialColumnCount) => {
             }
             columnWidth = viewPortWidth / adjustedColumnCount - (adjustedColumnCount - 1);
         }
+
         columnWidth = Math.min(Math.max(columnWidth, minWidth), maxWidth);
 
         grid.style.gridTemplateColumns = `repeat(${adjustedColumnCount}, 1fr)`;
-        setTileSize(tiles, columnWidth);
+        setTileSize(grid, columnWidth);
     };
 
     let timeoutId;
@@ -40,12 +39,11 @@ export const styleGridAndTiles = (gridId, tileClass, initialColumnCount) => {
         timeoutId = setTimeout(adjustGrid, 100);
     };
 
-    adjustGrid();
+    await adjustGrid();
     window.addEventListener('resize', throttledResizeListener);
-};
+}
 
-const setTileSize = (tiles, widthToSet) => {
-    const grid = tiles[0].parentNode;
-    grid.style.setProperty('--tile-size', `${widthToSet}px`);
-    grid.style.setProperty('--tile-font-size', `${widthToSet / 2}px`);
+const setTileSize = (grid, widthToSet) => {
+    grid.style.setProperty('--tile-size', `${widthToSet/16}rem`);
+    grid.style.setProperty('--tile-font-size', `${(widthToSet / 32)}rem`);
 };

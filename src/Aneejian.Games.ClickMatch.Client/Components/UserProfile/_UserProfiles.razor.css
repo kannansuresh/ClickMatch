@@ -1,0 +1,10 @@
+﻿.profiles-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2vmin;
+    row-gap: 5vmin;
+    max-width: 100vmin;
+    margin-bottom: 5vmin;
+}

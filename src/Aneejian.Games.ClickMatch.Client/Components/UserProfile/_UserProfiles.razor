@@ -1,0 +1,92 @@
+﻿@using Aneejian.Games.ClickMatch.Security
+@inject IJSRuntime jsRuntime
+@inject IndexedDbService iDb
+@inject NavigationManager navigationManager
+
+
+@if (Profiles is not null)
+{
+	<div class="text-center mb-5">
+		<h1 class="display-5">Who is playing?</h1>
+	</div>
+
+	<div class="profiles-container">
+
+		@foreach (var profile in Profiles)
+		{
+			<_UserProfileCard Profile=profile
+							  OnUserSelected=SelectUser
+							  OnUserDeleted=DeleteUser />
+		}
+
+		<_Splasher SplashText=@SplashMessage />
+
+	</div>
+}
+
+@code {
+	private List<UserDto>? Profiles { get; set; }
+
+	[Parameter] 
+	public EventCallback<UserDto> OnUserSelected { get; set; }
+
+	private string SplashMessage { get; set; } = string.Empty;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await FetchProfiles();
+	}
+
+	private async Task FetchProfiles()
+	{
+		var profiles = await iDb.GetUsers();
+
+
+		if (profiles.Count() == 0)
+		{
+			var guestUserDto = new RegisterRequest().AddGuestUser();
+			await iDb.AddNewUser(guestUserDto);
+		}
+
+		profiles = await iDb.GetUsers();
+
+		if (Profiles is not null)
+			Profiles.Clear();
+		else
+			Profiles = new List<UserDto>();
+
+		Profiles.AddRange(profiles);
+
+		var addUserDto = new UserDto
+			{
+				UserName = AppStrings.NewUser.UserName,
+				Name = AppStrings.NewUser.DisplayName,
+			};
+
+		Profiles.Add(addUserDto);
+	}
+
+	private void SelectUser(UserDto user)
+	{
+		if (user.UserName == AppStrings.NewUser.UserName)
+		{
+			navigationManager.NavigateTo(AppStrings.Pages.Register);
+		}
+		OnUserSelected.InvokeAsync(user);
+	}
+
+
+
+	private async Task DeleteUser(UserDto user)
+	{
+
+		if (user.UserName == AppStrings.NewUser.UserName)
+		{
+			return;
+		}
+		SplashMessage = $"User profile '{user.Name}' deleted successfully.";
+		await FetchProfiles();
+		await Task.Delay(2000);
+		SplashMessage = string.Empty;
+	}
+}

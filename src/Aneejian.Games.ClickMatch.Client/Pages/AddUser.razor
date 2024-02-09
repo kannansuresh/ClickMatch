@@ -1,7 +1,6 @@
 ﻿@inject IndexedDbService IndexedDbInteropService
 
-@page "/adduser"
-
+@attribute [Route(AppStrings.Pages.Register)]
 
 <_AddUserProfile />
 
@@ -21,7 +20,7 @@
 		{
 			if (ConfirmPassword != Password)
 			{
-				Console.WriteLine("Passwords do not match.");
+				System.Diagnostics.Debug.WriteLine("Passwords do not match.");
 				return;
 			}
 
@@ -34,12 +33,12 @@
 				};
 			int userId = await IndexedDbInteropService.AddNewUser(userDto);
 			Users = await IndexedDbInteropService.GetUsers();
-			Console.WriteLine($"User Id: {userId}");
+			System.Diagnostics.Debug.WriteLine($"User Id: {userId}");
 		}
 		catch (Exception ex)
 		{
 			ErrorMessage = ex.Message;
-			Console.WriteLine(ex.Message);
+			System.Diagnostics.Debug.WriteLine(ex.Message);
 		}
 
 	}
