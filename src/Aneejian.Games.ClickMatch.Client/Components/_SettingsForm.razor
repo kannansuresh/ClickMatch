@@ -61,7 +61,9 @@
 	<div class="d-grid">
 		<button class="btn btn-primary mb-4"
 				id="submitButton"
-				type="submit">Start Game</button>
+				type="submit">
+			Start Game
+		</button>
 	</div>
 	@if (SelectedTheme!.AttributionRequired && !String.IsNullOrEmpty(SelectedTheme.Attribution))
 	{
@@ -113,8 +115,7 @@
 	private async Task SetGameLevels()
 	{
 		var imageCount = SelectedTheme?.ItemCount ?? 0;
-		MaxGameLevel = await GetUserMaxLevel();
-		MaxGameLevel += 1;
+		MaxGameLevel = Math.Max(await GetUserMaxLevel(), 1);
 		var maxLevel = Math.Min(Math.Abs(imageCount / 4), MaxGameLevel);
 		GameLevels = Enumerable.Range(1, maxLevel).Reverse();
 		GameLevel = Math.Max(MaxGameLevel, GameLevel);
@@ -127,6 +128,8 @@
 		try
 		{
 			level += await indexedDbService.GetUserMaxGameLevel(LoggedInUser!.Id);
+			return level;
+
 		}
 		catch (Exception ex)
 		{

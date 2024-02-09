@@ -59,10 +59,10 @@
 										.Select(tile => tile.Content)
 										.Distinct()
 										.ToList();
-					if (images.Count > 0)
-					{
-						await _jsModule.InvokeVoidAsync("preloadImages", images);
-					}
+				if (images.Count > 0)
+				{
+					await _jsModule.InvokeVoidAsync("preloadImages", images);
+				}
 
 				await _jsModule.InvokeVoidAsync("styleGridAndTiles", GameGrid, columns);
 			}

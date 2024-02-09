@@ -6,7 +6,7 @@ public struct AppStrings
 
 	public struct Pages
 	{
-		public const string Home = "/";
+		public const string Home = "";
 		public const string Game = "game";
 		public const string Login = "login";
 		public const string Register = "register";
