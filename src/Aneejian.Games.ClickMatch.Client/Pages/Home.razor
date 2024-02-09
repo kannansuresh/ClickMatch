@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@attribute [Route(AppStrings.Pages.Home)]
 @inject IThemeService themeService
 @inject SessionStorageService sessionStorageService
 @inject AuthenticationService authenticationService
@@ -10,11 +10,11 @@
 @if (!authenticationService.IsAuthenticated || ShowProfiles)
 {
 	<_UserProfiles OnUserSelected="OnUserSelected" />
+	<_Disclaimer />
 }
 
 <_AuthorizedOnly>
 	<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
-		<p class="mb-4 text-warning">You are loggedin as @($"{LoggedInUser!.Name} ({LoggedInUser.UserName}).") <span><button class="btn btn-link" @onclick=@authenticationService.Logout>Logout</button></span></p>
 		<_Game />
 	</CascadingValue>
 </_AuthorizedOnly>

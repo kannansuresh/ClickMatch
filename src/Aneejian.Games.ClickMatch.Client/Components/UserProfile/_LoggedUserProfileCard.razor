@@ -1,0 +1,52 @@
+﻿@inject AuthenticationService authenticationService
+@using Aneejian.Games.ClickMatch.Helpers
+
+@if (Profile is not null)
+{
+	<div class="ms-2">
+		<div class="nav-link dropdown-toggle" id="navbarDropdown-@(UniqueId ?? "1")" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			@if (!string.IsNullOrEmpty(Profile.Avatar))
+			{
+				<picture class="profile-picture">
+					<source srcset="@(SharedMethods.WebpProfileImage(Profile))" type="image/webp">
+					<source srcset="@Profile.Avatar" type="image/jpeg">
+					<img src="@Profile.Avatar" alt="Tile-@Profile.UserName" />
+				</picture>
+			}
+		</div>
+		<ul class="dropdown-menu ms-2">
+			<li class="mb-2"><_UserProfileCard Profile="Profile" ShowHoverEffect=false ShowProfileInfo=true /></li>
+			@* <li><a class="dropdown-item" href="#">Action</a></li>
+			<li><a class="dropdown-item" href="#">Another action</a></li> *@
+			@if (OnLogout.HasDelegate)
+			{
+				<li><hr class="dropdown-divider"></li>
+				<li>
+					<div class="logout dropdown-item d-flex flex-row align-items-center" @onclick="Logout">
+						<i class="bi bi-box-arrow-right text-danger-emphasis fs-5"></i>
+						<button class="btn p-0 m-0 ps-2">Logout</button>
+					</div>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+@code {
+	[Parameter] public UserDto? Profile { get; set; }
+
+	[Parameter] public EventCallback OnLogout { get; set; }
+
+	private string? UniqueId { get; set; } = null;
+
+	protected override void OnInitialized()
+	{
+		UniqueId = Guid.NewGuid().ToString();
+		base.OnInitialized();
+	}
+
+	private async Task Logout()
+	{
+		await OnLogout.InvokeAsync();
+	}
+}

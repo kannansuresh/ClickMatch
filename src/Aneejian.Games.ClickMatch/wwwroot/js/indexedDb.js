@@ -53,6 +53,8 @@ export class IndexedDb {
         if (userGames.length === 0)
             return 0;
         const levelsWon = new Set(userGames.filter(game => game.gameWon).map(game => game.level));
+        if (levelsWon.size === 0)
+            return 0;
         const maxLevel = Math.max(...levelsWon);
         if (maxLevel === levelsWon.size)
             return maxLevel;

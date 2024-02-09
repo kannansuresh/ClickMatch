@@ -1,0 +1,13 @@
+﻿.profile-picture > img {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+}
+
+.profile-picture:hover > img {
+    transform: scale(2);
+}
+
+.logout{
+    cursor: pointer;
+}
