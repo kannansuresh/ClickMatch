@@ -58,6 +58,8 @@
 	{
 		var autheticatedUser = authenticationService.AuthenticatedUser;
 		LoggedInUser = autheticatedUser;
+		if (autheticatedUser is not null)
+			ShowProfiles = false;
 		StateHasChanged();
 	}
 

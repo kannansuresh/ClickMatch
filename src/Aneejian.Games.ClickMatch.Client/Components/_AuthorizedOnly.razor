@@ -2,22 +2,30 @@
 
 @if (isAuthenticated)
 {
-    @ChildContent
+	@ChildContent
 }
 
 @code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+	[Parameter] public RenderFragment? ChildContent { get; set; }
 
-    bool isAuthenticated = false;
+	bool isAuthenticated = false;
 
-    protected override void OnInitialized()
-    {
-        authenticationService.OnAuthenticationStateChanged += NotifyChange;
-    }
+	protected override void OnInitialized()
+	{
+		authenticationService.OnAuthenticationStateChanged += NotifyChange;
+	}
 
-    private void NotifyChange(bool authenticated)
-    {
-        isAuthenticated = authenticated;
-        StateHasChanged();
-    }
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (firstRender)
+		{
+			NotifyChange(authenticationService.IsAuthenticated);
+		}
+	}
+
+	private void NotifyChange(bool authenticated)
+	{
+		isAuthenticated = authenticated;
+		StateHasChanged();
+	}
 }
