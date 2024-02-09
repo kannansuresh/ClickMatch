@@ -24,7 +24,7 @@ public struct AppStrings
 		public const string UserName = "guest";
 		public const string Password = "Guest";
 		public const string DisplayName = "Guest";
-		public const string Avatar = "/images/guest-avatar.png";
+		public const string Avatar = "./images/guest-avatar.png";
 	}
 
 	public struct NewUser
