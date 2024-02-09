@@ -1,6 +1,7 @@
 ﻿@using System.ComponentModel.DataAnnotations
 @using Aneejian.Games.ClickMatch.Helpers
 @using Microsoft.AspNetCore.Components.Web
+
 @inject IJSRuntime jsRuntime
 
 
@@ -19,7 +20,7 @@
 				if (!string.IsNullOrEmpty(Profile.Avatar))
 				{
 					<picture>
-						<source srcset="@(WebpProfileImage())" type="image/webp">
+						<source srcset="@(SharedMethods.WebpProfileImage(Profile))" type="image/webp">
 						<source srcset="@Profile.Avatar" type="image/jpeg">
 						<img src="@Profile.Avatar" alt="Tile-@Profile.UserName" />
 					</picture>
@@ -73,22 +74,6 @@
 		await OnUserSelected.InvokeAsync(Profile);
 	}
 
-	private string WebpProfileImage()
-	{
-		if (Profile.Avatar is null)
-		{
-			return "";
-		}
-		if (Profile.Avatar == AppStrings.GuestUser.Avatar)
-		{
-			return Path.ChangeExtension(Profile.Avatar, "webp");
-		}
-		if (Profile.Avatar.ToLower().Contains("aneejian.com") || Profile.Avatar.ToLower().Contains("kannansuresh"))
-		{
-			return Profile.Avatar.ToWebp();
-		}
-		return Profile.Avatar;
-	}
 
 	private async Task DeleteUser()
 	{

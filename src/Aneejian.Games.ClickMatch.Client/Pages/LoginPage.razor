@@ -6,7 +6,7 @@
 
 <div class="d-flex flex-column w-100 justify-content-center align-items-center">
 	<div class="mb-5 w-100">
-		<_LoginForm />
+		<_LoginForm OnLoginSuccess="LoginSuccess"/>
 	</div>
 
 	<div class="mb-4 text-lg-start">
@@ -19,5 +19,10 @@
 	private void AddNewProfile()
 	{
 		navigationManager.NavigateTo(AppStrings.Pages.Register);
+	}
+
+	private void LoginSuccess()
+	{
+		navigationManager.NavigateTo(AppStrings.Pages.Home);
 	}
 }

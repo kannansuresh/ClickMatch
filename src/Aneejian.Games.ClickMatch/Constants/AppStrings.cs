@@ -3,6 +3,7 @@
 public struct AppStrings
 {
 	public const string ConfigFilePath = "config/config.json?v=1.0.0";
+	public const string GithubRepo = "https://github.com/kannansuresh/ClickMatch";
 
 	public struct Pages
 	{
@@ -10,6 +11,7 @@ public struct AppStrings
 		public const string Game = "game";
 		public const string Login = "login";
 		public const string Register = "register";
+		public const string About = "about";
 	}
 
 	public struct SessionStorageKeys
