@@ -22,7 +22,6 @@ public class RegisterRequest : UserDto
 	[Required(ErrorMessage = "Password is required.")]
 	public string InputPassword { get; set; } = string.Empty;
 
-
 	[Required(ErrorMessage = "Password confirmation is required.")]
 	[Compare(nameof(InputPassword), ErrorMessage = "Password and Confirm Password do not match.")]
 	public string ConfirmPassword { get; set; } = string.Empty;
@@ -36,5 +35,4 @@ public class RegisterRequest : UserDto
 		Password = InputPassword;
 		return this;
 	}
-
 }

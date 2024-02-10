@@ -65,7 +65,8 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 		return await ValidateLoggedInUser(user);
 	}
 
-	public async Task<bool> ValidateLoggedInUser(UserDto user) { 
+	public async Task<bool> ValidateLoggedInUser(UserDto user)
+	{
 		var loginRequestId = await _sessionStorageService.GetValueAsync<string>(AppStrings.SessionStorageKeys.LoginRequestId);
 		var token = await _sessionStorageService.GetValueAsync<string>(AppStrings.SessionStorageKeys.Token);
 		var checkToken = PasswordManager.ValidatePassword(user.PlainHashUserDto(loginRequestId), token);
@@ -140,5 +141,4 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 	}
 
 	private void NotifyAuthenticationStateChanged() => OnAuthenticationStateChanged?.Invoke(IsAuthenticated);
-
 }

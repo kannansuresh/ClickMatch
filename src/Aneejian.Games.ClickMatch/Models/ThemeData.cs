@@ -68,6 +68,4 @@ public class ThemeData : IThemeData
 
 		return uniqueItems.Select(image => string.Format(formattedItemUrl, image));
 	}
-
-
 }

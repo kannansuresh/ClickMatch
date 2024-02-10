@@ -13,5 +13,4 @@ public class TileModel(Guid matchingId, int? positionId, string? content)
 	public int FlipCount { get; set; } = 0;
 	public bool IsMatched { get; set; } = false;
 	public bool IsImage => Content.IsImage();
-
 }

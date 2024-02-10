@@ -31,6 +31,7 @@
 	protected override void OnInitialized()
 	{
 		CheckLogin();
+		ShowProfiles = !authenticationService.IsAuthenticated;
 		authenticationService.OnAuthenticationStateChanged += CheckLogin;
 		base.OnInitialized();
 	}
@@ -60,8 +61,6 @@
 	{
 		var autheticatedUser = authenticationService.AuthenticatedUser;
 		LoggedInUser = autheticatedUser;
-		if (autheticatedUser is not null)
-			ShowProfiles = false;
 		StateHasChanged();
 	}
 

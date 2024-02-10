@@ -45,22 +45,20 @@ public class GameScorer : IGameScorer
 		Score += Convert.ToInt32(scoreForFind);
 	}
 
-
 	public override string ToString()
 	{
 		return $"Score: {Score}, Bonus: {Bonus}, Multiplier: {Multiplier}x, Total: {TotalScore}";
 	}
 
-	static int GetPenaltyScale(int totalTiles)
+	private static int GetPenaltyScale(int totalTiles)
 	{
 		double penalty = Math.Pow(totalTiles, -0.5);
 		double mappedPenalty = MapToRange(penalty, 0.1, 1.0);
 		return Convert.ToInt32(mappedPenalty * 10);
 	}
 
-	static double MapToRange(double value, double min, double max)
+	private static double MapToRange(double value, double min, double max)
 	{
 		return Math.Max(min, Math.Min(max, value));
 	}
 }
-

@@ -29,7 +29,7 @@
 		{
 			if (ConfirmPassword != Password)
 			{
-				System.Diagnostics.Debug.WriteLine("Passwords do not match.");
+				SharedMethods.Log("Passwords do not match.");
 				return;
 			}
 
@@ -42,12 +42,12 @@
 				};
 			int userId = await IndexedDbInteropService.AddNewUser(userDto);
 			Users = await IndexedDbInteropService.GetUsers();
-			System.Diagnostics.Debug.WriteLine($"User Id: {userId}");
+			SharedMethods.Log($"User Id: {userId}");
 		}
 		catch (Exception ex)
 		{
 			ErrorMessage = ex.Message;
-			System.Diagnostics.Debug.WriteLine(ex.Message);
+			SharedMethods.Log(ex.Message);
 		}
 
 	}

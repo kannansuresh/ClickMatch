@@ -46,8 +46,6 @@ export class IndexedDb {
         return await this.db.users.delete(user.id)
     }
 
-
-
     async getUserMaxGameLevel(userId) {
         const userGames = await this.getGames(userId);
         if (userGames.length === 0)
@@ -62,8 +60,6 @@ export class IndexedDb {
         return missingLevel - 1 || Math.max(...levelsWon);
     }
 
-
-
     async getGames(userId) {
         return await this.db.games.where('userId').equals(userId).toArray();
     }
@@ -72,7 +68,6 @@ export class IndexedDb {
 }
 
 export class UserDTO {
-
     constructor(user) {
         this.id = user.id == 0 || null ? undefined : user.id;
         this.userName = user.userName;
@@ -83,7 +78,6 @@ export class UserDTO {
 }
 
 export class GameDTO {
-
     constructor(game) {
         this.id = game.id == 0 || null ? undefined : game.id;
         this.userId = game.userId;
@@ -94,8 +88,6 @@ export class GameDTO {
         this.gameLost = game.gameLost;
         this.gameAbandoned = game.gameAbandoned;
     }
-
-
 }
 
 export function createIndexedDb() {

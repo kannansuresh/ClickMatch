@@ -51,7 +51,6 @@ public static class ExtensionMethods
 		if (extension == ".svg")
 			return "";
 
-
 		var orginalFileName = Path.GetFileName(content);
 		var webpFileName = Path.ChangeExtension(orginalFileName, "webp");
 		var webpPath = content.Replace(orginalFileName, Path.Combine("webp/", webpFileName));
