@@ -90,9 +90,9 @@
 		}
 	}
 
-	private async void OnChangeHandler()
+	private void OnChangeHandler()
 	{
-		await InvokeAsync(StateHasChanged);
+		StateHasChanged();
 	}
 
 	private async Task OnSettingSave(IGameSettings settings)

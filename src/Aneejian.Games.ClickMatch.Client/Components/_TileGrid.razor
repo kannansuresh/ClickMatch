@@ -68,13 +68,14 @@
 			}
 
 			tileGridDisplay = "grid";
+
+			StateHasChanged();
 		}
 	}
 
 	private async Task HandleTileClick(TileModel tile)
 	{
 		await gameManager.FlipTile(tile);
-		StateHasChanged();
 	}
 
 	private (int rows, int columns) GetGridDimensions()
@@ -82,7 +83,7 @@
 		return GetRowsAndColumns(Tiles.Count(), 10);
 	}
 
-	static (int rows, int columns) GetRowsAndColumns(int number, int maxColumns = 10)
+	private static (int rows, int columns) GetRowsAndColumns(int number, int maxColumns = 10)
 	{
 		int sqrt = (int)Math.Sqrt(number);
 
