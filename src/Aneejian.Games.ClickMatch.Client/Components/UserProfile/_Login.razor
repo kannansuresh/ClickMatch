@@ -40,11 +40,6 @@
 		}
 	}
 
-	// private async Task SetModalFocus()
-	// {
-	// 	await jsRuntime.InvokeVoidAsync("setModalFocus", ModalId);
-	// }
-
 	private async Task<bool> CloseModal()
 	{
 		return await jsRuntime.InvokeAsync<bool>("closeModal", ModalId);

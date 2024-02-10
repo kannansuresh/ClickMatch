@@ -18,7 +18,7 @@ function inputFocus(modalId, elementId) {
 function focusFirstInput() {
     const input = document.querySelector('input')
     if (input)
-        input.focus()
+        focusElement(input)
 }
 
 function focusElementById(id) {
@@ -78,7 +78,6 @@ function openModal(modalId) {
 
 function setModalFocus(myModalEl) {
     const inputElement = myModalEl.querySelector('input')
-    if (inputElement) {
+    if (inputElement)
         inputElement.focus()
-    }
 }
