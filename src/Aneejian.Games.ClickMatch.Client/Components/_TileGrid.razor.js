@@ -14,7 +14,7 @@ export async function styleGridAndTiles(grid, initialColumnCount) {
     const maxWidth = 150;
 
     const adjustGrid = async () => {
-        let viewPortWidth = window.innerWidth - 20;
+        let viewPortWidth = window.outerWidth - 20;
         let columnWidth = viewPortWidth / initialColumnCount - (initialColumnCount - 1);
         let adjustedColumnCount = initialColumnCount;
 
@@ -39,8 +39,13 @@ export async function styleGridAndTiles(grid, initialColumnCount) {
         timeoutId = setTimeout(adjustGrid, 100);
     };
 
+    const orientationChangeListner = () => {
+        adjustGrid();
+    }
+
     await adjustGrid();
     window.addEventListener('resize', throttledResizeListener);
+    window.addEventListener('orientationchange', orientationChangeListner);
 }
 
 const setTileSize = (grid, widthToSet) => {
