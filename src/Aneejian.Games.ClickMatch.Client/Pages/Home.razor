@@ -10,7 +10,9 @@
 @if (!authenticationService.IsAuthenticated || ShowProfiles)
 {
 	<_UserProfiles OnUserSelected="OnUserSelected" />
-	<_Disclaimer />
+	<div class="text-center">
+		<_Disclaimer />
+	</div>
 }
 
 <_AuthorizedOnly>
@@ -70,7 +72,6 @@
 			await authenticationService.Logout();
 			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
 		}
-
 	}
 
 }
