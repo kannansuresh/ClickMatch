@@ -1,4 +1,5 @@
 ﻿@inject IndexedDbService IndexedDbInteropService
+@inject IJSRuntime JSRuntime
 
 @attribute [Route(AppStrings.Pages.Register)]
 
@@ -12,6 +13,14 @@
 	private string ConfirmPassword { get; set; } = string.Empty;
 	private string ErrorMessage { get; set; } = string.Empty;
 	private IEnumerable<UserDto>? Users { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await Focus();
+		}
+	}
 
 
 	private async Task HandleSubmitClick()
@@ -41,5 +50,10 @@
 			System.Diagnostics.Debug.WriteLine(ex.Message);
 		}
 
+	}
+
+	private async Task Focus()
+	{
+		await JSRuntime.InvokeVoidAsync("focusFirstInput");
 	}
 }

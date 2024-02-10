@@ -15,6 +15,27 @@ function inputFocus(modalId, elementId) {
     }
 }
 
+function focusFirstInput() {
+    const input = document.querySelector('input')
+    if (input)
+        focusElement(input)
+}
+
+function focusElementById(id) {
+    focusElement(document.getElementById(id))
+}
+
+function focusElementByClassName(className) {
+    focusElement(document.querySelector(className))
+}
+
+function focusElement(elementToFocus) {
+    try {
+        elementToFocus.focus();
+    } catch (e) {
+        console.log(e)
+    }
+}
 
 function closeModal(modalId) {
     try {
@@ -48,12 +69,15 @@ function openModal(modalId) {
     try {
         const myModalEl = document.getElementById(modalId);
         const modal = bootstrap.Modal.getOrCreateInstance(myModalEl)
-        modal.show();
-        const inputElements = myModalEl.querySelectorAll('input')
-        if (inputElements.length > 1) {
-            inputElements[0].classList.contains('visually-hidden') ? inputElements[1].focus() : inputElements[0].focus()
-        }
+        modal.show()
+        setModalFocus(myModalEl)
     } catch (e) {
         console.error(e)
     }
+}
+
+function setModalFocus(myModalEl) {
+    const inputElement = myModalEl.querySelector('input')
+    if (inputElement)
+        inputElement.focus()
 }
