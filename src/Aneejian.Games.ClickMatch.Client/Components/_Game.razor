@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics
 @inject IThemeService themeService
 @inject GameManagerService gameManager
+@implements IDisposable
 
 <div class="d-flex flex-column justify-content-center align-items-center">
 	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
@@ -83,7 +84,10 @@
 
 	public void Dispose()
 	{
-		gameManager.OnChange -= OnChangeHandler;
+		if (gameManager != null)
+		{
+			gameManager.OnChange -= OnChangeHandler;
+		}
 	}
 
 	private async void OnChangeHandler()
@@ -91,17 +95,17 @@
 		await InvokeAsync(StateHasChanged);
 	}
 
-	private void OnSettingSave(IGameSettings settings)
+	private async Task OnSettingSave(IGameSettings settings)
 	{
-		StartNewGame(settings);
+		await StartNewGame(settings);
 	}
 
-	private void StartNewGame(IGameSettings settings)
+	private async Task StartNewGame(IGameSettings settings)
 	{
 		try
 		{
 			Tiles = [];
-			gameManager.StartGame(settings);
+			await gameManager.StartGame(settings);
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
 			GameLevel = gameManager.GameSettings.GameLevel;
 			Tiles = gameManager!.Tiles;
@@ -113,14 +117,14 @@
 		}
 	}
 
-	private void OnPlayAgain()
+	private async Task OnPlayAgain()
 	{
 		if (gameManager.GameWon)
 		{
 			gameManager.GameSettings.SetupNextLevel();
 		}
 		gameManager.ResetGame();
-		StartNewGame(gameManager.GameSettings);
+		await StartNewGame(gameManager.GameSettings);
 		StateHasChanged();
 	}
 
