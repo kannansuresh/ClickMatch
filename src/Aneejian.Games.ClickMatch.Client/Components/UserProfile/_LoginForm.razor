@@ -1,4 +1,5 @@
-﻿@using Aneejian.Games.ClickMatch.Services.Authentication
+﻿@using Aneejian.Games.ClickMatch.Helpers
+@using Aneejian.Games.ClickMatch.Services.Authentication
 @inject AuthenticationService authenticationService
 @inject IJSRuntime JSRuntime
 
@@ -129,7 +130,7 @@
 			LoginContext!.NotifyValidationStateChanged();
 			await OnLoginSuccess.InvokeAsync();
 		}
-		System.Diagnostics.Debug.WriteLine($"Login Result: {loginResult}, Error Message: {ErrorMessage}");
+		SharedMethods.Log($"Login Result: {loginResult}, Error Message: {ErrorMessage}");
 	}
 
 	private async Task LoginAsGuest()

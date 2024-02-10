@@ -25,9 +25,7 @@
 });
 
 window.registerForUpdateAvailableNotification = (caller, methodName) => {
-
     window.updateAvailable.then(isUpdateAvailable => {
-
         if (isUpdateAvailable) {
             caller.invokeMethodAsync(methodName).then();
         }

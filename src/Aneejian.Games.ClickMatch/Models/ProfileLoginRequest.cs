@@ -8,7 +8,7 @@ namespace Aneejian.Games.ClickMatch.Models;
 
 public class ProfileLoginRequest(SessionStorageService sessionStorageService)
 {
-	readonly SessionStorageService _sessionStorageService = sessionStorageService;
+	private readonly SessionStorageService _sessionStorageService = sessionStorageService;
 
 	[Required(ErrorMessage = "Password is required.")]
 	public string Password { get; set; } = "";

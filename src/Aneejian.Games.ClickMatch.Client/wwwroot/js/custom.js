@@ -1,3 +1,21 @@
+const logMethods = {
+    info: console.info,
+    error: console.error,
+    warn: console.warn,
+    log: console.log,
+};
+
+function logIfDev(message, type = 'log') {
+    if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        const logMethod = logMethods[type];
+        if (logMethod) {
+            logMethod(message);
+        } else {
+            console.warn(`Invalid log type: ${type} \nMessage Passed: ${message}`);
+        }
+    }
+}
+
 function enableToolTip() {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     _ = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -11,7 +29,7 @@ function inputFocus(modalId, elementId) {
             myInput.focus()
         })
     } catch (e) {
-        console.log(e)
+        logIfDev(e, 'warn')
     }
 }
 
@@ -33,7 +51,7 @@ function focusElement(elementToFocus) {
     try {
         elementToFocus.focus();
     } catch (e) {
-        console.log(e)
+        logIfDev(e, 'error')
     }
 }
 
@@ -44,7 +62,7 @@ function closeModal(modalId) {
         modal.hide()
         return true
     } catch (e) {
-        console.info('Failed to close modal as it is not found. Trying to remove the modal backdrop.' + e)
+        logIfDev('Failed to close modal as it was not found. Trying to remove the modal backdrop.' + e, 'warn')
         closeModalBackdrop()
         return true
     }
@@ -59,9 +77,8 @@ function closeModalBackdrop() {
         const body = document.querySelector('body')
         body.classList.remove('modal-open')
         body.style = ''
-
     } catch (e) {
-        console.error(e)
+        logIfDev(e, 'error')
     }
 }
 
@@ -72,7 +89,7 @@ function openModal(modalId) {
         modal.show()
         setModalFocus(myModalEl)
     } catch (e) {
-        console.error(e)
+        logIfDev(e, 'error')
     }
 }
 

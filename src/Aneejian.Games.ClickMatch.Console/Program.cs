@@ -1,9 +1,5 @@
 ﻿using Aneejian.Games.ClickMatch.Models;
-using Aneejian.Games.ClickMatch.Services;
 using System.Net.Http.Json;
-
-
-
 
 int[] numbers = Enumerable.Range(1, 10).ToArray();
 

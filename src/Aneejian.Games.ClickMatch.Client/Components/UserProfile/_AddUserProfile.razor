@@ -1,4 +1,5 @@
-﻿@using Aneejian.Games.ClickMatch.Security
+﻿@using Aneejian.Games.ClickMatch.Helpers
+@using Aneejian.Games.ClickMatch.Security
 @inject IndexedDbService iDb
 @inject IJSRuntime jsRuntime
 @inject NavigationManager navigationManager
@@ -157,7 +158,7 @@
 		}
 		catch (Exception ex)
 		{
-			System.Diagnostics.Debug.WriteLine(ex.Message);
+			SharedMethods.Log(ex.Message);
 		}
 
 		e.Value = userName;

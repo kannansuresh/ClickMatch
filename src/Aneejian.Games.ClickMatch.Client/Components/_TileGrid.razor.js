@@ -49,6 +49,6 @@ export async function styleGridAndTiles(grid, initialColumnCount) {
 }
 
 const setTileSize = (grid, widthToSet) => {
-    grid.style.setProperty('--tile-size', `${widthToSet/16}rem`);
+    grid.style.setProperty('--tile-size', `${widthToSet / 16}rem`);
     grid.style.setProperty('--tile-font-size', `${(widthToSet / 32)}rem`);
 };

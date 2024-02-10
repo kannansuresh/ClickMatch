@@ -1,4 +1,5 @@
-﻿using Aneejian.Games.ClickMatch.Models;
+﻿using Aneejian.Games.ClickMatch.Helpers;
+using Aneejian.Games.ClickMatch.Models;
 using System.Text.Json;
 
 namespace Aneejian.Games.ClickMatch.Services;
@@ -8,12 +9,10 @@ public class ThemeService(HttpClient httpClient, string configPath) : IThemeServ
 	private readonly HttpClient httpClient = httpClient;
 	private readonly string configPath = configPath;
 
-
 	public Config? ThemeConfig { get; set; }
 	public IEnumerable<IThemeData>? ThemeDatas { get; set; }
 
 	public bool IsInitialized => ThemeConfig != null && ThemeDatas != null;
-
 
 	public async Task InitializeAsync()
 	{
@@ -39,14 +38,13 @@ public class ThemeService(HttpClient httpClient, string configPath) : IThemeServ
 
 		try
 		{
-
 			hostedThemes = await GetAsync<IEnumerable<ThemeData>>(hostedThemeInfo, true);
 			if (hostedThemes != null)
 				themes.UnionWith(hostedThemes);
 		}
 		catch (Exception ex)
 		{
-			await Console.Out.WriteLineAsync(ex.Message);
+			SharedMethods.Log(ex.Message);
 			try
 			{
 				localThemes = await GetAsync<IEnumerable<ThemeData>>(localThemeInfo, true);
@@ -55,8 +53,7 @@ public class ThemeService(HttpClient httpClient, string configPath) : IThemeServ
 			}
 			catch (Exception ex2)
 			{
-				await Console.Out.WriteLineAsync(ex2.Message);
-
+				SharedMethods.Log(ex2.Message);
 			}
 		}
 

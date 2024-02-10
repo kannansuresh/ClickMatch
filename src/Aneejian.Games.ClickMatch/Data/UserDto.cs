@@ -4,7 +4,6 @@ namespace Aneejian.Games.ClickMatch.Data;
 
 public class UserDto
 {
-
 	private string _userName = string.Empty;
 
 	[Key]

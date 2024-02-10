@@ -21,4 +21,11 @@ public static class SharedMethods
 		}
 		return profile.Avatar;
 	}
+
+	public static void Log(string message)
+	{
+#if DEBUG
+		Console.WriteLine(message);
+#endif
+	}
 }

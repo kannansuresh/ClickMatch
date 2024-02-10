@@ -7,8 +7,7 @@ namespace Aneejian.Games.ClickMatch.Models;
 
 public class ProfileDeleteRequest(IndexedDbService indexedDbService)
 {
-
-	readonly IndexedDbService _indexedDbService = indexedDbService;
+	private readonly IndexedDbService _indexedDbService = indexedDbService;
 
 	[Required(ErrorMessage = "Password is required.")]
 	public string ConfirmationPassword { get; set; } = "";

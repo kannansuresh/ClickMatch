@@ -12,7 +12,7 @@
 	@if (gameManager is not null && gameManager.Tiles is not null && gameManager.GameInProgress)
 	{
 		<div class="row mb-4">
-			<div class="display-5">Level @gameManager.GameSettings!.GameLevel</div>
+			<div class="display-6">Level @gameManager.GameSettings!.GameLevel</div>
 		</div>
 
 		<div class="row mb-4">
@@ -109,7 +109,7 @@
 		}
 		catch (Exception ex)
 		{
-			Debug.WriteLine(ex.Message);
+			SharedMethods.Log(ex.Message);
 		}
 	}
 

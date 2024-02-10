@@ -16,10 +16,10 @@
     cursor: pointer;
 }
 
-.image:hover {
-    transform: scale(1.5);
-    transition: all 0.2s ease-in-out;
-}
+    .image:hover {
+        transform: scale(1.5);
+        transition: all 0.2s ease-in-out;
+    }
 
 .no-hover:hover {
     transform: scale(1.05);

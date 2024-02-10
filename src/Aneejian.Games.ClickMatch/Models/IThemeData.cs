@@ -1,5 +1,4 @@
-﻿
-namespace Aneejian.Games.ClickMatch.Models;
+﻿namespace Aneejian.Games.ClickMatch.Models;
 
 public interface IThemeData
 {
