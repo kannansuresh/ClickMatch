@@ -81,6 +81,8 @@
 		ScoreCollector = new ScoreCollector();
 	}
 
+
+
 	public void Dispose()
 	{
 		gameManager.OnChange -= OnChangeHandler;
@@ -91,17 +93,17 @@
 		await InvokeAsync(StateHasChanged);
 	}
 
-	private void OnSettingSave(IGameSettings settings)
+	private async Task OnSettingSave(IGameSettings settings)
 	{
-		StartNewGame(settings);
+		await StartNewGame(settings);
 	}
 
-	private void StartNewGame(IGameSettings settings)
+	private async Task StartNewGame(IGameSettings settings)
 	{
 		try
 		{
 			Tiles = [];
-			gameManager.StartGame(settings);
+			await gameManager.StartGame(settings);
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
 			GameLevel = gameManager.GameSettings.GameLevel;
 			Tiles = gameManager!.Tiles;
@@ -113,14 +115,14 @@
 		}
 	}
 
-	private void OnPlayAgain()
+	private async Task OnPlayAgain()
 	{
 		if (gameManager.GameWon)
 		{
 			gameManager.GameSettings.SetupNextLevel();
 		}
 		gameManager.ResetGame();
-		StartNewGame(gameManager.GameSettings);
+		await StartNewGame(gameManager.GameSettings);
 		StateHasChanged();
 	}
 

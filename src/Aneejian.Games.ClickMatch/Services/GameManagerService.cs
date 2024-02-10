@@ -29,7 +29,7 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 	private List<TileModel>? FlippedTiles { get; set; } = [];
 	private List<TileModel>? MatchedTiles { get; set; } = [];
 
-	public async void StartGame(IGameSettings gameSettings)
+	public async Task StartGame(IGameSettings gameSettings)
 	{
 		Player = _authenticationService.AuthenticatedUser;
 		GameSettings = gameSettings ?? throw new Exception("Game settings not set.");
