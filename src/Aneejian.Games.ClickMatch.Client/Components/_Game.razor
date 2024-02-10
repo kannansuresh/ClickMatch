@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics
 @inject IThemeService themeService
 @inject GameManagerService gameManager
+@implements IDisposable
 
 <div class="d-flex flex-column justify-content-center align-items-center">
 	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
@@ -81,11 +82,12 @@
 		ScoreCollector = new ScoreCollector();
 	}
 
-
-
 	public void Dispose()
 	{
-		gameManager.OnChange -= OnChangeHandler;
+		if (gameManager != null)
+		{
+			gameManager.OnChange -= OnChangeHandler;
+		}
 	}
 
 	private async void OnChangeHandler()
