@@ -147,10 +147,8 @@
 
 	private async Task HandleThemeChange()
 	{
-
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SettingsRequest!.ThemeId);
 		await SetGameLevels();
-		// StateHasChanged();
 	}
 
 }
