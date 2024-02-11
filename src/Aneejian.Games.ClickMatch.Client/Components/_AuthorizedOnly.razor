@@ -1,4 +1,5 @@
 ﻿@inject AuthenticationService authenticationService
+@implements IDisposable
 
 @if (isAuthenticated)
 {
@@ -26,6 +27,12 @@
 	private void NotifyChange(bool authenticated)
 	{
 		isAuthenticated = authenticated;
-		StateHasChanged();
+		StateHasChanged(); // This is necessary to re-render the component
+	}
+
+	public void Dispose()
+	{
+		if (authenticationService != null)
+			authenticationService.OnAuthenticationStateChanged -= NotifyChange;
 	}
 }

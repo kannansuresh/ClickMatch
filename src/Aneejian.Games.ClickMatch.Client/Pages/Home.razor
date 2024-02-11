@@ -40,11 +40,11 @@
 	{
 		if (!authenticationService.IsAuthenticated)
 		{
-			StateHasChanged();
 			try { gameManager.ResetGame(); }
 			catch { }
 			ShowProfiles = true;
 			LoggedInUser = null;
+			StateHasChanged(); // This is necessary to re-render the component
 			return;
 		}
 		CheckLogin();
@@ -54,14 +54,12 @@
 	{
 		LoggedInUser = user;
 		ShowProfiles = false;
-		StateHasChanged();
 	}
 
 	private void CheckLogin()
 	{
 		var autheticatedUser = authenticationService.AuthenticatedUser;
 		LoggedInUser = autheticatedUser;
-		StateHasChanged();
 	}
 
 	public async ValueTask DisposeAsync()

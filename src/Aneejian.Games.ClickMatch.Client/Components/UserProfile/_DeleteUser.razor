@@ -50,7 +50,6 @@
 	private string PasswordInputId => "password" + Profile.Id;
 
 	private string PasswordValidationMessage { get; set; } = string.Empty;
-	private string SplashMessage { get; set; } = string.Empty;
 
 	private ProfileDeleteRequest? DeleteRequest { get; set; }
 
@@ -77,11 +76,9 @@
 		PasswordValidationMessage = DeleteRequest?.ErrorMessage ?? "";
 		if (profileDeleted)
 		{
-			SplashMessage = $"Profile deleted successfully.";
 			await CloseModal();
 			await DeleteUser();
 		}
-		StateHasChanged();
 	}
 
 	private async Task DeleteUser()

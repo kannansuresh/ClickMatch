@@ -92,7 +92,7 @@
 
 	private void OnChangeHandler()
 	{
-		StateHasChanged();
+		StateHasChanged(); // Required for re-rendering.
 	}
 
 	private async Task OnSettingSave(IGameSettings settings)
@@ -109,7 +109,7 @@
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
 			GameLevel = gameManager.GameSettings.GameLevel;
 			Tiles = gameManager!.Tiles;
-			StateHasChanged();
+
 		}
 		catch (Exception ex)
 		{
@@ -125,20 +125,18 @@
 		}
 		gameManager.ResetGame();
 		await StartNewGame(gameManager.GameSettings);
-		StateHasChanged();
 	}
 
 	private void OnAbandonClick()
 	{
 		gameManager.ResetGame();
-		StateHasChanged();
 	}
+
 	private void OnFilipAllClick(MouseEventArgs e)
 	{
 		foreach (var tile in Tiles!)
 		{
 			tile.IsShown = !tile.IsShown;
 		}
-		StateHasChanged();
 	}
 }
