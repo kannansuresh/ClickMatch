@@ -183,10 +183,9 @@
 		ShowHoverEffect = true;
 	}
 
-	private async Task OnAvatarSelected(string avatar)
+	private void OnAvatarSelected(string avatar)
 	{
 		RegisterRequest!.Avatar = avatar;
-		await InvokeAsync(StateHasChanged);
 	}
 
 }
