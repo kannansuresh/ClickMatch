@@ -1,7 +1,7 @@
 ﻿@inject IThemeService themeService
 
 
-<div class="row settings-form">
+<div class="settings-form" style="width: 90vw; max-width: 70ch;">
 	<h4 class="mb-4">Enter your game preference</h4>
 	<_SettingsForm Themes=@Themes SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@ShowTileNumber OnSubmitClick="HandleSubmitClick" />
 </div>
