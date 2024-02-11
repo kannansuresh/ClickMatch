@@ -77,11 +77,9 @@
 		PasswordValidationMessage = DeleteRequest?.ErrorMessage ?? "";
 		if (profileDeleted)
 		{
-			SplashMessage = $"Profile deleted successfully.";
 			await CloseModal();
 			await DeleteUser();
 		}
-		StateHasChanged();
 	}
 
 	private async Task DeleteUser()
