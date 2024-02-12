@@ -12,6 +12,7 @@ public struct AppStrings
 		public const string Login = "login";
 		public const string Register = "register";
 		public const string About = "about";
+		public const string Stats = "stats";
 	}
 
 	public struct SessionStorageKeys

@@ -59,6 +59,21 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 		}
 	}
 
+	public async Task<bool> IsSessionAuthenticated()
+	{
+		var loggedInUserId = await _sessionStorageService.GetValueAsync<string>(AppStrings.SessionStorageKeys.UserId);
+		if (loggedInUserId != null)
+		{
+			var user = await GetUser(Convert.ToInt32(loggedInUserId));
+			return await ValidateLoggedInUser(user);
+		}
+		else
+		{
+			IsAuthenticated = false;
+			return false;
+		}
+	}
+
 	public async Task<bool> ValidateLoggedInUser(int userId)
 	{
 		var user = await GetUser(userId);
@@ -115,6 +130,7 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 
 	public async Task Logout()
 	{
+		SharedMethods.Log("I was called to logout.");
 		await _sessionStorageService.RemoveAsync(AppStrings.SessionStorageKeys.UserId);
 		await _sessionStorageService.RemoveAsync(AppStrings.SessionStorageKeys.LoginRequestId);
 		await _sessionStorageService.RemoveAsync(AppStrings.SessionStorageKeys.Token);

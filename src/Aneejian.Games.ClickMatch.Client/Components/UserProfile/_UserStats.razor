@@ -1,0 +1,71 @@
+﻿@inject IndexedDbService indexedDbService
+@inject AuthenticationService authenticationService
+
+<div>
+	@if (UserStats is null)
+	{
+		<div>
+			Loading...
+		</div>
+	}
+	else if (UserStats.Count() == 0)
+	{
+		<div>
+			Play at least one game to see the stats.
+		</div>
+	}
+	else
+	{
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Level</th>
+					<th>Time Played</th>
+					<th>Times Won</th>
+					<th>Times Lost</th>
+					<th>Times Abandoned</th>
+					<th>Best Score</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (LevelDTO level in UserStats)
+				{
+					<tr>
+						<td>@level.Level</td>
+						<td>@level.TimesPlayed</td>
+						<td>@level.TimesWon</td>
+						<td>@level.TimesLost</td>
+						<td>@level.TimesAbandoned</td>
+						<td>@level.HighScore</td>
+					</tr>
+				}
+
+			</tbody>
+		</table>
+	}
+</div>
+
+
+@code {
+	private int UserId { get; set; }
+	private IEnumerable<LevelDTO>? UserStats { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		var isSessionAuthenticated = await authenticationService.IsSessionAuthenticated();
+		CheckLogin(isSessionAuthenticated);
+		UserStats = await indexedDbService.GetUserStats(UserId);
+		UserStats = UserStats.OrderByDescending(x => x.Level);
+	}
+
+	private void CheckLogin(bool isAuthenticated)
+	{
+		if (!isAuthenticated)
+		{
+			UserId = 0;
+			return;
+		}
+		UserId = authenticationService?.AuthenticatedUser?.Id ?? 0;
+		StateHasChanged(); // This is necessary to re-render the component
+	}
+}

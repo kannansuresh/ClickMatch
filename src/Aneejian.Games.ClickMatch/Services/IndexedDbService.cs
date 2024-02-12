@@ -57,6 +57,8 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 
 	public async Task UpdateUserGame(GameDto game) => await InvokeAsync(DbEnum.updateUserGame, game);
 
+	public async Task<IEnumerable<LevelDTO>> GetUserStats(int id) => await InvokeAsync<IEnumerable<LevelDTO>>(DbEnum.getUserStats, id);
+
 	public async ValueTask DisposeAsync()
 	{
 		if (_indexedDbRef != null)

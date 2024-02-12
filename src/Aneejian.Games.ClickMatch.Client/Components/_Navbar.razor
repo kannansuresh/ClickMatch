@@ -55,6 +55,12 @@
 		base.OnInitialized();
 	}
 
+	protected override async Task OnInitializedAsync()
+	{
+		var isSessionAuthenticated = await authenticationService.IsSessionAuthenticated();
+		CheckLogin(isSessionAuthenticated);
+	}
+
 	private async Task Logout()
 	{
 		await authenticationService.Logout();
@@ -62,7 +68,7 @@
 
 	private void CheckLogin(bool isAuthenticated)
 	{
-		if (!authenticationService.IsAuthenticated)
+		if (!isAuthenticated)
 		{
 			LoggedInUser = null;
 			return;

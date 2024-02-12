@@ -47,7 +47,7 @@ export class IndexedDb {
     }
 
     async getUserMaxGameLevel(userId) {
-        const userGames = await this.getGames(userId);
+        const userGames = await this.getUserGames(userId);
         if (userGames.length === 0)
             return 0;
         const levelsWon = new Set(userGames.filter(game => game.gameWon).map(game => game.level));
@@ -60,8 +60,51 @@ export class IndexedDb {
         return missingLevel - 1 || Math.max(...levelsWon);
     }
 
-    async getGames(userId) {
+    async getUserGames(userId) {
         return await this.db.games.where('userId').equals(userId).toArray();
+    }
+
+    async getUserStats(userId) {
+        const userGames = await this.db.games
+            .where('userId').equals(userId)
+            .toArray();
+
+        // Create an empty object to store stats per level
+        const levelStats = {};
+
+        // Iterate through each game and update stats per level
+        for (const game of userGames) {
+            const level = game.level;
+
+            // Initialize stats for the level if it doesn't exist
+            if (!levelStats[level]) {
+                levelStats[level] = {
+                    highScore: 0,
+                    timesPlayed: 0,                    
+                    timesWon: 0,
+                    timesLost: 0,
+                };
+            }
+
+            // Update level stats for this game
+            levelStats[level].highScore = Math.max(levelStats[level].highScore, game.score);
+            levelStats[level].timesPlayed++;
+            levelStats[level].timesWon += game.gameWon ? 1 : 0;
+            levelStats[level].timesLost += game.gameLost ? 1 : 0;
+        }
+
+        // Convert level stats object to an array of LevelDTO objects
+        const levelData = Object.entries(levelStats).map(([level, stats]) => {
+            return new LevelDTO({
+                level: parseInt(level), // Ensure level is number
+                highScore: stats.highScore,
+                timesPlayed: stats.timesPlayed,
+                timesWon: stats.timesWon,
+                timesLost: stats.timesLost,
+            });
+        });
+
+        return levelData;
     }
 
     // Other database operations can be added here, such as update, delete, etc.
@@ -74,6 +117,16 @@ export class UserDTO {
         this.name = user.name;
         this.password = user.password;
         this.avatar = user.avatar;
+    }
+}
+
+export class LevelDTO {
+    constructor(levelData) {
+        this.level = levelData.level;
+        this.highScore = levelData.highScore;
+        this.timesPlayed = levelData.timesPlayed;
+        this.timesWon = levelData.timesWon;
+        this.timesLost = levelData.timesLost;
     }
 }
 
