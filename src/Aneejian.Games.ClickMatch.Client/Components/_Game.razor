@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics
 @inject IThemeService themeService
 @inject GameManagerService gameManager
+@inject IJSRuntime jsRuntime
 @implements IDisposable
 
 <div class="d-flex flex-column justify-content-center align-items-center">
@@ -109,6 +110,7 @@
 			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
 			GameLevel = gameManager.GameSettings.GameLevel;
 			Tiles = gameManager!.Tiles;
+			await jsRuntime.InvokeVoidAsync("scrollElementIntoView", "game-grid");
 
 		}
 		catch (Exception ex)
