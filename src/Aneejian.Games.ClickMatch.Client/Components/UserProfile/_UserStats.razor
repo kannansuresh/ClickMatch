@@ -16,15 +16,16 @@
 	}
 	else
 	{
-		<table class="table">
+		<table class="table table-hover table-bordered text-center">
+			<caption>@StatsCaption</caption>
 			<thead>
 				<tr>
-					<th>Level</th>
-					<th>Time Played</th>
-					<th>Times Won</th>
-					<th>Times Lost</th>
-					<th>Times Abandoned</th>
-					<th>Best Score</th>
+					<th class="fw-medium">Level</th>
+					<th class="fw-medium">Times Played</th>
+					<th class="fw-medium">Times Won</th>
+					<th class="fw-medium">Times Lost</th>
+					<th class="fw-medium">Times Abandoned</th>
+					<th class="fw-medium">Best Score</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -49,6 +50,7 @@
 @code {
 	private int UserId { get; set; }
 	private IEnumerable<LevelDTO>? UserStats { get; set; }
+	private string StatsCaption {get; set; } = "Your game stats.";
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -65,7 +67,9 @@
 			UserId = 0;
 			return;
 		}
-		UserId = authenticationService?.AuthenticatedUser?.Id ?? 0;
+		var autheticatedUser = authenticationService.AuthenticatedUser;
+		UserId =  autheticatedUser?.Id ?? 0;
+		StatsCaption = $"Stats of user {autheticatedUser?.Name} ({autheticatedUser?.UserName})";
 		StateHasChanged(); // This is necessary to re-render the component
 	}
 }

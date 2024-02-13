@@ -10,6 +10,7 @@ public struct AppStrings
 		public const string Home = "";
 		public const string Game = "game";
 		public const string Login = "login";
+		public const string Logout = "logout";
 		public const string Register = "register";
 		public const string About = "about";
 		public const string Stats = "stats";

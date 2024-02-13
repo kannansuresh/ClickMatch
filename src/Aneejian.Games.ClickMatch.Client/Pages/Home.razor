@@ -7,19 +7,22 @@
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
-@if (!authenticationService.IsAuthenticated || ShowProfiles)
-{
-	<_UserProfiles OnUserSelected="OnUserSelected" />
-	<div class="text-center">
-		<_Disclaimer />
-	</div>
-}
-
-<_AuthorizedOnly>
-	<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
-		<_Game />
-	</CascadingValue>
-</_AuthorizedOnly>
+<_AccessBased>
+	<Authorized>
+		<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
+			<_Game />
+		</CascadingValue>
+	</Authorized>
+	<UnAuthorized>
+		@if (ShowProfiles)
+		{
+			<_UserProfiles OnUserSelected="OnUserSelected" />
+			<div class="text-center">
+				<_Disclaimer />
+			</div>
+		}
+	</UnAuthorized>
+</_AccessBased>
 
 @code {
 	private UserDto? LoggedInUser { get; set; }
@@ -34,13 +37,6 @@
 		ShowProfiles = !authenticationService.IsAuthenticated;
 		authenticationService.OnAuthenticationStateChanged += CheckLogin;
 		base.OnInitialized();
-	}
-
-	protected override async Task OnInitializedAsync()
-	{
-		var isAuthenticated = await authenticationService.IsSessionAuthenticated();
-		CheckLogin(isAuthenticated);
-		ShowProfiles = !isAuthenticated;
 	}
 
 	private void CheckLogin(bool isAuthenticated)
@@ -65,7 +61,7 @@
 
 	private void CheckLogin()
 	{
-		
+
 		var autheticatedUser = authenticationService.AuthenticatedUser;
 		LoggedInUser = autheticatedUser;
 	}

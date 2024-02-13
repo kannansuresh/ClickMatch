@@ -5,13 +5,21 @@ using Aneejian.Games.ClickMatch.Security;
 
 namespace Aneejian.Games.ClickMatch.Services.Authentication;
 
-public class AuthenticationService(IndexedDbService indexedDbService, SessionStorageService sessionStorageService)
+public class AuthenticationService
 {
 	private bool _isAuthenticated;
 	private string? _authenticationErrorMessage;
 	private UserDto? _authenticatedUser;
-	private readonly IndexedDbService _indexedDbService = indexedDbService;
-	private readonly SessionStorageService _sessionStorageService = sessionStorageService;
+	private readonly IndexedDbService _indexedDbService;
+	private readonly SessionStorageService _sessionStorageService;
+
+	public AuthenticationService(IndexedDbService indexedDbService, SessionStorageService sessionStorageService)
+	{
+		_indexedDbService = indexedDbService;
+		_sessionStorageService = sessionStorageService;
+		IsAuthenticated = false;
+		IsSessionAuthenticated().ConfigureAwait(false);
+	}
 
 	public event Action<bool>? OnAuthenticationStateChanged;
 
@@ -130,7 +138,6 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 
 	public async Task Logout()
 	{
-		SharedMethods.Log("I was called to logout.");
 		await _sessionStorageService.RemoveAsync(AppStrings.SessionStorageKeys.UserId);
 		await _sessionStorageService.RemoveAsync(AppStrings.SessionStorageKeys.LoginRequestId);
 		await _sessionStorageService.RemoveAsync(AppStrings.SessionStorageKeys.Token);
@@ -156,5 +163,8 @@ public class AuthenticationService(IndexedDbService indexedDbService, SessionSto
 		return user ?? throw new Exception("User does not exist.");
 	}
 
-	private void NotifyAuthenticationStateChanged() => OnAuthenticationStateChanged?.Invoke(IsAuthenticated);
+	private void NotifyAuthenticationStateChanged()
+	{
+		OnAuthenticationStateChanged?.Invoke(IsAuthenticated);
+	}
 }

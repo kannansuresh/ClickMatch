@@ -1,27 +1,29 @@
-﻿@inject AuthenticationService authenticationService
-@implements IDisposable
+﻿@implements IDisposable
+@inject AuthenticationService authenticationService
 
 @if (isAuthenticated)
 {
-	@ChildContent
+	@Authorized
+}
+else
+{
+	@UnAuthorized
 }
 
 @code {
-	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public RenderFragment? Authorized { get; set; }
+
+	[Parameter]
+	public RenderFragment? UnAuthorized { get; set; }
 
 	bool isAuthenticated = false;
 
 	protected override void OnInitialized()
 	{
+		NotifyChange(authenticationService.IsAuthenticated);
 		authenticationService.OnAuthenticationStateChanged += NotifyChange;
-	}
-
-	protected override void OnAfterRender(bool firstRender)
-	{
-		if (firstRender)
-		{
-			NotifyChange(authenticationService.IsAuthenticated);
-		}
 	}
 
 	private void NotifyChange(bool authenticated)

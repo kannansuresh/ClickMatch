@@ -3,7 +3,17 @@
 
 @attribute [Route(AppStrings.Pages.Register)]
 
-<_AddUserProfile />
+<_AccessBased>
+	<Authorized>
+		<div>
+			Please logout to continue.
+		</div>
+	</Authorized>
+	<UnAuthorized>
+		<_AddUserProfile />
+	</UnAuthorized>
+</_AccessBased>
+
 
 @code {
 
