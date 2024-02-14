@@ -1,0 +1,36 @@
+﻿/*.table-responsive {
+    overflow-x: auto;
+    max-width: 95vw;
+    margin: auto;
+}*/
+
+
+@media (max-width: 650px) {
+    td {
+        display: grid;
+        grid-template-columns: 15ch auto;
+        text-align: left;
+        padding: 0.3rem 1rem;
+        border: none;
+    }
+
+    td:first-child {
+        padding-top: 1rem;
+    }
+
+    td:last-child {
+        padding-bottom: 1rem;
+    }
+
+
+    th {
+        display: none;
+    }
+
+    td::before {
+        content: attr(data-cell) ": ";
+        font-weight: 500;
+    }
+
+
+}

@@ -6,173 +6,173 @@
 @implements IDisposable
 
 <div class="d-flex flex-column justify-content-center align-items-center">
-    @if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
-    {
-        <div class="col">
-            <_GameSettings SelectedThemeId=@(gameManager.GameSettings?.ThemeData.ThemeId ?? SelectedThemeId) GameLevel=@GameLevel ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
-        </div>
-    }
-    @if (gameManager is not null && gameManager.Tiles is not null && gameManager.GameInProgress)
-    {
-        <div class="row mb-4">
-            <div class="display-6">Level @gameManager.GameSettings!.GameLevel</div>
-        </div>
+	@if (Themes is not null && !gameManager.GameInProgress && !gameManager.GameWon && !gameManager.GameLost)
+	{
+		<div class="col">
+			<_GameSettings SelectedThemeId=@(gameManager.GameSettings?.ThemeData.ThemeId ?? SelectedThemeId) GameLevel=@GameLevel ShowTileNumber=@(gameManager.GameSettings?.ShowTileNumbers ?? true) OnSubmitClick=@OnSettingSave />
+		</div>
+	}
+	@if (gameManager is not null && gameManager.Tiles is not null && gameManager.GameInProgress)
+	{
+		<div class="row mb-4">
+			<div class="display-6">Level @gameManager.GameSettings!.GameLevel</div>
+		</div>
 
-        <div class="row mb-4">
-            <_TileGrid Tiles="gameManager.Tiles" />
-        </div>
+		<div class="row mb-4">
+			<_TileGrid Tiles="gameManager.Tiles" />
+		</div>
 
-        <_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />
+		<_MultiplierSplash Multiplier="gameManager.GameScorer.Multiplier" />
 
-        <div class="row mb-4 user-select-none">
-            <div>@gameManager.GameScorer.ToString()</div>
-        </div>
+		<div class="row mb-4 user-select-none">
+			<div>@gameManager.GameScorer.ToString()</div>
+		</div>
 
-        <div class="d-flex row row-cols-auto g-2 mb-2 justify-content-center align-items-center">
-            <div class="col">
-                <input class="btn-check" type="checkbox" @bind=gameManager.GameSettings!.ShowTileNumbers id="showTileNumber">
-                <label class="btn btn-primary btn-sm" style="min-width: 125px" for="showTileNumber">
-                    @(gameManager.GameSettings.ShowTileNumbers ? "Hide tile number" : "Show tile number")
-                </label>
-            </div>
-            <div class="col">
-                <button class="btn btn-danger btn-sm" @onclick=OnAbandonClick>Abandon Game</button>
-            </div>
-            <_DevOnly>
-                <div class="col">
-                    <button class="btn btn-success btn-sm" @onclick=OnFilipAllClick>Flip all Tiles</button>
-                </div>
-            </_DevOnly>
-        </div>
+		<div class="d-flex row row-cols-auto g-2 mb-4 justify-content-center align-items-center">
+			<div class="col">
+				<input class="btn-check" type="checkbox" @bind=gameManager.GameSettings!.ShowTileNumbers id="showTileNumber">
+				<label class="btn btn-primary btn-sm" style="min-width: 125px" for="showTileNumber">
+					@(gameManager.GameSettings.ShowTileNumbers ? "Hide tile number" : "Show tile number")
+				</label>
+			</div>
+			<div class="col">
+				<button class="btn btn-danger btn-sm" @onclick=OnAbandonClick>Abandon Game</button>
+			</div>
+			<_DevOnly>
+				<div class="col">
+					<button class="btn btn-success btn-sm" @onclick=OnFilipAllClick>Flip all Tiles</button>
+				</div>
+			</_DevOnly>
+		</div>
 
-    }
+		<div class="row mb-4">
+			<div><_UserStats Level=@gameManager.GameSettings.GameLevel /></div>
+		</div>
 
-    @if (gameManager!.GameWon || gameManager.GameLost)
-    {
-        <div class="d-flex flex-column justify-content-center align-items-center text-center">
-            <h1 class="mb-4">@(gameManager.GameWon ? $"You cleared Level {gameManager.GameSettings!.GameLevel}!" : $"You failed to clear Level {gameManager.GameSettings!.GameLevel}")</h1>
-            <h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
-            <h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
+	}
 
-                @if (gameManager.GameWon)
-                {
-                    <button class="btn btn-success d-block mt-4 w-100.ss" type="button" @onclick=PlayNextLevel>@($"Play Next Level")</button>
-                }
-            <div class="d-flex flex-column flex-sm-row gap-2 mt-4 mb-4">
-                <button class="btn btn-warning" type="button" @onclick=ReplayLevel>@($"Replay Level {gameManager.GameSettings.GameLevel}")</button>
-                <button class="btn btn-outline-info" type="button" @onclick=GoToSettings>Change Settings</button>
-            </div>
-            @if (gameManager.GameWon)
-            {
-                <_Confetti />
-            }
-        </div>
-    }
+	@if (gameManager!.GameWon || gameManager.GameLost)
+	{
+		<div class="d-flex flex-column justify-content-center align-items-center text-center">
+			<h1 class="mb-4">@(gameManager.GameWon ? $"You cleared Level {gameManager.GameSettings!.GameLevel}!" : $"You failed to clear Level {gameManager.GameSettings!.GameLevel}")</h1>
+			<h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
+			<h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
+
+			@if (gameManager.GameWon)
+			{
+				<button class="btn btn-success d-block mt-4 w-100.ss" type="button" @onclick=PlayNextLevel>@($"Play Next Level")</button>
+			}
+			<div class="d-flex flex-column flex-sm-row gap-2 mt-4 mb-4">
+				<button class="btn btn-warning" type="button" @onclick=ReplayLevel>@($"Replay Level {gameManager.GameSettings.GameLevel}")</button>
+				<button class="btn btn-outline-info" type="button" @onclick=GoToSettings>Change Settings</button>
+			</div>
+			@if (gameManager.GameWon)
+			{
+				<_Confetti />
+			}
+		</div>
+	}
 </div>
 
 @code {
 
-    private TileModel[]? Tiles { get; set; }
-    private int GameLevel { get; set; } = 1;
-    private int MaxGameLevel { get; set; } = 1;
-    private IEnumerable<IThemeData>? Themes { get; set; }
-    private string SelectedThemeId { get; set; } = "";
-    private Config? Config { get; set; }
-    private ScoreCollector? ScoreCollector { get; set; }
+	private TileModel[]? Tiles { get; set; }
+	private int GameLevel { get; set; } = 1;
+	private int MaxGameLevel { get; set; } = 1;
+	private IEnumerable<IThemeData>? Themes { get; set; }
+	private string SelectedThemeId { get; set; } = "";
+	private Config? Config { get; set; }
+	private ScoreCollector? ScoreCollector { get; set; }
 
 
-    protected override void OnInitialized()
-    {
-        gameManager.OnChange += OnChangeHandler;
-        authenticationService.OnAuthenticationStateChanged += OnAuthenticationChangeHandler;
-        Tiles = [];
-        Config = themeService.ThemeConfig;
-        GameLevel = Config!.DefaultGameLevel;
-        SelectedThemeId = Config.DefaultTheme;
-        Themes = themeService.ThemeDatas;
-        ScoreCollector = new ScoreCollector();
-    }
+	protected override void OnInitialized()
+	{
+		gameManager.OnChange += OnChangeHandler;
+		authenticationService.OnAuthenticationStateChanged += OnAuthenticationChangeHandler;
+		Tiles = [];
+		Config = themeService.ThemeConfig;
+		GameLevel = Config!.DefaultGameLevel;
+		SelectedThemeId = Config.DefaultTheme;
+		Themes = themeService.ThemeDatas;
+		ScoreCollector = new ScoreCollector();
+	}
 
-    public void Dispose()
-    {
-        if (gameManager != null)
-        {
-            gameManager.OnChange -= OnChangeHandler;
-        }
-    }
+	public void Dispose()
+	{
+		if (gameManager != null)
+		{
+			gameManager.OnChange -= OnChangeHandler;
+		}
+	}
 
-    private void OnChangeHandler()
-    {
-        StateHasChanged(); // Required for re-rendering.
-    }
+	private void OnChangeHandler()
+	{
+		StateHasChanged(); // Required for re-rendering.
+	}
 
-    private void OnAuthenticationChangeHandler(bool isAuthenticated)
-    {
-        try
-        {
-            gameManager?.ResetGame();
-        }
-        catch (Exception ex)
-        {
-            SharedMethods.Log(ex.Message);
-        }
-        StateHasChanged();
-    }
+	private void OnAuthenticationChangeHandler(bool isAuthenticated)
+	{
+		try
+		{
+			gameManager?.ResetGame();
+		}
+		catch (Exception ex)
+		{
+			SharedMethods.Log(ex.Message);
+		}
+		StateHasChanged();
+	}
 
-    private async Task OnSettingSave(IGameSettings settings)
-    {
-        await StartNewGame(settings);
-    }
+	private async Task OnSettingSave(IGameSettings settings)
+	{
+		await StartNewGame(settings);
+	}
 
-    private async Task StartNewGame(IGameSettings settings)
-    {
-        try
-        {
-            Tiles = [];
-            await gameManager.StartGame(settings);
-            SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
-            GameLevel = gameManager.GameSettings.GameLevel;
-            Tiles = gameManager!.Tiles;
-            await jsRuntime.InvokeVoidAsync("scrollElementIntoView", "game-grid");
+	private async Task StartNewGame(IGameSettings settings)
+	{
+		try
+		{
+			Tiles = [];
+			await gameManager.StartGame(settings);
+			SelectedThemeId = gameManager.GameSettings.ThemeData.ThemeId ?? Config!.DefaultTheme;
+			GameLevel = gameManager.GameSettings.GameLevel;
+			Tiles = gameManager!.Tiles;
+			await jsRuntime.InvokeVoidAsync("scrollElementIntoView", "game-grid");
 
-        }
-        catch (Exception ex)
-        {
-            SharedMethods.Log(ex.Message);
-        }
-    }
+		}
+		catch (Exception ex)
+		{
+			SharedMethods.Log(ex.Message);
+		}
+	}
 
-    private async Task PlayNextLevel()
-    {
-        gameManager.GameSettings.SetupNextLevel();
-        gameManager.ResetGame();
-        await StartNewGame(gameManager.GameSettings);
-    }
+	private async Task PlayNextLevel()
+	{
+		gameManager.GameSettings.SetupNextLevel();
+		gameManager.ResetGame();
+		await StartNewGame(gameManager.GameSettings);
+	}
 
-    private async Task ReplayLevel()
-    {
-        if (gameManager.GameWon)
-        {
-            gameManager.GameSettings.SetupNextLevel();
-        }
-        gameManager.ResetGame();
-        await StartNewGame(gameManager.GameSettings);
-    }
+	private async Task ReplayLevel()
+	{
+		gameManager.ResetGame();
+		await StartNewGame(gameManager.GameSettings);
+	}
 
-    private void OnAbandonClick()
-    {
-        gameManager.ResetGame();
-    }
+	private void OnAbandonClick()
+	{
+		gameManager.ResetGame();
+	}
 
-    private void OnFilipAllClick(MouseEventArgs e)
-    {
-        foreach (var tile in Tiles!)
-        {
-            tile.IsShown = !tile.IsShown;
-        }
-    }
-    private void GoToSettings(MouseEventArgs e)
-    {
-        gameManager.ResetGame();
-    }
+	private void OnFilipAllClick(MouseEventArgs e)
+	{
+		foreach (var tile in Tiles!)
+		{
+			tile.IsShown = !tile.IsShown;
+		}
+	}
+	private void GoToSettings(MouseEventArgs e)
+	{
+		gameManager.ResetGame();
+	}
 }
