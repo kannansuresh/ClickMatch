@@ -54,13 +54,13 @@
             <h2 class="mb-4">@($"You scored {gameManager.GameScorer.TotalScore} pts")</h2>
             <h3 class="mb-4">You  made @gameManager.Moves moves and missed <span class="text-danger">@gameManager.Misses</span> times.</h3>
 
-            <div class="d-flex flex-column flex-sm-row gap-2 mt-4 mb-4">
                 @if (gameManager.GameWon)
                 {
-                    <button class="btn btn-success" type="button" @onclick=PlayNextLevel>@($"Play Level {gameManager.GameSettings.GameLevel + 1}")</button>
+                    <button class="btn btn-success d-block mt-4 w-100.ss" type="button" @onclick=PlayNextLevel>@($"Play Next Level")</button>
                 }
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4 mb-4">
                 <button class="btn btn-warning" type="button" @onclick=ReplayLevel>@($"Replay Level {gameManager.GameSettings.GameLevel}")</button>
-                <button class="btn btn-outline-primary" type="button" @onclick=GoToSettings>Change Settings</button>
+                <button class="btn btn-outline-info" type="button" @onclick=GoToSettings>Change Settings</button>
             </div>
             @if (gameManager.GameWon)
             {
