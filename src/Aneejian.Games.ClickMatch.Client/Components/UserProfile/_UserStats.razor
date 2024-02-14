@@ -16,28 +16,39 @@
 	}
 	else
 	{
-		<table class="table table-hover table-bordered text-center">
+		<table class="table table-hover table-bordered">
 			<caption>@StatsCaption</caption>
-			<thead>
+			<thead class="text-center">
 				<tr>
 					<th class="fw-medium">Level</th>
-					<th class="fw-medium">Times Played</th>
-					<th class="fw-medium">Times Won</th>
-					<th class="fw-medium">Times Lost</th>
-					<th class="fw-medium">Times Abandoned</th>
+					<th class="fw-medium">Played</th>
+					<th class="fw-medium">Won</th>
+					<th class="fw-medium">Lost</th>
+					<th class="fw-medium">Abandoned</th>
+					<th class="fw-medium">High Score</th>
 					<th class="fw-medium">Best Score</th>
+
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (LevelDTO level in UserStats)
+				@foreach (LevelStatsDTO level in UserStats)
 				{
-					<tr>
+					<tr class="text-center">
 						<td>@level.Level</td>
 						<td>@level.TimesPlayed</td>
 						<td>@level.TimesWon</td>
 						<td>@level.TimesLost</td>
 						<td>@level.TimesAbandoned</td>
 						<td>@level.HighScore</td>
+						@if (BestGameTexts is not null)
+						{
+							<td class="text-start">@(BestGameTexts![level.Level])</td>
+						}
+						else
+						{
+							<td>-</td>
+
+						}
 					</tr>
 				}
 
@@ -49,8 +60,9 @@
 
 @code {
 	private int UserId { get; set; }
-	private IEnumerable<LevelDTO>? UserStats { get; set; }
-	private string StatsCaption {get; set; } = "Your game stats.";
+	private IEnumerable<LevelStatsDTO>? UserStats { get; set; }
+	private string StatsCaption { get; set; } = "Your game stats.";
+	private Dictionary<int, string> BestGameTexts { get; set; } = new Dictionary<int, string>();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -58,6 +70,29 @@
 		CheckLogin(isSessionAuthenticated);
 		UserStats = await indexedDbService.GetUserStats(UserId);
 		UserStats = UserStats.OrderByDescending(x => x.Level);
+		BestGameTexts = new Dictionary<int, string>();
+		foreach (var stat in UserStats)
+		{
+			BestGameTexts.Add(stat.Level, await GetBestGameText(stat));
+		}
+	}
+
+	private async Task<string> GetBestGameText(LevelStatsDTO level)
+	{
+		if (level.LevelsBestGame?.Score == 0)
+		{
+			return "-";
+		}
+		if (level.UsersBestGame?.Score >= level.LevelsBestGame?.Score)
+		{
+			return "By you";
+		}
+		else
+		{
+			var user = await indexedDbService.GetUser(level.LevelsBestGame?.UserId);
+			var userString = $"{user?.Name} ({user?.UserName})";
+			return $"{level.LevelsBestGame?.Score} by {userString}";
+		}
 	}
 
 	private void CheckLogin(bool isAuthenticated)
@@ -68,7 +103,7 @@
 			return;
 		}
 		var autheticatedUser = authenticationService.AuthenticatedUser;
-		UserId =  autheticatedUser?.Id ?? 0;
+		UserId = autheticatedUser?.Id ?? 0;
 		StatsCaption = $"Stats of user {autheticatedUser?.Name} ({autheticatedUser?.UserName})";
 		StateHasChanged(); // This is necessary to re-render the component
 	}
