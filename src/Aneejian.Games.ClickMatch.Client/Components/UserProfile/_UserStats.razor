@@ -1,112 +1,119 @@
 ﻿@inject IndexedDbService indexedDbService
 @inject AuthenticationService authenticationService
 
-<div class="table-responsive">
-    @if (UserStats is null)
-    {
-        <div>
-            Loading...
-        </div>
-    }
-    else if (UserStats.Count() == 0)
-    {
-        <div>
-            Play at least one game to see the stats.
-        </div>
-    }
-    else
-    {
-        
-            <table class="table table-hover table-bordered">
-                <caption>@StatsCaption</caption>
-                <thead class="text-center">
-                    <tr>
-                        <th class="fw-medium">Level</th>
-                        <th class="fw-medium">Played</th>
-                        <th class="fw-medium">Won</th>
-                        <th class="fw-medium">Lost</th>
-                        <th class="fw-medium">Abandoned</th>
-                        <th class="fw-medium">High Score</th>
-                        <th class="fw-medium">Best Score</th>
+<div>
+	@if (UserStats is null)
+	{
+		<div>
+			Loading...
+		</div>
+	}
+	else if (UserStats.Count() == 0)
+	{
+		<div>
+			Play at least one game to see the stats.
+		</div>
+	}
+	else
+	{
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (LevelStatsDTO level in UserStats)
-                    {
-                        <tr class="text-center">
-                            <td>@level.Level</td>
-                            <td>@level.TimesPlayed</td>
-                            <td>@level.TimesWon</td>
-                            <td>@level.TimesLost</td>
-                            <td>@level.TimesAbandoned</td>
-                            <td>@level.HighScore</td>
-                            @if (BestGameTexts is not null)
-                            {
-                                <td class="@(BestGameTexts![level.Level].Contains("y") ? "text-start" : "")">@(BestGameTexts![level.Level])</td>
-                            }
-                            else
-                            {
-                                <td>-</td>
+		<table class="table table-hover table-bordered table-striped">
+			<caption>@StatsCaption</caption>
+			<thead class="text-center">
+				<tr>
+					<th class="fw-medium">Level</th>
+					<th class="fw-medium">Played</th>
+					<th class="fw-medium">Won</th>
+					<th class="fw-medium">Lost</th>
+					<th class="fw-medium">Abandoned</th>
+					<th class="fw-medium">Personal Best</th>
+					<th class="fw-medium">Best Score</th>
 
-                            }
-                        </tr>
-                    }
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (LevelStatsDTO level in UserStats)
+				{
+					<tr class="text-center">
+						<td data-cell="Level">@level.Level</td>
+						<td data-cell="Played">@level.TimesPlayed</td>
+						<td data-cell="Won">@level.TimesWon</td>
+						<td data-cell="Lost">@level.TimesLost</td>
+						<td data-cell="Abandoned">@level.TimesAbandoned</td>
+						<td data-cell="Personal Best">@level.HighScore</td>
+						@if (BestGameTexts is not null)
+						{
+							<td data-cell="Best Score" class="@(BestGameTexts![level.Level].Contains("y") ? "text-start" : "")">@(BestGameTexts![level.Level])</td>
+						}
+						else
+						{
+							<td data-cell="Best Score">0</td>
+						}
+					</tr>
+				}
 
-                </tbody>
-            </table>
-        
-    }
+			</tbody>
+		</table>
+
+	}
 </div>
 
 
 @code {
-    private int UserId { get; set; }
-    private IEnumerable<LevelStatsDTO>? UserStats { get; set; }
-    private string StatsCaption { get; set; } = "Your game stats.";
-    private Dictionary<int, string> BestGameTexts { get; set; } = new Dictionary<int, string>();
+	private int UserId { get; set; }
+	private IEnumerable<LevelStatsDTO>? UserStats { get; set; }
+	private string StatsCaption { get; set; } = "Your game stats.";
+	private Dictionary<int, string> BestGameTexts { get; set; } = new Dictionary<int, string>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        var isSessionAuthenticated = await authenticationService.IsSessionAuthenticated();
-        CheckLogin(isSessionAuthenticated);
-        UserStats = await indexedDbService.GetUserStats(UserId);
-        UserStats = UserStats.OrderByDescending(x => x.Level);
-        BestGameTexts = new Dictionary<int, string>();
-        foreach (var stat in UserStats)
-        {
-            BestGameTexts.Add(stat.Level, await GetBestGameText(stat));
-        }
-    }
+	[Parameter]
+	public int Level { get; set; } = 0;
 
-    private async Task<string> GetBestGameText(LevelStatsDTO level)
-    {
-        if (level.LevelsBestGame?.Score == 0)
-        {
-            return "-";
-        }
-        if (level.UsersBestGame?.Score >= level.LevelsBestGame?.Score)
-        {
-            return level.UsersBestGame.Score.ToString();
-        }
-        else
-        {
-            var user = await indexedDbService.GetUser(level.LevelsBestGame?.UserId);
-            var userString = $"{user?.Name} ({user?.UserName})";
-            return $"{level.LevelsBestGame?.Score} by {userString}";
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		var isSessionAuthenticated = Level > 0;
+		if (Level == 0)
+		{
+			isSessionAuthenticated = await authenticationService.IsSessionAuthenticated();
+		}
+		CheckLogin(isSessionAuthenticated);
+		UserStats = await indexedDbService.GetUserStats(UserId, Level);
+		UserStats = UserStats.OrderByDescending(x => x.Level);
+		BestGameTexts = new Dictionary<int, string>();
+		foreach (var stat in UserStats)
+		{
+			BestGameTexts.Add(stat.Level, await GetBestGameText(stat));
+		}
+	}
 
-    private void CheckLogin(bool isAuthenticated)
-    {
-        if (!isAuthenticated)
-        {
-            UserId = 0;
-            return;
-        }
-        var autheticatedUser = authenticationService.AuthenticatedUser;
-        UserId = autheticatedUser?.Id ?? 0;
-        StatsCaption = $"Stats of user {autheticatedUser?.Name} ({autheticatedUser?.UserName})";
-        StateHasChanged(); // This is necessary to re-render the component
-    }
+	private async Task<string> GetBestGameText(LevelStatsDTO level)
+	{
+		if (level.LevelsBestGame?.Score == 0)
+		{
+			return "-";
+		}
+		if (level.UsersBestGame?.Score >= level.LevelsBestGame?.Score)
+		{
+			return level.UsersBestGame.Score.ToString();
+		}
+		else
+		{
+			var user = await indexedDbService.GetUser(level.LevelsBestGame?.UserId);
+			var userString = $"{user?.Name} ({user?.UserName})";
+			return $"{level.LevelsBestGame?.Score} by {userString}";
+		}
+	}
+
+	private void CheckLogin(bool isAuthenticated)
+	{
+		if (!isAuthenticated)
+		{
+			UserId = 0;
+			return;
+		}
+		var autheticatedUser = authenticationService.AuthenticatedUser;
+		UserId = autheticatedUser?.Id ?? 0;
+		var userString = $"user {autheticatedUser?.Name} ({autheticatedUser?.UserName})";
+		StatsCaption = Level > 0 ? $"Level {Level} stats of {userString}" : $"Stats of {userString}";
+		StateHasChanged(); // This is necessary to re-render the component
+	}
 }

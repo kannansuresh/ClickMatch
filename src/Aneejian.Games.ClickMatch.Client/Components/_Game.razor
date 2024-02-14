@@ -28,7 +28,7 @@
 			<div>@gameManager.GameScorer.ToString()</div>
 		</div>
 
-		<div class="d-flex row row-cols-auto g-2 mb-2 justify-content-center align-items-center">
+		<div class="d-flex row row-cols-auto g-2 mb-4 justify-content-center align-items-center">
 			<div class="col">
 				<input class="btn-check" type="checkbox" @bind=gameManager.GameSettings!.ShowTileNumbers id="showTileNumber">
 				<label class="btn btn-primary btn-sm" style="min-width: 125px" for="showTileNumber">
@@ -43,6 +43,10 @@
 					<button class="btn btn-success btn-sm" @onclick=OnFilipAllClick>Flip all Tiles</button>
 				</div>
 			</_DevOnly>
+		</div>
+
+		<div class="row mb-4">
+			<div><_UserStats Level=@gameManager.GameSettings.GameLevel /></div>
 		</div>
 
 	}
