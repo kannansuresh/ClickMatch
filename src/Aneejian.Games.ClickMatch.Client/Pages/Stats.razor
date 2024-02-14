@@ -1,0 +1,22 @@
+﻿@attribute [Route(AppStrings.Pages.Stats)]
+
+<div class="mb-4">
+	<a href="" class="btn btn-success">Play another round</a>
+</div>
+<_AccessBased>
+	<Authorized>
+		<div class="fs-3 fw-light mb-4">
+			Your game stats.
+		</div>
+		<_UserStats />
+	</Authorized>
+	<UnAuthorized>
+		<div class="fs-4 fw-light">
+			Please <a class="text-decoration-none" href="@AppStrings.Pages.Login">login</a> to view your stats.
+		</div>
+	</UnAuthorized>
+</_AccessBased>
+
+@code {
+
+}

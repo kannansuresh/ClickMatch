@@ -3,23 +3,26 @@
 @inject SessionStorageService sessionStorageService
 @inject AuthenticationService authenticationService
 @inject GameManagerService gameManager
-@implements IAsyncDisposable
+@implements IDisposable
 
 <PageTitle>Aneejian | Click and Match</PageTitle>
 
-@if (!authenticationService.IsAuthenticated || ShowProfiles)
-{
-	<_UserProfiles OnUserSelected="OnUserSelected" />
-	<div class="text-center">
-		<_Disclaimer />
-	</div>
-}
-
-<_AuthorizedOnly>
-	<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
-		<_Game />
-	</CascadingValue>
-</_AuthorizedOnly>
+<_AccessBased>
+	<Authorized>
+		<CascadingValue Value="LoggedInUser" Name="LoggedInUser" IsFixed=true>
+			<_Game />
+		</CascadingValue>
+	</Authorized>
+	<UnAuthorized>
+		@if (ShowProfiles)
+		{
+			<_UserProfiles OnUserSelected="OnUserSelected" />
+			<div class="text-center">
+				<_Disclaimer />
+			</div>
+		}
+	</UnAuthorized>
+</_AccessBased>
 
 @code {
 	private UserDto? LoggedInUser { get; set; }
@@ -38,7 +41,7 @@
 
 	private void CheckLogin(bool isAuthenticated)
 	{
-		if (!authenticationService.IsAuthenticated)
+		if (!isAuthenticated)
 		{
 			try { gameManager.ResetGame(); }
 			catch { }
@@ -58,15 +61,15 @@
 
 	private void CheckLogin()
 	{
+
 		var autheticatedUser = authenticationService.AuthenticatedUser;
 		LoggedInUser = autheticatedUser;
 	}
 
-	public async ValueTask DisposeAsync()
+	public void Dispose()
 	{
 		if (authenticationService != null)
 		{
-			await authenticationService.Logout();
 			authenticationService.OnAuthenticationStateChanged -= CheckLogin;
 		}
 	}

@@ -1,5 +1,4 @@
-﻿@inject AuthenticationService authenticationService
-@using Aneejian.Games.ClickMatch.Helpers
+﻿@using Aneejian.Games.ClickMatch.Helpers
 
 @if (Profile is not null)
 {
@@ -16,8 +15,8 @@
 		</div>
 		<ul class="dropdown-menu ms-2">
 			<li class="mb-2"><_UserProfileCard Profile="Profile" ShowHoverEffect=false ShowProfileInfo=true /></li>
-			@* <li><a class="dropdown-item" href="#">Action</a></li>
-			<li><a class="dropdown-item" href="#">Another action</a></li> *@
+			<li><a class="dropdown-item" href="stats">My Stats</a></li>
+			@* <li><a class="dropdown-item" href="#">Another action</a></li> *@
 			@if (OnLogout.HasDelegate)
 			{
 				<li><hr class="dropdown-divider"></li>

@@ -1,39 +1,46 @@
 ﻿@implements IDisposable
 @inject AuthenticationService authenticationService
+@inject NavigationManager navigationManager
 
 <nav class="navbar navbar-expand-lg bg-body">
 	<div class="container-fluid">
 		<div class="navbar-brand">
-			@if (authenticationService.IsAuthenticated)
-			{
-				<_LoggedUserProfileCard Profile="LoggedInUser" OnLogout="Logout" />
-			}
-			else
-			{
-				<img src="./icons/icon.svg" width="30" height="30" alt="Click & Match" />
-			}
+			<_AccessBased>
+				<Authorized>
+					<_LoggedUserProfileCard Profile="LoggedInUser" OnLogout="Logout" />
+				</Authorized>
+				<UnAuthorized>
+					<img src="./icons/icon.svg" width="30" height="30" alt="Click & Match" />
+				</UnAuthorized>
+			</_AccessBased>
 		</div>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse d-lg-flex" id="navbarSupportedContent">
 			<ul class="navbar-nav col me-auto mb-2 mb-lg-0 justify-content-lg-end">
-				@if (!authenticationService.IsAuthenticated)
-				{
-					<li class="nav-item">
-						<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Home">Home</NavLink>
-					</li>
-					<li class="nav-item">
-						<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Login">Login</NavLink>
-					</li>
 
-					<li class="nav-item">
-						<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Register">Register</NavLink>
-					</li>
-				}
-				@* 					<li class="nav-item">
-				<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.About">About</NavLink>
-				</li> *@
+				<_AccessBased>
+					<UnAuthorized>
+						<li class="nav-item">
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Home">Home</NavLink>
+						</li>
+						<li class="nav-item">
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Login">Login</NavLink>
+						</li>
+						<li class="nav-item">
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Register">Register</NavLink>
+						</li>
+					</UnAuthorized>
+					<Authorized>
+						<li class="nav-item">
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Stats">My Stats</NavLink>
+						</li>
+						<li class="nav-item">
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Logout">Logout</NavLink>
+						</li>
+					</Authorized>
+				</_AccessBased>
 				<li class="nav-item">
 					<NavLink class="nav-link ms-1 me-1" href="@AppStrings.GithubRepo" target="_blank"><i class="bi bi-github"></i></NavLink>
 				</li>
@@ -50,7 +57,6 @@
 
 	protected override void OnInitialized()
 	{
-		CheckLogin(false);
 		authenticationService.OnAuthenticationStateChanged += CheckLogin;
 		base.OnInitialized();
 	}
@@ -58,11 +64,12 @@
 	private async Task Logout()
 	{
 		await authenticationService.Logout();
+		navigationManager.NavigateTo(AppStrings.Pages.Home);
 	}
 
 	private void CheckLogin(bool isAuthenticated)
 	{
-		if (!authenticationService.IsAuthenticated)
+		if (!isAuthenticated)
 		{
 			LoggedInUser = null;
 			return;

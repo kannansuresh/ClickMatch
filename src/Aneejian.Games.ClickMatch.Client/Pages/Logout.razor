@@ -1,0 +1,12 @@
+﻿@attribute [Route(AppStrings.Pages.Logout)]
+
+@inject NavigationManager navigationManager
+@inject AuthenticationService authenticationService
+
+@code {
+	protected override async Task OnInitializedAsync()
+	{
+		await authenticationService.Logout();
+		navigationManager.NavigateTo(AppStrings.Pages.Home);
+	}
+}
