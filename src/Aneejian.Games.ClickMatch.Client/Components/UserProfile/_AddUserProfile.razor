@@ -7,7 +7,7 @@
 <div class="text-center d-flex justify-content-center align-items-center flex-column">
 	@if (AddedUser is not null)
 	{
-		<h1 class="mb-4 display-6">Welcome @AddedUser.Name</h1>
+		<_SubHeading>Welcome @AddedUser.Name</_SubHeading>
 		<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
 			<div class="col mb-4"
 				 style="width:fit-content">
@@ -21,7 +21,7 @@
 	}
 	else
 	{
-		<h3 class="fw-lighter mb-4">Create New User Profile</h3>
+		<_SubHeading>Create New User Profile</_SubHeading>
 		<div class="row g-4" style="width:95vw; max-width:100ch">
 			<div class="col-sm-4 ms-auto me-auto me-sm-0 ms-sm-0"
 				 style="max-width:fit-content;">
@@ -34,6 +34,7 @@
 						  id="contactForm"
 						  OnValidSubmit="HandleSubmit">
 					<DataAnnotationsValidator />
+					<ValidationSummary class="list-unstyled" />
 					<AntiforgeryToken />
 					<div class="row g-3">
 						<div class="col-sm-6">
@@ -118,7 +119,6 @@
 		</div>
 	}
 </div>
-
 
 @code {
 

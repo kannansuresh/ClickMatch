@@ -29,7 +29,8 @@ public class UserDto
 	public string Name { get; set; } = string.Empty;
 
 	[Required(ErrorMessage = "Password is required.")]
-	[StringLength(16, ErrorMessage = "The Password must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
+	// the max value for string length is purposefully set to int.MaxValue as the encryption will increase the length of the password
+	[StringLength(int.MaxValue, ErrorMessage = "The Password must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
 	public virtual string Password { get; set; } = string.Empty;
 
 	[Required(ErrorMessage = "Avatar is required.")]

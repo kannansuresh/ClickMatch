@@ -6,15 +6,13 @@
 		<div class="mb-4">
 			<a href="" class="btn btn-success">Play another round</a>
 		</div>
-		<div class="fs-3 fw-light mb-4">
-			Your game stats.
-		</div>
+		<_SubHeading>Your game stats.</_SubHeading>
 		<_UserStats />
 	</Authorized>
 	<UnAuthorized>
-		<div>
-			Please <button class="btn btn-link m-0 p-0 pb-1 text-decoration-none border-0" @onclick=@NavigateToLoginPage>login</button> to view your stats.
-		</div>
+		<_SubHeading>
+			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLoginPage @onclick:preventDefault>login</a> to view your stats.
+		</_SubHeading>
 	</UnAuthorized>
 </_AccessBased>
 

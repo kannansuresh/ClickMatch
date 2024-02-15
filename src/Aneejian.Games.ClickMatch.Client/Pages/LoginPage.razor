@@ -7,11 +7,12 @@
 
 <_AccessBased>
 	<Authorized>
-		<div>
-			Please <button type="button" class="btn btn-link m-0 p-0 pb-1 text-decoration-none border-0" @onclick=@NavigateToLogoutPage>logout</button> to continue.
-		</div>
+		<_SubHeading>
+			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLogoutPage @onclick:preventDefault>logout</a> to continue.
+		</_SubHeading>
 	</Authorized>
 	<UnAuthorized>
+		<_SubHeading>Login to your profile</_SubHeading>
 		<div class="d-flex flex-column w-100 justify-content-center align-items-center">
 			<div class="mb-5 w-100">
 				<_LoginForm OnLoginSuccess="LoginSuccess" />
