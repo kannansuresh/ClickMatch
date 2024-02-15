@@ -10,7 +10,9 @@ public struct AppStrings
 		public const string Home = "";
 		public const string Game = "game";
 		public const string Login = "login";
+		public const string LoginWithRedirect = "login/{RedirectUri?}";
 		public const string Logout = "logout";
+		public const string LogoutWithRedirect = "logout/{RedirectUri?}";
 		public const string Register = "register";
 		public const string About = "about";
 		public const string Stats = "stats";

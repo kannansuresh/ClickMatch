@@ -2,11 +2,13 @@
 @inject NavigationManager navigationManager
 
 @attribute [Route(AppStrings.Pages.Login)]
+@attribute [Route(AppStrings.Pages.LoginWithRedirect)]
+
 
 <_AccessBased>
 	<Authorized>
 		<div>
-			Please logout to continue.
+			Please <button type="button" class="btn btn-link m-0 p-0 pb-1 text-decoration-none border-0" @onclick=@NavigateToLogoutPage>logout</button> to continue.
 		</div>
 	</Authorized>
 	<UnAuthorized>
@@ -24,13 +26,22 @@
 
 
 @code {
+
+	[Parameter]
+	public string? RedirectUri { get; set; }
+
 	private void AddNewProfile()
 	{
 		navigationManager.NavigateTo(AppStrings.Pages.Register);
 	}
 
+	private void NavigateToLogoutPage()
+	{
+		navigationManager.NavigateTo(AppStrings.Pages.Logout + "/" + AppStrings.Pages.Login);		
+	}
+
 	private void LoginSuccess()
 	{
-		navigationManager.NavigateTo(AppStrings.Pages.Home);
+		navigationManager.NavigateTo(RedirectUri ?? AppStrings.Pages.Home);
 	}
 }
