@@ -7,7 +7,7 @@
 <div class="text-center d-flex justify-content-center align-items-center flex-column">
 	@if (AddedUser is not null)
 	{
-		<h1 class="mb-4 display-6">Welcome @AddedUser.Name</h1>
+		<_SubHeading>Welcome @AddedUser.Name</_SubHeading>
 		<div class="row row-cols-1 text-center d-flex justify-content-center align-items-center">
 			<div class="col mb-4"
 				 style="width:fit-content">
@@ -21,45 +21,51 @@
 	}
 	else
 	{
-		<h3 class="h1 display-6 mt-5">Create New User Profile</h3>
-		<div class="d-flex flex-column align-items-center justify-content-center p-5 pb-3 w-75">
-			<div class="col mb-4 ms-0 me-2 align-items-center justify-content-center"
+		<_SubHeading>Create New User Profile</_SubHeading>
+		<div class="row g-4" style="width:95vw; max-width:100ch">
+			<div class="col-sm-4 ms-auto me-auto me-sm-0 ms-sm-0"
 				 style="max-width:fit-content;">
 				<_UserProfileCard Profile=RegisterRequest
 								  ShowProfileInfo=true
 								  ShowHoverEffect=ShowHoverEffect />
 			</div>
-			<div class="col mb-4 text-start"
-				 style="min-width:60vmin;">
+			<div class="col-sm-8 mb-4 text-start">
 				<EditForm EditContext=RegisterRequestContext
 						  id="contactForm"
 						  OnValidSubmit="HandleSubmit">
 					<DataAnnotationsValidator />
+					<ValidationSummary class="list-unstyled" />
 					<AntiforgeryToken />
-					<div class="form-floating mb-3">
-						<InputText class="form-control"
-								   id="userName"
-								   autofocus
-								   type="text"
-								   placeholder="User Name"
-								   @oninput="CheckUserNameAvailability"
-								   @bind-Value=RegisterRequest!.UserName
-								   autocomplete="off"
-								   maxlength="20" />
-						<label for="userName">User Name</label>
-						<ValidationMessage For="() => RegisterRequest!.UserName" />
-					</div>
-					<div class="form-floating mb-3">
-						<InputText class="form-control"
-								   id="displayName"
-								   type="text"
-								   placeholder="Display Name"
-								   @bind-Value=RegisterRequest!.Name
-								   autocomplete="off"
-								   maxlength="20"
-								   @oninput=SetDisplayName />
-						<label for="displayName">Display Name</label>
-						<ValidationMessage For="() => RegisterRequest!.Name" />
+					<div class="row g-3">
+						<div class="col-sm-6">
+							<div class="form-floating mb-3">
+								<InputText class="form-control"
+										   id="userName"
+										   autofocus
+										   type="text"
+										   placeholder="User Name"
+										   @oninput="CheckUserNameAvailability"
+										   @bind-Value=RegisterRequest!.UserName
+										   autocomplete="off"
+										   maxlength="20" />
+								<label for="userName">User Name</label>
+								<ValidationMessage For="() => RegisterRequest!.UserName" />
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-floating mb-3">
+								<InputText class="form-control"
+										   id="displayName"
+										   type="text"
+										   placeholder="Display Name"
+										   @bind-Value=RegisterRequest!.Name
+										   autocomplete="off"
+										   maxlength="20"
+										   @oninput=SetDisplayName />
+								<label for="displayName">Display Name</label>
+								<ValidationMessage For="() => RegisterRequest!.Name" />
+							</div>
+						</div>
 					</div>
 
 					<div class="form-floating mb-3">
@@ -75,29 +81,32 @@
 							Select an avatar from below or enter a URL to use your own avatar.
 						</div>
 						<ValidationMessage For="() => RegisterRequest!.Avatar" />
-
 						<_AvatarSelector OnAvatarSelected="OnAvatarSelected" />
 					</div>
-
-					<div class="form-floating mb-3">
-						<InputText class="form-control"
-								   id="password"
-								   type="password"
-								   placeholder="Password"
-								   @bind-Value=RegisterRequest!.InputPassword />
-						<label for="password">Password</label>
-						<ValidationMessage For="() => RegisterRequest!.InputPassword" />
+					<div class="row g-3">
+						<div class="col-sm-6">
+							<div class="form-floating mb-3">
+								<InputText class="form-control"
+										   id="password"
+										   type="password"
+										   placeholder="Password"
+										   @bind-Value=RegisterRequest!.InputPassword />
+								<label for="password">Password</label>
+								<ValidationMessage For="() => RegisterRequest!.InputPassword" />
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-floating mb-3">
+								<InputText class="form-control"
+										   id="confirmPassword"
+										   type="password"
+										   placeholder="Confirm Password"
+										   @bind-Value="RegisterRequest!.ConfirmPassword" />
+								<label for="confirmPassword">Confirm Password</label>
+								<ValidationMessage For="() => RegisterRequest!.ConfirmPassword" />
+							</div>
+						</div>
 					</div>
-					<div class="form-floating mb-3">
-						<InputText class="form-control"
-								   id="confirmPassword"
-								   type="password"
-								   placeholder="Confirm Password"
-								   @bind-Value="RegisterRequest!.ConfirmPassword" />
-						<label for="confirmPassword">Confirm Password</label>
-						<ValidationMessage For="() => RegisterRequest!.ConfirmPassword" />
-					</div>
-
 					<div class="d-grid">
 						<button class="btn btn-primary"
 								id="submitButton"
@@ -110,7 +119,6 @@
 		</div>
 	}
 </div>
-
 
 @code {
 

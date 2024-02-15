@@ -20,6 +20,7 @@ public class RegisterRequest : UserDto
 	}
 
 	[Required(ErrorMessage = "Password is required.")]
+	[StringLength(16, ErrorMessage = "The Password must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
 	public string InputPassword { get; set; } = string.Empty;
 
 	[Required(ErrorMessage = "Password confirmation is required.")]

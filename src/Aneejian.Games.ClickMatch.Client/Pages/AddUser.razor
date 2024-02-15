@@ -6,11 +6,9 @@
 
 <_AccessBased>
 	<Authorized>
-		<div>
-			<div>
-				Please <button type="button" class="btn btn-link m-0 p-0 pb-1 text-decoration-none border-0" @onclick=@NavigateToLogoutPage>logout</button> to continue.
-			</div>
-		</div>
+		<_SubHeading>
+			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLogoutPage @onclick:preventDefault>logout</a> to continue.
+		</_SubHeading>
 	</Authorized>
 	<UnAuthorized>
 		<_AddUserProfile />
