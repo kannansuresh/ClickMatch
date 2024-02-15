@@ -1,12 +1,19 @@
 ﻿@attribute [Route(AppStrings.Pages.Logout)]
+@attribute [Route(AppStrings.Pages.LogoutWithRedirect)]
+
 
 @inject NavigationManager navigationManager
 @inject AuthenticationService authenticationService
 
 @code {
+
+	[Parameter]
+	public string? RedirectUri { get; set; }
+
 	protected override async Task OnInitializedAsync()
 	{
+
 		await authenticationService.Logout();
-		navigationManager.NavigateTo(AppStrings.Pages.Home);
+		navigationManager.NavigateTo(RedirectUri ?? AppStrings.Pages.Home);
 	}
 }
