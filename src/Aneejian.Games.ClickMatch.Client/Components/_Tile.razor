@@ -7,7 +7,7 @@
 			</div>
 
 			@if (Tile.IsShown && !Tile.IsMatched)
-			{				
+			{
 				@if (Tile.IsImage)
 				{
 					<div class="flip-card-back flip-card-back-image">
@@ -37,12 +37,8 @@
 	[Parameter] public bool ShowTileNumber { get; set; } = true;
 	[Parameter, EditorRequired] public EventCallback<TileModel> OnTileClick { get; set; }
 
-
 	private string flipTileClass => Tile?.IsShown ?? true ? "flip-card-inner-shown" : "";
-
 	private string matchedTileClass => Tile?.IsMatched ?? true ? "flip-card-matched" : "";
-
-
 	private async Task HandleTileClick()
 	{
 		if (Tile == null || Tile.IsShown) return;
