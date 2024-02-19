@@ -14,7 +14,8 @@
 				</UnAuthorized>
 			</_AccessBased>
 		</div>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse d-lg-flex" id="navbarSupportedContent">
@@ -23,26 +24,31 @@
 				<_AccessBased>
 					<UnAuthorized>
 						<li class="nav-item">
-							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Home" Match=NavLinkMatch.All>Home</NavLink>
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Home"
+								Match=NavLinkMatch.All>Home</NavLink>
 						</li>
 						<li class="nav-item">
 							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Login">Login</NavLink>
 						</li>
 						<li class="nav-item">
-							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Register">Register</NavLink>
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Register">Register
+							</NavLink>
 						</li>
 					</UnAuthorized>
 					<Authorized>
 						<li class="nav-item">
-							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Stats">My Stats</NavLink>
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Stats">My Stats
+							</NavLink>
 						</li>
 						<li class="nav-item">
-							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Logout">Logout</NavLink>
+							<NavLink class="nav-link" aria-current="page" href="@AppStrings.Pages.Logout">Logout
+							</NavLink>
 						</li>
 					</Authorized>
 				</_AccessBased>
 				<li class="nav-item">
-					<NavLink class="nav-link ms-1 me-1" href="@AppStrings.GithubRepo" target="_blank"><i class="bi bi-github"></i></NavLink>
+					<NavLink class="nav-link ms-1 me-1" href="@AppStrings.GithubRepo" target="_blank"><i
+							class="bi bi-github"></i></NavLink>
 				</li>
 			</ul>
 		</div>

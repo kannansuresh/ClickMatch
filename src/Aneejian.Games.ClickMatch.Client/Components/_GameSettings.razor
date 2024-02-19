@@ -2,8 +2,16 @@
 
 
 <div class="settings-form" style="width: 90vw; max-width: 70ch;">
-	<h4 class="mb-4">Enter your game preference</h4>
-	<_SettingsForm Themes=@Themes SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@ShowTileNumber OnSubmitClick="HandleSubmitClick" />
+	@if (PlayFromLink)
+	{
+		<_SubHeading>Challenge Settings</_SubHeading>
+	}
+	else
+	{
+		<_SubHeading>Choose your game settings</_SubHeading>
+	}
+	<_SettingsForm Themes=@Themes SelectedThemeId=@SelectedThemeId GameLevel=@GameLevel ShowTileNumber=@ShowTileNumber
+		PlayFromLink=@PlayFromLink OnSubmitClick="HandleSubmitClick" />
 </div>
 
 
@@ -15,23 +23,29 @@
 	[Parameter] public EventCallback<GameSettings> OnSubmitClick { get; set; }
 	[Parameter] public int GameLevel { get; set; }
 	[Parameter] public bool ShowTileNumber { get; set; } = true;
-
+	[Parameter] public bool PlayFromLink { get; set; } = false;
 	private IEnumerable<int>? GameLevels { get; set; } = new List<int>();
-
 	private IThemeData? SelectedTheme { get; set; }
 
 	protected override void OnInitialized()
 	{
-
 		Themes = Themes ?? themeService.ThemeDatas;
 		SelectedThemeId = SelectedThemeId ?? themeService!.ThemeConfig!.DefaultTheme;
-		GameLevel = GameLevel == 0 ? themeService!.ThemeConfig!.DefaultGameLevel : GameLevel;
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
+	}
+
+	protected override void OnParametersSet()
+	{
+		if (PlayFromLink)
+		{
+			Themes = Themes?.Where(x => x.ThemeId == SelectedThemeId);
+		}
 	}
 
 	private async Task HandleSubmitClick(SettingsRequest request)
 	{
 		GameLevel = request.Level;
+		GameLevel = GameLevel == 0 ? themeService!.ThemeConfig!.DefaultGameLevel : GameLevel;
 		ShowTileNumber = request.ShowTileNumber;
 		SelectedTheme = Themes?.FirstOrDefault(x => x.ThemeId == request.ThemeId);
 		var gameSettings = new GameSettings(GameLevel, SelectedTheme!, ShowTileNumber);

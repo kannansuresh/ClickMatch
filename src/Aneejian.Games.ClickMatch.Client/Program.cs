@@ -22,7 +22,7 @@ try
 }
 catch (Exception ex)
 {
-	SharedMethods.Log(ex.Message);
+	SharedMethods.Log(ex.ToString());
 }
 
 await host.RunAsync();

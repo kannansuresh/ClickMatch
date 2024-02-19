@@ -5,6 +5,7 @@ public interface IGameSettings
 	IEnumerable<string> Items { get; }
 	int NumberOfTiles { get; }
 	bool ShowTileNumbers { get; set; }
+	bool SaveGameData { get; set; }
 	int GameLevel { get; }
 	IThemeData ThemeData { get; set; }
 

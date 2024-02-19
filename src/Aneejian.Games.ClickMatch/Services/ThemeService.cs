@@ -44,7 +44,7 @@ public class ThemeService(HttpClient httpClient, string configPath) : IThemeServ
 		}
 		catch (Exception ex)
 		{
-			SharedMethods.Log(ex.Message);
+			SharedMethods.Log(ex.ToString());
 			try
 			{
 				localThemes = await GetAsync<IEnumerable<ThemeData>>(localThemeInfo, true);
@@ -53,7 +53,7 @@ public class ThemeService(HttpClient httpClient, string configPath) : IThemeServ
 			}
 			catch (Exception ex2)
 			{
-				SharedMethods.Log(ex2.Message);
+				SharedMethods.Log(ex2.ToString());
 			}
 		}
 

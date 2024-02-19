@@ -1,0 +1,25 @@
+@attribute [Route(AppStrings.Pages.Game)]
+@attribute [Route(AppStrings.Pages.PlayFromLink)]
+
+
+@if (ThemeId is not null && Level > 0)
+{
+    <_Game InputThemeId="@ThemeId" InputGameLevel="@Level" SaveGameData=false />
+}
+else
+{
+    <_SubHeading>
+        The game link is invalid.
+    </_SubHeading>
+}
+
+
+@code {
+    [Parameter] public string? ThemeId { get; set; }
+    [Parameter] public int Level { get; set; } = 1;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+    }
+}

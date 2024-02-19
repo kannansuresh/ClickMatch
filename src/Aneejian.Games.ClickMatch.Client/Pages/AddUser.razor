@@ -7,7 +7,8 @@
 <_AccessBased>
 	<Authorized>
 		<_SubHeading>
-			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLogoutPage @onclick:preventDefault>logout</a> to continue.
+			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLogoutPage
+				@onclick:preventDefault>logout</a> to continue.
 		</_SubHeading>
 	</Authorized>
 	<UnAuthorized>
@@ -58,7 +59,7 @@
 		catch (Exception ex)
 		{
 			ErrorMessage = ex.Message;
-			SharedMethods.Log(ex.Message);
+			SharedMethods.Log(ex.ToString());
 		}
 
 	}

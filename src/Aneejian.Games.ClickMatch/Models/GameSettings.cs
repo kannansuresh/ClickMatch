@@ -1,6 +1,6 @@
 ﻿namespace Aneejian.Games.ClickMatch.Models;
 
-public class GameSettings(int gameLevel, IThemeData themeData, bool showTileNumber = true) : IGameSettings
+public class GameSettings(int gameLevel, IThemeData themeData, bool showTileNumber = true, bool saveGameData = true) : IGameSettings
 {
 	public int GameLevel { get; private set; } = gameLevel;
 
@@ -9,6 +9,8 @@ public class GameSettings(int gameLevel, IThemeData themeData, bool showTileNumb
 	public IThemeData ThemeData { get; set; } = themeData;
 
 	public bool ShowTileNumbers { get; set; } = showTileNumber;
+
+	public bool SaveGameData { get; set; } = saveGameData;
 
 	public IEnumerable<string> Items => ThemeData.GetItems(NumberOfTiles / 2) ?? [];
 
