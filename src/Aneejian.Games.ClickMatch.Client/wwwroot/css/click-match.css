@@ -1,0 +1,302 @@
+:root {
+  --tile-front-color: #9b51e0;
+  --tile-back-color: linear-gradient(-45deg, #ffc796 0%, #ff6b95 100%);
+  --progress-bar-background-color: #e0e0e0;
+  --progress-bar-progress-color: #9b51e0;
+  --progress-text-color: #9b51e0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui;
+}
+
+/* preventing blazor from focusing on the h1 element */
+h1:focus {
+  outline: none;
+}
+
+/* changing the validation message style to match other errors */
+.validation-message {
+  color: var(--bs-form-invalid-color);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* custom loader animation start */
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes flip_1 {
+  0% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+  10%,
+  79.99% {
+    transform: rotateY(180deg);
+    backface-visibility: visible;
+  }
+  80% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+}
+
+@keyframes flip_4 {
+  20% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+  30%,
+  79.99% {
+    transform: rotateY(180deg);
+    backface-visibility: visible;
+  }
+  80% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+}
+
+@keyframes fade_1_4 {
+  30% {
+    opacity: 1;
+  }
+  40%,
+  80% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 1;
+  }
+}
+
+@keyframes flip_2 {
+  40% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+  50%,
+  79.99% {
+    transform: rotateY(180deg);
+    backface-visibility: visible;
+  }
+  80% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+}
+
+@keyframes flip_3 {
+  60% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+  70%,
+  79.99% {
+    transform: rotateY(180deg);
+    backface-visibility: visible;
+  }
+  80% {
+    transform: none;
+    backface-visibility: hidden;
+  }
+}
+
+@keyframes fade_2_3 {
+  70% {
+    opacity: 1;
+  }
+  79.99%,
+  80% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 1;
+  }
+}
+
+.loader-grid-container {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  justify-items: center;
+  height: 100vh;
+  gap: 1rem;
+}
+
+.loader-tile-grid {
+  display: grid;
+  grid-gap: 1px;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: fit-content;
+}
+
+.loader-flip-card:nth-child(1) .loader-flip-card-inner {
+  animation-name: flip_1;
+}
+
+.loader-flip-card:nth-child(4) .loader-flip-card-inner {
+  animation-name: flip_4;
+}
+
+.loader-flip-card:nth-child(1),
+.loader-flip-card:nth-child(4) {
+  animation-name: fade_1_4;
+}
+
+.loader-flip-card:nth-child(2) .loader-flip-card-inner {
+  animation-name: flip_2;
+}
+
+.loader-flip-card:nth-child(3) .loader-flip-card-inner {
+  animation-name: flip_3;
+}
+
+.loader-flip-card:nth-child(2),
+.loader-flip-card:nth-child(3) {
+  animation-name: fade_2_3;
+}
+
+.loader-flip-card {
+  perspective: 1000px;
+  margin: 1px;
+  cursor: pointer;
+  height: 9.375rem;
+  width: 9.375rem;
+  min-width: 3.125rem;
+  min-height: 3.125rem;
+  max-height: 9.375rem;
+  max-width: 9.375rem;
+  font-size: 1em;
+  transition: all 0.2s ease-in-out;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+.loader-flip-card-inner {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+.loader-flip-card-front {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  background-color: var(--tile-front-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.loader-flip-card-front * {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  color: #fff;
+}
+
+.loader-flip-card-back {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  background-image: var(--tile-back-color);
+  backdrop-filter: blur(10rem);
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-flip-card-back * {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  color: #fff;
+}
+
+.loader-flip-card-back img {
+  width: auto;
+  height: 90%;
+  color: #fff;
+}
+
+.loader-flip-card-back picture {
+  width: auto;
+  height: 90%;
+}
+
+.loader-flip-card-matched {
+  visibility: hidden;
+}
+
+.loader-flip-counter {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  font-size: 0.5rem;
+  display: none;
+}
+
+.loader-progress {
+  position: relative;
+  display: block;
+  width: 305px;
+  height: 0.1rem;
+  background-color: var(--progress-bar-background-color);
+  border-radius: 0.3rem;
+}
+
+.loader-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--blazor-load-percentage, 0%);
+  height: 100%;
+  background-color: var(--progress-bar-progress-color);
+  border-radius: 0.3rem;
+  transition: width 0.05s ease-in-out;
+}
+
+.loader-progress-text {
+  text-align: center;
+  color: var(--progress-text-color);
+  margin: 1rem;
+  animation-name: pulse;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+.loader-progress-text::after {
+  content: var(--blazor-load-percentage-text, "Loading...");
+}
+
+/* custom loader animation end */

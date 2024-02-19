@@ -37,7 +37,7 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 		GameScorer.Reset();
 		Tiles = GameSettings.GenerateTiles().ToArray();
 		GameInProgress = true;
-		await SaveGameData();
+		if (Player is not null && gameSettings.SaveGameData) await SaveGameData();
 		NotifyStateChanged();
 	}
 
@@ -70,7 +70,7 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 		GameData = null;
 		IndexedDbGameId = 0;
 		Tiles = [];
-		GameScorer.Reset();
+		GameScorer?.Reset();
 		NotifyStateChanged();
 	}
 
@@ -117,11 +117,14 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 		GameInProgress = false;
 		GameWon = GameScorer.Score > 0;
 		GameLost = !GameWon;
-		GameData!.Score = GameScorer.TotalScore;
-		GameData.TimeTaken = 0;
-		GameData.GameWon = GameWon;
-		GameData.GameLost = GameLost;
-		await _indexedDbService.UpdateUserGame(GameData);
+		if (Player is not null && GameData is not null && GameSettings.SaveGameData)
+		{
+			GameData!.Score = GameScorer.TotalScore;
+			GameData.TimeTaken = 0;
+			GameData.GameWon = GameWon;
+			GameData.GameLost = GameLost;
+			await _indexedDbService.UpdateUserGame(GameData);
+		}
 	}
 
 	public event Action? OnChange;

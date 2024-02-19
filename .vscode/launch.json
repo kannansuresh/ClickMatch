@@ -1,17 +1,18 @@
 {
   "configurations": [
     {
-      "name": "C#: Aneejian.Games.ClickMatch.Client [Default Configuration]",
-      "type": "dotnet",
-      "request": "launch",
-      "projectPath": "${workspaceFolder}\\src\\Aneejian.Games.ClickMatch.Client\\Aneejian.Games.ClickMatch.Client.csproj"
-    },
-    {
-      "name": "C#: Aneejian.Games.ClickMatch.Client [https]",
+      "name": "C#: Aneejian.Games.ClickMatch.Client [Default Configuration (https)]",
       "type": "dotnet",
       "request": "launch",
       "projectPath": "${workspaceFolder}\\src\\Aneejian.Games.ClickMatch.Client\\Aneejian.Games.ClickMatch.Client.csproj",
       "launchConfigurationId": "TargetFramework=;https"
+    },
+    {
+      "name": "C#: Aneejian.Games.ClickMatch.Client [http]",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}\\src\\Aneejian.Games.ClickMatch.Client\\Aneejian.Games.ClickMatch.Client.csproj",
+      "launchConfigurationId": "TargetFramework=;http"
     }
   ]
 }

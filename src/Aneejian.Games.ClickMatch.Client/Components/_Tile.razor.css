@@ -1,78 +1,78 @@
 ﻿.flip-card {
-    perspective: 1000px;
-    margin: 1px;
-    cursor: pointer;
-    height: var(--tile-size, 9.375rem);
-    width: var(--tile-size, 9.375rem);
-    min-width: 3.125rem;
-    min-height: 3.125rem;
-    max-height: 9.375rem;
-    max-width: 9.375rem;
-    font-size: var(--tile-font-size, 1em);
-    transition: all 0.2s ease-in-out;
+  perspective: 1000px;
+  margin: 1px;
+  cursor: pointer;
+  height: var(--tile-size, 9.375rem);
+  width: var(--tile-size, 9.375rem);
+  min-width: 3.125rem;
+  min-height: 3.125rem;
+  max-height: 9.375rem;
+  max-width: 9.375rem;
+  font-size: var(--tile-font-size, 1em);
+  transition: all 0.2s ease-in-out;
 }
 
 .flip-card-inner {
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.5s;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
 }
 
 .flip-card .flip-card-inner-shown {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 .flip-card-front,
 .flip-card-back {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    backface-visibility: hidden;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  backface-visibility: hidden;
 }
 
 .flip-card-front {
-    background-color: #3498db;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
+  background-color: #3498db;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
 }
 
 .flip-card-back {
-    background-image: linear-gradient(-45deg, #FFC796 0%, #FF6B95 100%);
-    backdrop-filter: blur(10rem);
-    transform: rotateY(180deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-image: linear-gradient(-45deg, #ffc796 0%, #ff6b95 100%);
+  backdrop-filter: blur(10rem);
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-    .flip-card-back *,
-    .flip-card-front * {
-        padding: 0;
-        margin: 0;
-        max-width: 100%;
-        max-height: 100%;
-        color: #fff;
-    }
+.flip-card-back *,
+.flip-card-front * {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  max-height: 100%;
+  color: #fff;
+}
 
-    .flip-card-back img,
-    .flip-card-back picture {
-        width: auto;
-        height: 90%;
-    }
+.flip-card-back img,
+.flip-card-back picture {
+  width: auto;
+  height: 90%;
+}
 
 .flip-card-matched {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 .flip-counter {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 1;
-    font-size: 0.5rem;
-    display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  font-size: 0.5rem;
+  display: none;
 }
