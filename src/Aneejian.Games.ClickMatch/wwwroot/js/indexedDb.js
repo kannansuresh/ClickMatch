@@ -30,10 +30,9 @@ export class IndexedDb {
     }
 
     async getUser(idOrUserName) {
-        if (isNaN(idOrUserName))
+        if (Number.isNaN(idOrUserName))
             return await this.db.users.get({ userName: idOrUserName });
-        else
-            return await this.db.users.get(idOrUserName);
+        return await this.db.users.get(idOrUserName);
     }
 
     async userExists(userName) {
@@ -121,7 +120,7 @@ export class IndexedDb {
         });
 
 
-        for (var i = 0; i < levelData.length; i++) {
+        for (let i = 0; i < levelData.length; i++) {
             levelData[i].levelsBestGame = await this.getBestGame(levelData[i].level)
         }
 
