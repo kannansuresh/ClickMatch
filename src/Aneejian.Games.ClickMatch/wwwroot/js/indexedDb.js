@@ -134,7 +134,7 @@ export class IndexedDb {
 
 export class UserDTO {
     constructor(user) {
-        this.id = user.id == 0 || null ? undefined : user.id;
+        this.id = user.id === 0 || null ? undefined : user.id;
         this.userName = user.userName;
         this.name = user.name;
         this.password = user.password;
@@ -157,7 +157,7 @@ export class LevelStatsDTO {
 
 export class GameDTO {
     constructor(game) {
-        this.id = game.id == 0 || null ? undefined : game.id;
+        this.id = game.id === 0 || null ? undefined : game.id;
         this.userId = game.userId;
         this.level = game.level;
         this.score = game.score;
