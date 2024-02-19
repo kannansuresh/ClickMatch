@@ -4,7 +4,11 @@
       "path": "."
     }
   ],
-  "settings": {},
+  "settings": {
+    "[aspnetcorerazor]": {
+      "editor.formatOnSave": false
+    }
+  },
   "extensions": {
     "recommendations": [
       "ms-dotnettools.csdevkit",
