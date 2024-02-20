@@ -155,7 +155,7 @@
 	{
 		RegisterRequest!.Password = RegisterRequest.InputPassword;
 		var userId = await iDb.AddNewUser(RegisterRequest);
-		AddedUser = await iDb.GetUser(userId);
+		AddedUser = await iDb.GetUserById(userId);
 		RegisterRequest = new RegisterRequest();
 		ShowHoverEffect = true;
 	}

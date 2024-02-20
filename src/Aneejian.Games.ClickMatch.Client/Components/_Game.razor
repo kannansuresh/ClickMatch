@@ -48,7 +48,7 @@
 
 		@if (!PlayFromLink){
 			<div class="row mb-4">
-				<div><_UserStats Level=@gameManager.GameSettings.GameLevel /></div>
+				<div><_UserStats Level=@gameManager.GameSettings.GameLevel LevelGameInProgress=@gameManager.GameInProgress /></div>
 			</div>
 		}
 
@@ -70,7 +70,7 @@
 				@if (!PlayFromLink)
 				{
 					<button class="btn btn-outline-info" type="button" @onclick=GoToSettings>Change Settings</button>
-				}				
+				}
 			</div>
 			@if (gameManager.GameWon)
 			{
@@ -117,7 +117,7 @@
 			PlayFromLink = true;
 			SelectedThemeId = InputThemeId;
 			GameLevel = InputGameLevel;
-			var themeData = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);			
+			var themeData = Themes?.FirstOrDefault(x => x.ThemeId == SelectedThemeId);
 			var validLevel = GameLevel > 0 && GameLevel <= themeData?.ItemCount / 4;
 			if (themeData is not null && validLevel)
 			{

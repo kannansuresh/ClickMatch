@@ -7,7 +7,8 @@ public enum DbMethods
 	addUserGame,
 	updateUserGame,
 	getUsers,
-	getUser,
+	getUserById,
+	getUserByUserName,
 	userExists,
 	getUserMaxGameLevel,
 	getUserStats
