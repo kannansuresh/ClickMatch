@@ -97,7 +97,8 @@
 		}
 		else
 		{
-			var user = await indexedDbService.GetUser(level.LevelsBestGame?.UserId);
+			if (level.LevelsBestGame?.UserId == 0) return level.LevelsBestGame.Score.ToString();
+			var user = await indexedDbService.GetUserById(level.LevelsBestGame!.UserId);
 			var userString = $"{user?.Name} ({user?.UserName})";
 			return $"{level.LevelsBestGame?.Score} by {userString}";
 		}

@@ -1,3 +1,7 @@
+import { UserDTO } from "./UserDTO.js";
+import { GameDTO } from "./GameDTO.js";
+import { LevelStatsDTO } from "./LevelStatsDTO.js";
+
 export class IndexedDb {
     constructor() {
         this.db = new Dexie('Aneejian.Games.ClickMatch');
@@ -29,18 +33,20 @@ export class IndexedDb {
         return await this.db.users.toArray();
     }
 
-    async getUser(idOrUserName) {
-        if (Number.isNaN(idOrUserName))
-            return await this.db.users.get({ userName: idOrUserName });
-        return await this.db.users.get(idOrUserName);
+    async getUserById(id) {
+        return await this.db.users.get(id);
+    }
+
+    async getUserByUserName(userName) {
+        return await this.db.users.get({ userName: userName });
     }
 
     async userExists(userName) {
-        return !! await this.getUser(userName);
+        return !! await this.getUserByUserName(userName);
     }
 
-    async deleteUser(idOrUserName) {
-        const user = await this.getUser(idOrUserName);
+    async deleteUser(userId) {
+        const user = await this.getUserById(userId);
         await this.db.games.where('userId').equals(user.id).delete();
         return await this.db.users.delete(user.id)
     }
@@ -131,42 +137,6 @@ export class IndexedDb {
 }
 
 
-
-export class UserDTO {
-    constructor(user) {
-        this.id = user.id === 0 || null ? undefined : user.id;
-        this.userName = user.userName;
-        this.name = user.name;
-        this.password = user.password;
-        this.avatar = user.avatar;
-    }
-}
-
-export class LevelStatsDTO {
-    constructor(levelData) {
-        this.userId = levelData.userId;
-        this.level = levelData.level;
-        this.highScore = levelData.highScore;
-        this.timesPlayed = levelData.timesPlayed;
-        this.timesWon = levelData.timesWon;
-        this.timesLost = levelData.timesLost;
-        this.usersBestGame = levelData.usersBestGame;
-        this.levelsBestGame = levelData.levelsBestGame;
-    }
-}
-
-export class GameDTO {
-    constructor(game) {
-        this.id = game.id === 0 || null ? undefined : game.id;
-        this.userId = game.userId;
-        this.level = game.level;
-        this.score = game.score;
-        this.timeTaken = game.timeTaken;
-        this.gameWon = game.gameWon;
-        this.gameLost = game.gameLost;
-        this.gameAbandoned = game.gameAbandoned;
-    }
-}
 
 export function createIndexedDb() {
     return new IndexedDb();

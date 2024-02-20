@@ -41,7 +41,7 @@ public class AuthenticationService
 	{
 		try
 		{
-			var user = await GetUser(userName);
+			var user = await GetUserByUserName(userName);
 			return await Login(user, password);
 		}
 		catch (Exception ex)
@@ -56,7 +56,7 @@ public class AuthenticationService
 	{
 		try
 		{
-			var user = await GetUser(userId);
+			var user = await GetUserById(userId);
 			return await Login(user, password);
 		}
 		catch (Exception ex)
@@ -72,7 +72,7 @@ public class AuthenticationService
 		var loggedInUserId = await _sessionStorageService.GetValueAsync<string>(AppStrings.SessionStorageKeys.UserId);
 		if (loggedInUserId != null)
 		{
-			var user = await GetUser(Convert.ToInt32(loggedInUserId));
+			var user = await GetUserById(Convert.ToInt32(loggedInUserId));
 			return await ValidateLoggedInUser(user);
 		}
 		else
@@ -84,7 +84,7 @@ public class AuthenticationService
 
 	public async Task<bool> ValidateLoggedInUser(int userId)
 	{
-		var user = await GetUser(userId);
+		var user = await GetUserById(userId);
 		return await ValidateLoggedInUser(user);
 	}
 
@@ -149,7 +149,7 @@ public class AuthenticationService
 		if (!IsAuthenticated)
 			throw new Exception("No user is authenticated.");
 		var userId = await _sessionStorageService.GetValueAsync<string>(AppStrings.SessionStorageKeys.UserId);
-		var user = await GetUser(Convert.ToInt32(userId));
+		var user = await GetUserById(Convert.ToInt32(userId));
 		var userIsLoggedIn = await ValidateLoggedInUser(user);
 		if (userIsLoggedIn)
 			return user;
@@ -157,9 +157,15 @@ public class AuthenticationService
 			throw new Exception("User is not logged in.");
 	}
 
-	private async Task<UserDto> GetUser<T>(T userIdOrName)
+	private async Task<UserDto> GetUserById(int userId)
 	{
-		var user = await _indexedDbService.GetUser(userIdOrName);
+		var user = await _indexedDbService.GetUserById(userId);
+		return user ?? throw new Exception("User does not exist.");
+	}
+
+	private async Task<UserDto> GetUserByUserName(string userName)
+	{
+		var user = await _indexedDbService.GetUserByUserName(userName);
 		return user ?? throw new Exception("User does not exist.");
 	}
 
