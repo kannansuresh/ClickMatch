@@ -32,7 +32,7 @@
 }
 
 .flip-card-front {
-  background-color: #3498db;
+  background-color: var(--tile-front-color, #9b51e0);
   color: #fff;
   display: flex;
   align-items: center;
