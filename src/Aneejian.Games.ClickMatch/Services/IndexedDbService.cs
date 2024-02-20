@@ -65,5 +65,6 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 			await _module.DisposeAsync();
 		if (_dexieRef != null)
 			await _dexieRef.DisposeAsync();
+		GC.SuppressFinalize(this);
 	}
 }
