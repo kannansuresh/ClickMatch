@@ -34,6 +34,10 @@
 			<tbody>
 				@foreach (LevelStatsDTO level in UserStats)
 				{
+					@if (LevelGameInProgress && level.Level == Level)
+					{
+						level.TimesPlayed -= 1;
+					}
 					<tr class="text-center">
 						<td data-cell="Level">@level.Level</td>
 						<td data-cell="Played">@level.TimesPlayed</td>
@@ -67,6 +71,9 @@
 
 	[Parameter]
 	public int Level { get; set; } = 0;
+
+	[Parameter]
+	public bool LevelGameInProgress { get; set; } = false;
 
 	protected override async Task OnInitializedAsync()
 	{

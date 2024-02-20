@@ -7,6 +7,9 @@
   "settings": {
     "[aspnetcorerazor]": {
       "editor.formatOnSave": false
+    },
+    "[javascript][json][jsonc]": {
+      "editor.defaultFormatter": "biomejs.biome"
     }
   },
   "extensions": {
