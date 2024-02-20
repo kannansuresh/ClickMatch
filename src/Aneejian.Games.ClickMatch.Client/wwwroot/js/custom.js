@@ -104,8 +104,20 @@ function setModalFocus(myModalEl) {
   if (inputElement) inputElement.focus();
 }
 
-function scrollElementIntoView(elementId) {
-  document
-    .getElementById(elementId)
-    .scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+async function scrollElementIntoView(elementId) {
+  const element = await waitForElementToBeAvailable(`#${elementId}`);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+// await for an element to be available for 5 seconds
+async function waitForElementToBeAvailable(selector, timeout = 5000) {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    const element = document.querySelector(selector);
+    if (element) return element;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  return null;
 }
