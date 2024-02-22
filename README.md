@@ -26,6 +26,10 @@ Click & Match is a simple and fun memory game. The objective of the game is to m
 - Try to remember the position of cards. This is a game of memory.
 - Be patient, some patterns may take a while to come back to you.
 
+### Profile and Stats
+
+The game stores all data in your browser. If you change the browser or clear the browser data, you will lose your progress. If nobody else is playing on your device, the default guest account is enough.
+
 Enjoy the game!
 
 ## Game Modes
@@ -35,3 +39,24 @@ Currently the game has only one mode (classic). Hopefully, in the future, I migh
 - [x] **Classic Mode**: Match all pairs of cards without any time limit.
 - [ ] **Time Trial**: Match all pairs of cards within a time limit.
 - [ ] **Walk Mode**: User can reveal all cards together for a few seconds and then they will be flipped back. User has to remember the position of cards and match them.
+
+## Technical Aspects
+
+The game is written in C# and uses Blazor WebAssembly for the UI. The game is hosted on GitHub Pages.
+
+### How does the user profile and game data persistence work?
+
+I have made use of IndexedDB to store user profiles and game data. Thanks to [Dexie.js](https://dexie.org/) for making it easy to work with IndexedDB.
+
+### Does the project follow all the best practices in Blazor?
+
+I am new to Blazor and still learning. If you find any issues or have any suggestions, please fee free to open an issue or a pull request.
+
+## Attribution
+
+- For Images Used in the Game
+  - [Animal Icons from Figma](https://www.figma.com/community/file/1253367719553048712/animal-icon) designed by [HRK](https://www.figma.com/@HRK04).
+  - [Animal Avatars from Figma](https://www.figma.com/community/file/1302328392768925757/380-animal-avatars-2-style-full-free) designed by [Aleks](https://www.figma.com/@aleksmakowski)
+  - Animal and Toy Icons made by [Freepik](https://www.freepik.com/) from [www.flaticon.com](https://www.flaticon.com/).
+  - Bootstrap Icons from [icons.getbootstrap.com](https://icons.getbootstrap.com/).
+  - Business people icons from [Reshot](https://www.reshot.com/).
