@@ -32,14 +32,6 @@ The game stores all data in your browser. If you change the browser or clear the
 
 Enjoy the game!
 
-## Game Modes
-
-Currently the game has only one mode (classic). Hopefully, in the future, I might add more game modes:
-
-- [x] **Classic Mode**: Match all pairs of cards without any time limit.
-- [ ] **Time Trial**: Match all pairs of cards within a time limit.
-- [ ] **Walk Mode**: User can reveal all cards together for a few seconds and then they will be flipped back. User has to remember the position of cards and match them.
-
 ## Technical Aspects
 
 The game is written in C# and uses Blazor WebAssembly for the UI. The game is hosted on GitHub Pages.
