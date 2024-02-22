@@ -115,5 +115,18 @@
     <script src="js/custom.js"></script>
     <script src="sw-registrator.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-1G04SXT8CL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-1G04SXT8CL");
+    </script>
   </body>
 </html>
