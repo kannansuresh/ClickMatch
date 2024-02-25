@@ -1,0 +1,49 @@
+﻿@inject NavigationManager navigationManager
+
+@if (!Logout)
+{
+	<div>
+		Please <a class='text-decoration-none' href='' @onclick=@NavigateToLoginPage @onclick:preventDefault>login</a> @Message
+	</div>
+}
+else
+{
+	<div>
+		Please <a class='text-decoration-none' href='' @onclick=@NavigateToLogoutPage @onclick:preventDefault>logout</a> @Message
+	</div>
+}
+
+@code {
+
+	[Parameter]
+	public bool Logout { get; set; } = false;
+
+	[Parameter]
+	public string? Message { get; set; }
+
+	[Parameter]
+	public string TargetPage { get; set; } = string.Empty;
+
+	protected override void OnInitialized()
+	{
+		if (string.IsNullOrWhiteSpace(Message))
+		{
+			Message = " to view this page.";
+		}
+		else
+		{
+			Message = $" to {Message.Trim()}.";
+		}
+
+		TargetPage = string.IsNullOrWhiteSpace(TargetPage) ? string.Empty : "/" + TargetPage;
+	}
+	private void NavigateToLoginPage()
+	{
+		navigationManager.NavigateTo(AppStrings.Pages.Login + TargetPage);
+	}
+
+	private void NavigateToLogoutPage()
+	{
+		navigationManager.NavigateTo(AppStrings.Pages.Logout + TargetPage);
+	}
+}

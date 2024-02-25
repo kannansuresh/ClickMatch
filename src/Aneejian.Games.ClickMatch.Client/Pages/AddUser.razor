@@ -1,14 +1,12 @@
 ﻿@inject IndexedDbService IndexedDbInteropService
 @inject IJSRuntime JSRuntime
-@inject NavigationManager navigationManager
 
 @attribute [Route(AppStrings.Pages.Register)]
 
 <_AccessBased>
 	<Authorized>
 		<_SubHeading>
-			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLogoutPage
-				@onclick:preventDefault>logout</a> to continue.
+			<_LoginOrLogoutMessage Logout=true Message="add new profile" TargetPage=@AppStrings.Pages.Register />
 		</_SubHeading>
 	</Authorized>
 	<UnAuthorized>
@@ -62,11 +60,6 @@
 			SharedMethods.Log(ex.ToString());
 		}
 
-	}
-
-	private void NavigateToLogoutPage()
-	{
-		navigationManager.NavigateTo(AppStrings.Pages.Logout + "/" + AppStrings.Pages.Register);
 	}
 
 	private async Task Focus()
