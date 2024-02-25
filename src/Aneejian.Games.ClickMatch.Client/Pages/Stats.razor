@@ -1,6 +1,4 @@
-﻿@inject NavigationManager navigationManager
-@attribute [Route(AppStrings.Pages.Stats)]
-
+﻿@attribute [Route(AppStrings.Pages.Stats)]
 
 <_AccessBased>
 	<Authorized>
@@ -12,18 +10,7 @@
 	</Authorized>
 	<UnAuthorized>
 		<_SubHeading>
-			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLoginPage @onclick:preventDefault>login</a> to view your stats.
+			<_LoginOrLogoutMessage Message="view your stats" TargetPage=@AppStrings.Pages.Stats/>
 		</_SubHeading>
 	</UnAuthorized>
 </_AccessBased>
-
-
-
-@code {
-
-	private void NavigateToLoginPage()
-	{
-		navigationManager.NavigateTo(AppStrings.Pages.Login + "/" + AppStrings.Pages.Stats);
-	}
-
-}

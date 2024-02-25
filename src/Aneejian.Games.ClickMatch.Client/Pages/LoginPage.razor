@@ -8,7 +8,7 @@
 <_AccessBased>
 	<Authorized>
 		<_SubHeading>
-			Please <a class="text-decoration-none" href="" @onclick=@NavigateToLogoutPage @onclick:preventDefault>logout</a> to continue.
+			<_LoginOrLogoutMessage Logout=true Message="to continue" TargetPage=@AppStrings.Pages.Login />
 		</_SubHeading>
 	</Authorized>
 	<UnAuthorized>
@@ -34,11 +34,6 @@
 	private void AddNewProfile()
 	{
 		navigationManager.NavigateTo(AppStrings.Pages.Register);
-	}
-
-	private void NavigateToLogoutPage()
-	{
-		navigationManager.NavigateTo(AppStrings.Pages.Logout + "/" + AppStrings.Pages.Login);		
 	}
 
 	private void LoginSuccess()
