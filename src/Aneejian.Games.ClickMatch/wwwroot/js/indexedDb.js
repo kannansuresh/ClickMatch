@@ -25,6 +25,18 @@ export class IndexedDb {
         return await this.db.games.add(new GameDTO(game));
     }
 
+    async updateUser(user, updatePassword = false) {
+        const updateData = {
+            name: user.name,
+            avatar: user.avatar,
+        };
+        if (updatePassword) {
+            updateData.password = user.password;
+        }
+        return await this.db.users.update(user.id, updateData);
+    }
+
+
     async updateUserGame(game) {
         return await this.db.games.update(game.id, new GameDTO(game));
     }

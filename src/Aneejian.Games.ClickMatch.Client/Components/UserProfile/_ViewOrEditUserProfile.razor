@@ -1,0 +1,100 @@
+@inject AuthenticationService authenticationService
+@inject IndexedDbService indexedDbService
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+
+
+
+<_AccessBased>
+	<Authorized>
+		@if (User is not null)
+		{
+			<div>
+				@if (!EditMode)
+				{
+					<_SubHeading>
+						@(User.Name)'s Profile
+					</_SubHeading>
+					<div class="d-grid align-items-center justify-content-center mb-4">
+						<_UserProfileCard Profile="User" ShowHoverEffect=false />
+					</div>
+
+					@if (User.UserName != AppStrings.GuestUser.UserName)
+					{
+						<div class="mb-4 d-flex gap-2 justify-content-center">
+							<button class="btn btn-primary btn-sm" @onclick=InitiateEditProfile>Edit Profile</button>
+							<button class="btn btn-danger btn-sm" @onclick=OpenDeleteModal>Delete Profile</button>
+						</div>
+					}
+					<_SubHeading class="fw-light mb-4 fs-4">
+						Game Stats
+					</_SubHeading>
+					<_UserStats />
+				}
+				else
+				{
+					<_SubHeading>
+						Editing @(User.Name)'s Profile
+					</_SubHeading>
+					<_EditProfile Profile="User" OnCancel="CancelEditMode" OnProfileUpdated="ProfileUpdated" />
+				}
+			</div>
+			<_DeleteUser Profile=User OnUserDeleted=DeleteUser />
+
+		}
+	</Authorized>
+	<UnAuthorized>
+		<div>
+			<_SubHeading>
+				Please login to view your profile.
+			</_SubHeading>
+		</div>
+	</UnAuthorized>
+</_AccessBased>
+
+
+
+
+
+
+@code {
+	[Parameter]
+	public UserDto? User { get; set; }
+
+	public bool EditMode { get; set; } = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await authenticationService.IsSessionAuthenticated();
+		User = authenticationService.AuthenticatedUser;
+	}
+
+	private void InitiateEditProfile()
+	{
+		EditMode = true;
+	}
+
+	private void CancelEditMode()
+	{
+		EditMode = false;
+	}
+
+	private async Task ProfileUpdated()
+	{
+		User = await indexedDbService.GetUserById(User!.Id);
+		EditMode = false;
+		StateHasChanged();
+	}
+
+
+	private async Task OpenDeleteModal(MouseEventArgs e)
+	{
+		await jsRuntime.InvokeVoidAsync("openModal", "delete-profile-modal" + User!.Id);
+	}
+
+	private void DeleteUser()
+	{
+		navigationManager.NavigateTo(AppStrings.Pages.Logout);
+	}
+
+}

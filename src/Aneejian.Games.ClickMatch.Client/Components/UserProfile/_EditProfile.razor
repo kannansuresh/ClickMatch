@@ -1,0 +1,175 @@
+﻿@inject IndexedDbService indexedDbService
+
+
+<div class="d-grid align-items-center justify-items-center justify-contents-center mb-4">
+
+	<div class="m-auto mb-4">
+		<_UserProfileCard Profile=EditProfileRequest ShowProfileInfo=true ShowHoverEffect=false />
+	</div>
+
+	<div class="text-start">
+		<EditForm EditContext="EditProfileRequestContext" class="mb-4" OnValidSubmit="SaveProfile">
+			<DataAnnotationsValidator />
+			<ValidationSummary class="list-unstyled" />
+			<AntiforgeryToken />
+			<div class="form-floating mb-3">
+				<InputText class="form-control" id="displayName" type="text" placeholder="Display Name"
+						   @bind-Value="EditProfileRequest!.Name" autocomplete="off" maxlength="20" @oninput=@SetDisplayName />
+				<label for="displayName">Display Name</label>
+				<ValidationMessage For="() => EditProfileRequest!.Name" />
+			</div>
+			<div class="form-floating mb-3">
+				<InputText class="form-control" id="avatar" type="avatar" placeholder="Select an Avatar"
+						   @bind-Value=EditProfileRequest!.Avatar autocomplete="off" />
+				<label for="avatar">Avatar</label>
+				<div id="avatarHelpBlock" class="form-text">
+					Select an avatar from below or enter a URL to use your own avatar.
+				</div>
+				<ValidationMessage For="() => EditProfileRequest!.Avatar" />
+				<_AvatarSelector SelectedAvatar="@EditProfileRequest!.Avatar" OnAvatarSelected="OnAvatarSelected" />
+			</div>
+			<div class="form-check mb-3 text-start">
+				<InputCheckbox class="form-check-input" type="checkbox" @bind-Value=@ChangePassword
+							   id="changePassword" />
+				<label class="form-check-label" for="changePassword">
+					Change profile password
+				</label>
+			</div>
+
+			@if (ChangePassword)
+			{
+				<section>
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="currentPassword" type="password" placeholder="Current Password"
+								   Value=@EditProfileRequest!.CurrentPassword ValueChanged="ValidateCurrentPassword" ValueExpression="() => EditProfileRequest!.CurrentPassword" />
+						<label for="currentPassword">Current Password</label>
+						<ValidationMessage For="() => EditProfileRequest!.CurrentPassword" />
+					</div>
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="password" type="password" placeholder="New Password"
+								   @bind-Value=EditProfileRequest!.InputPassword />
+						<label for="password">New Password</label>
+						<ValidationMessage For="() => EditProfileRequest!.InputPassword" />
+					</div>
+					<div class="form-floating mb-3">
+						<InputText class="form-control" id="confirmPassword" type="password"
+								   placeholder="Confirm New Password" @bind-Value="EditProfileRequest!.ConfirmPassword" />
+						<label for="confirmPassword">Confirm New Password</label>
+						<ValidationMessage For="() => EditProfileRequest!.ConfirmPassword" />
+					</div>
+				</section>
+			}
+			<div class="d-flex justify-content-center gap-2 mb-4 mt-4">
+				<button class="btn btn-primary w-50" id="submitButton" type="submit">
+					Save Profile
+				</button>
+				<button class="btn btn-secondary w-50" id="cancelButton" type="button" @onclick=OnCancel>
+					Cancel
+				</button>
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+
+@code {
+	[Parameter, EditorRequired]
+	public UserDto? Profile { get; set; }
+
+	[Parameter]
+	public EventCallback<UserDto> OnProfileUpdated { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+
+	private EditRequest? EditProfileRequest { get; set; }
+	private EditContext? EditProfileRequestContext { get; set; }
+	private ValidationMessageStore? MessageStore { get; set; }
+
+	private bool _changePassword;
+	const string dummyPassword = "dummyPassword";
+
+	private bool ChangePassword
+	{
+		get
+		{
+			return _changePassword;
+		}
+		set
+		{
+			_changePassword = value;
+			if (value)
+			{
+				EditProfileRequest!.CurrentPassword = "";
+				EditProfileRequest!.InputPassword = "";
+				EditProfileRequest!.ConfirmPassword = "";
+			}
+			else
+			{
+				EditProfileRequest!.CurrentPassword = dummyPassword;
+				EditProfileRequest!.InputPassword = dummyPassword;
+				EditProfileRequest!.ConfirmPassword = dummyPassword;
+			}
+		}
+	}
+
+	protected override void OnInitialized()
+	{
+		if (Profile is not null)
+		{
+			EditProfileRequest = new EditRequest(Profile);
+			SharedMethods.Log($"Profile pic: {EditProfileRequest.Avatar}");
+			EditProfileRequestContext = new EditContext(EditProfileRequest);
+			MessageStore = new ValidationMessageStore(EditProfileRequestContext);
+			ChangePassword = false;
+		}
+		base.OnInitialized();
+	}
+
+	private void SetDisplayName(ChangeEventArgs e)
+	{
+		var displayName = e.Value?.ToString()?.Trim() ?? "";
+		if (string.IsNullOrEmpty(displayName)) return;
+		e.Value = displayName;
+		EditProfileRequest!.Name = displayName;
+	}
+
+	private void OnAvatarSelected(string avatar)
+	{
+		EditProfileRequest!.Avatar = avatar;
+	}
+
+	private async void SaveProfile()
+	{
+		SharedMethods.Log("Saving profile...");
+		if (ChangePassword)
+			EditProfileRequest!.Password = EditProfileRequest!.InputPassword;
+		await indexedDbService.UpdateUser(EditProfileRequest!, ChangePassword);
+		Profile = await indexedDbService.GetUserById(EditProfileRequest!.Id);
+		await OnProfileUpdated.InvokeAsync();
+	}
+
+	private bool CheckCurrentPassword()
+	{
+		if (!ChangePassword) return true;
+		var profilePasswordHash = Profile?.Password ?? "";
+		return Security.PasswordManager.ValidatePassword(EditProfileRequest!.CurrentPassword, profilePasswordHash);
+	}
+
+	private void ValidateCurrentPassword(string value)
+	{
+		EditProfileRequest!.CurrentPassword = value;
+		if (!CheckCurrentPassword())
+		{
+			SharedMethods.Log("I was here to add message to the store.");
+			MessageStore!.Clear();
+			MessageStore!.Add(() => EditProfileRequest!.CurrentPassword, "Invalid current password.");
+		}
+		else
+		{
+			MessageStore!.Clear();
+		}
+		EditProfileRequestContext!.NotifyValidationStateChanged();
+	}
+
+}

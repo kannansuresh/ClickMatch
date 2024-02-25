@@ -5,6 +5,7 @@ public enum DbMethods
 	addNewUser,
 	deleteUser,
 	addUserGame,
+	updateUser,
 	updateUserGame,
 	getUsers,
 	getUserById,
