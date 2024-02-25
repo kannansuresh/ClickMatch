@@ -40,10 +40,6 @@ The game is written in C# and uses Blazor WebAssembly for the UI. The game is ho
 
 I have made use of IndexedDB to store user profiles and game data. Thanks to [Dexie.js](https://dexie.org/) for making it easy to work with IndexedDB.
 
-### Does the project follow all the best practices in Blazor?
-
-I am new to Blazor and still learning. If you find any issues or have any suggestions, please fee free to open an issue or a pull request.
-
 ## Attribution
 
 - For Images Used in the Game

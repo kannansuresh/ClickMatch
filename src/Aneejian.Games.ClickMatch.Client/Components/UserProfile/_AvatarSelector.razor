@@ -42,6 +42,8 @@
 
 	[Parameter] public EventCallback<string> OnAvatarSelected { get; set; }
 
+	[Parameter] public string? SelectedAvatar { get; set; }
+
 	private string avatarTheme = "animal_avatars_circular";
 	private IEnumerable<string>? Avatars { get; set; }
 
@@ -55,7 +57,14 @@
 	{
 		if (firstRender)
 		{
-			await SelectAvatar(Avatars?.ElementAtOrDefault(Random.Shared.Next(Avatars.Count())) ?? "");
+			if (SelectedAvatar is not null)
+			{
+				await SelectAvatar(SelectedAvatar);
+			}
+			else
+			{
+				await SelectAvatar(Avatars?.ElementAtOrDefault(Random.Shared.Next(Avatars.Count())) ?? "");
+			}
 			await jsRuntime.InvokeVoidAsync("enableToolTip");
 		}
 	}

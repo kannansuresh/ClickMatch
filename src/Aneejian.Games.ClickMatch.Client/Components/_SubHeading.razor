@@ -1,6 +1,6 @@
 ﻿@if (ChildContent is not null)
 {
-	<div class="fs-3 fw-light mb-4">
+	<div class="fs-3 fw-light mb-4" @attributes=InputAttributes>
 		@ChildContent
 	</div>
 }
@@ -8,4 +8,9 @@
 @code {
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter(CaptureUnmatchedValues = true)]
+	public Dictionary<string, object>? InputAttributes { get; set; }
+
+
 }

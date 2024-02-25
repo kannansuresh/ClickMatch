@@ -43,6 +43,8 @@ public class IndexedDbService(IJSRuntime _jsRuntime) : IAsyncDisposable
 
 	public async Task<IEnumerable<UserDto>> GetUsers() => await InvokeAsync<IEnumerable<UserDto>>(DbEnum.getUsers);
 
+	public async Task UpdateUser(UserDto user, bool UpdatePassword = false) => await InvokeAsync(DbEnum.updateUser, user, UpdatePassword);
+
 	public async Task DeleteUser(int id) => await InvokeAsync(DbEnum.deleteUser, id);
 
 	public async Task DeleteUser(string userName) => await InvokeAsync(DbEnum.deleteUser, userName);
