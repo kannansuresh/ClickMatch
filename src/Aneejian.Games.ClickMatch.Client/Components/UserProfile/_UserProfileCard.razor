@@ -31,20 +31,7 @@
 			<div class="profile-name text-wrap">@(Profile.Name == "" ? "___" : Profile.Name)</div>
 			<div class="profile-user-name text-wrap text-info">@(Profile.UserName == "" ? "___" : $"{Profile.UserName}")</div>
 		</div>
-@* 		@if (OnUserDeleted.HasDelegate && Profile.UserName != AppStrings.NewUser.UserName && Profile.UserName != AppStrings.GuestUser.UserName)
-		{
-			<div class="profile-delete" @onclick=OpenDeleteModal>
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-				</svg>
-			</div>
-		} *@
 	</div>
-
-@* 	@if (OnUserDeleted.HasDelegate && Profile.UserName != AppStrings.NewUser.UserName && Profile.UserName != AppStrings.GuestUser.UserName)
-	{
-		<_DeleteUser Profile=Profile OnUserDeleted=DeleteUser />
-	} *@
 
 	@if (OnUserSelected.HasDelegate)
 	{
@@ -63,9 +50,7 @@
 
 	[Parameter] public EventCallback<UserDto> OnUserDeleted { get; set; }
 
-	private bool IgnoreLoginClick { get; set; } = false;
 	private string LoginModalId => "login-profile-modal" + Profile.Id;
-	private string DeleteModalId => "delete-profile-modal" + Profile.Id;
 
 	private string hoverClass => ShowHoverEffect ? "profile-hover" : "";
 
@@ -82,11 +67,6 @@
 
 	private async Task CheckUserToLogin()
 	{
-		if (IgnoreLoginClick)
-		{
-			IgnoreLoginClick = false;
-			return;
-		}
 		if (Profile.UserName == AppStrings.NewUser.UserName)
 		{
 			await SelectUser();
@@ -101,10 +81,4 @@
 	{
 		await jsRuntime.InvokeVoidAsync("openModal", LoginModalId);
 	}
-
-	// private async Task OpenDeleteModal(MouseEventArgs e)
-	// {
-	// 	IgnoreLoginClick = true;
-	// 	await jsRuntime.InvokeVoidAsync("openModal", DeleteModalId);
-	// }
 }

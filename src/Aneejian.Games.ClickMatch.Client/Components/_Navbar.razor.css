@@ -1,0 +1,22 @@
+﻿.navbar-brand img {
+    border-radius: 50%;
+    transition: all 0.5s;
+}
+
+
+    .navbar-brand img:hover {
+        border-radius: 0px;
+        transform: rotate(360deg);
+    }
+
+.nav-item {
+    transition: all 0.5s;
+}
+
+    .nav-item:hover {
+        border-bottom: 0.1rem solid #9b51e0;
+    }
+
+.repository:hover li {
+    border-bottom: none;
+}
