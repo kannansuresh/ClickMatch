@@ -97,7 +97,7 @@ public class GameManagerService(AuthenticationService authenticationService, Ind
 			else
 			{
 				Misses += 1;
-				await Task.Delay(1000);
+				await Task.Delay(700);
 				FlippedTiles.ConvertAll(t => t.IsShown = false);
 				Multiplier = 1;
 			}
