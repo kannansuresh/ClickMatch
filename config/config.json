@@ -1,0 +1,6 @@
+{
+  "local_theme_info": "config/theme_info.json",
+  "hosted_theme_info": "https://aneejian.com/memory-game-resources/theme_info.json",
+  "default_theme": "bootstrap_icons",
+  "default_level": 1
+}

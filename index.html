@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#03173d" />
+
+    <!-- Primary Meta Tags -->
+    <title>Click & Match | Aneejian</title>
+    <meta name="title" content="Click & Match | Aneejian" />
+    <meta
+      name="description"
+      content="Click & Match is a simple and fun memory game. The objective of the game is to match pairs of cards. How many levels can you beat?" />
+
+    <!-- Open Graph / Facebook -->
+    <meta content="819231514810191" property="fb:app_id" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://aneejian.com/ClickMatch/" />
+    <meta property="og:title" content="Click & Match | Aneejian" />
+    <meta
+      property="og:description"
+      content="Click & Match is a simple and fun memory game. The objective of the game is to match pairs of cards. How many levels can you beat?" />
+    <meta
+      property="og:image"
+      content="https://aneejian.com/ClickMatch/images/click-match-cover.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://aneejian.com/ClickMatch/" />
+    <meta property="twitter:title" content="Click & Match | Aneejian" />
+    <meta
+      property="twitter:description"
+      content="Click & Match is a simple and fun memory game. The objective of the game is to match pairs of cards. How many levels can you beat?" />
+    <meta
+      property="twitter:image"
+      content="https://aneejian.com/ClickMatch/images/click-match-cover.png" />
+
+    <title>Click & Match | Aneejian</title>
+    <base href="/ClickMatch/" />
+    <link
+      rel="preload"
+      href="css/bootstrap/bootstrap-icons.min.css"
+      as="style"
+      onload="this.rel='stylesheet'" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/click-match.css" />
+    <link href="Aneejian.Games.ClickMatch.Client.styles.css" rel="stylesheet" />
+    <link href="manifest.webmanifest" rel="manifest" />
+    <link rel="icon" type="image/svg" href="icons/icon.svg" sizes="any" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="icons/icon-512.png"
+      sizes="512x512" />
+    <link rel="mask-icon" type="image/svg" href="icons/maskable-icon.svg" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png" />
+  </head>
+
+  <body>
+    <div id="app">
+      <!-- custom loader start -->
+      <div class="loader-grid-container">
+        <div class="loader-tile-grid">
+          <div class="loader-flip-card">
+            <div class="loader-flip-card-inner">
+              <div class="loader-flip-card-front">1</div>
+              <div class="loader-flip-card-back">
+                <img src="loader-images/alphabet-a.svg" alt="A" />
+              </div>
+            </div>
+          </div>
+          <div class="loader-flip-card">
+            <div class="loader-flip-card-inner">
+              <div class="loader-flip-card-front">2</div>
+              <div class="loader-flip-card-back">
+                <img src="loader-images/dice.svg" alt="dice" />
+              </div>
+            </div>
+          </div>
+          <div class="loader-flip-card">
+            <div class="loader-flip-card-inner">
+              <div class="loader-flip-card-front">3</div>
+              <div class="loader-flip-card-back">
+                <img src="loader-images/dice.svg" alt="dice" />
+              </div>
+            </div>
+          </div>
+          <div class="loader-flip-card">
+            <div class="loader-flip-card-inner">
+              <div class="loader-flip-card-front">4</div>
+              <div class="loader-flip-card-back">
+                <img src="loader-images/alphabet-a.svg" alt="A" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="loader-progress-bar-container">
+          <div class="loader-progress">
+            <div class="loader-progress-bar"></div>
+          </div>
+          <div class="loader-progress-text"></div>
+        </div>
+      </div>
+      <!-- custom loader end -->
+    </div>
+
+    <div id="blazor-error-ui">
+      An unhandled error has occurred.
+      <a href="" class="reload">Reload</a>
+      <a class="dismiss">🗙</a>
+    </div>
+    <script src="js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="sw-registrator.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-1G04SXT8CL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-1G04SXT8CL");
+    </script>
+  </body>
+</html>
